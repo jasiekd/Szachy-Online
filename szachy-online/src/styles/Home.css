@@ -1,0 +1,70 @@
+.content{
+     background-color: #272727; 
+    /*background-color: red;*/
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap:5vh;
+}
+.chess-piece-info{
+    border-radius: 16px;
+
+    color: white;
+    display: flex;
+    flex-direction: row;
+    width: 70vw;
+    background-color: #20201E;
+    padding: 50px;
+    transition:  0.5s ease;
+}
+.chess-piece-info:hover{
+    scale: 1.1;
+}
+.piece{
+    background-color: #272727;
+    padding: 20px;
+    border-radius: 20px;
+}
+.piece-img{
+    width: 100px;
+}
+.piece-text{
+    
+}
+.piece-header{
+    text-align: center;
+    font-size: 30px;
+    font-weight: 800;
+}
+.piece-main-text{
+    
+}
+.App{
+    background-color: red;
+    
+}
+
+.app-nav{
+    display: flex;
+    position: fixed;
+    flex-direction: column;
+    top:0;
+    /* background-color: #20201E; */
+    height: 100%;
+}
+.nav-btn{
+    display: flex;
+    background-color: #20201E;
+    border:none;
+    color:white;
+    justify-content: center;
+    align-items: center;
+    height: 5vh;
+    font-size:32px;
+    padding:16px;
+}
+.nav-btn:hover{
+    background-color: #2d2d2c;
+
+}
