@@ -21,6 +21,7 @@ import chessHistory from "../img/chessHistory.png";
 import addFriend from "../img/add.png";
 import friendList from "../img/friend.png";
 import { useNavigate } from "react-router-dom";
+import {login} from "../services/AccountService";
 
 function Home() {
     const navigate = useNavigate();
@@ -96,7 +97,9 @@ function Home() {
     const startGameHumanHumanOnline=()=>{
         navigate("/chessBoard");
     }
-  
+    
+    const[loginVal,setLoginVal] = useState("test");
+    const[passwordVal,setPasswordnVal] = useState("test");
   return (
     <div className="App">
       <nav className="app-nav">
@@ -161,10 +164,10 @@ function Home() {
       </div>
       <div className='option' style={getLoginStyle} onMouseOver={showLogin}  onMouseOut={hideLogin}>
             <div className='account-text'>Login:</div>
-            <input className='account-input'></input>
+            <input className='account-input' value={loginVal} onChange={(e)=>setLoginVal(e.target.value)}></input>
             <div className='account-text'>Hasło:</div>
-            <input className='account-input'></input>
-            <button className='nav-btn account-btn'>
+            <input className='account-input' value={passwordVal} onChange={(e)=>setPasswordnVal(e.target.value)}></input>
+            <button className='nav-btn account-btn' onClick={()=>login(loginVal,passwordVal)}>
                 <p className='slide-btn-text'>Zaloguj</p>
             </button>
       </div>
