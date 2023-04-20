@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "0OTYW/Ifx6HfxEho3LSqHo8yyjP0ThQTKWNQgRSkabg=",
+  "Source": "szachy-online.Api",
+  "BasePath": "_content/szachy-online.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

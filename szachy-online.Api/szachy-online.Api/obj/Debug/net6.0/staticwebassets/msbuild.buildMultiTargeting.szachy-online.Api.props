@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\szachy-online.Api.props" />
+</Project>
