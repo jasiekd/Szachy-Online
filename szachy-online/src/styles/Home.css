@@ -86,3 +86,16 @@ body{
     background-color: #2d2d2c;
 
 }
+.option{
+    background-color:#1d1d1b;
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    left: 15rem;
+    transition: 0.5s ease;
+    overflow-x: hidden;
+}
+.slide-btn-text{
+    white-space: nowrap;
+    font-size: 1.2rem;
+}
