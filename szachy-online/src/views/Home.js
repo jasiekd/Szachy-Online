@@ -16,22 +16,87 @@ import React, { useState } from "react";
 import onlineHumanHuman from "../img/occ.png";
 import onlineHumanComputer from "../img/ocm.png";
 import localHumanHuman from "../img/tcc.png";
+import continueIcon from "../img/right-arrow.png";
+import chessHistory from "../img/chessHistory.png";
+import addFriend from "../img/add.png";
+import friendList from "../img/friend.png";
+import { useNavigate } from "react-router-dom";
+
 function Home() {
+    const navigate = useNavigate();
+    
     const [getGameStyle, setGameStyle] = useState({width:"0rem"});
     const showGameOptions=() =>{
         setGameStyle({width:"25rem"});
+        
     }
     const hideGameOptions=() =>{
         setGameStyle({width:"0rem"});
     }
 
-    const [getFileStyle, setFileStyle] = useState({width:"0rem", backgroundColor: "blue"});
+    const [getFileStyle, setFileStyle] = useState({width:"0rem"});
     const showFileOptions=() =>{
-        setFileStyle({width:"15rem", backgroundColor: "blue"});
+        setFileStyle({width:"25rem"});
+
     }
     const hideFileOptions=() =>{
-        setFileStyle({width:"0rem", backgroundColor: "blue"});
+        setFileStyle({width:"0rem"});
     }
+
+    const [getFriendStyle,setFriendStyle] = useState({width:"0rem"});
+    const showFriendOptions=() =>{
+        setFriendStyle({width:"25rem"});
+
+    }
+    const hideFriendOptions=() =>{
+        setFriendStyle({width:"0rem"});
+    }
+    
+    const [getLoginStyle,setLoginStyle] = useState({width:"0rem"});
+    const showLogin=() =>{
+        setLoginStyle({width:"25rem"});
+
+    }
+    const hideLogin=() =>{
+        setLoginStyle({width:"0rem"});
+    }
+    const [getRegisterStyle,setRegisterStyle] = useState({width:"0rem"});
+    const showRegister=() =>{
+        setRegisterStyle({width:"25rem"});
+
+    }
+    const hideRegister=() =>{
+        setRegisterStyle({width:"0rem"});
+    }
+
+    const showHumanHumanOptions=()=>{
+        hideGameOptions();
+        showHumanHuman();
+    }
+
+    const [getHumanHumanOptionsStyle,setHumanHumanOptionsStyle] = useState({width:"0rem"});
+    const showHumanHuman=() =>{
+        setHumanHumanOptionsStyle({width:"55rem"});
+    }
+    const hideHumanHuman=() =>{
+        setHumanHumanOptionsStyle({width:"0rem"});
+    }
+
+    const hideAdditionalMenu=()=>{
+        setHumanHumanOptionsStyle({width:"0rem"});
+        setTurnBasedOptionsStyle({width:"0rem"});
+    }
+    const [getTurnBasedOptionsStyle,setTurnBasedOptionsStyle] = useState({width:"0rem"});
+    const showTurnBasedMenu=() =>{
+        setTurnBasedOptionsStyle({width:"100%"});
+    }
+    const hideTurnBasedMenu=() =>{
+        setTurnBasedOptionsStyle({width:"0rem"});
+    }
+    const startGameHumanHumanOnline=()=>{
+        navigate("/chessBoard");
+    }
+  
   return (
     <div className="App">
       <nav className="app-nav">
@@ -39,45 +104,136 @@ function Home() {
                 <img className="img-logo" src={imgLogo} alt=""/>
             </div>
             
-            <button className="nav-btn" onMouseOver={showGameOptions} onMouseOut={hideGameOptions}>
+            <button className="nav-btn" onMouseOver={showGameOptions} onMouseOut={hideGameOptions} onClick={hideAdditionalMenu}>
                 <img className="btn-img" src={imgChess} alt=""/>
                 <p>Graj</p>
             </button>
-            <button className="nav-btn" onMouseOver={showFileOptions} onMouseOut={hideFileOptions}>
+            <button className="nav-btn" onMouseOver={showFileOptions} onMouseOut={hideFileOptions}  onClick={hideAdditionalMenu}>
                 <img className="btn-img" src={imgFile} alt=""/>
                 <p>Pliki</p>
             </button>
-            <button className="nav-btn">
+            <button className="nav-btn" onMouseOver={showFriendOptions} onMouseOut={hideFriendOptions} onClick={hideAdditionalMenu}>
                 <img className="btn-img" src={imgFriends} alt=""/>
                 <p>Znajomi</p>
             </button>
-            <button className="nav-btn">
+            <button className="nav-btn" onMouseOver={showLogin} onMouseOut={hideLogin}  onClick={hideAdditionalMenu}>
                 <img className="btn-img" src={imgLogin} alt=""/>
                 <p>Logowanie</p>
             </button>
-            <button className="nav-btn">
+            <button className="nav-btn" onMouseOver={showRegister} onMouseOut={hideRegister}  onClick={hideAdditionalMenu}>
                 <img className="btn-img" src={imgRegister} alt=""/>
                 <p>Rejestracja</p>   
             </button>
       </nav>
       <div className='option' style={getGameStyle} onMouseOver={showGameOptions}  onMouseOut={hideGameOptions}>
-            <button className='nav-btn'>
+            <button className='nav-btn' onClick={showHumanHumanOptions}>
                 <img className="btn-img" src={onlineHumanHuman} alt=""/>
                 <p className='slide-btn-text'>Online Człowiek - Człowiek</p>
             </button>
-            <button className='nav-btn'>
+            <button className='nav-btn' onClick={showTurnBasedMenu}>
                 <img className="btn-img" src={localHumanHuman} alt=""/>
                 <p className='slide-btn-text'>Turowo Człowiek - Człowiek</p>
             </button>
-            <button className='nav-btn'>
+            <button className='nav-btn' >
                 <img className="btn-img" src={onlineHumanComputer} alt=""/>
                 <p className='slide-btn-text'>Online Człowiek - Maszyna</p>
             </button>
       </div>
       <div className='option' style={getFileStyle} onMouseOver={showFileOptions}  onMouseOut={hideFileOptions}>
+            <button className='nav-btn'>
+                <img className="btn-img" src={continueIcon} alt=""/>
+                <p className='slide-btn-text'>Wznów gre z pliku</p>
+            </button>
+            <button className='nav-btn'>
+                <img className="btn-img" src={chessHistory} alt=""/>
+                <p className='slide-btn-text'>Historia rozgrywki z pliku</p>
+            </button>
+      </div>
+      <div className='option' style={getFriendStyle} onMouseOver={showFriendOptions}  onMouseOut={hideFriendOptions}>
+            <button className='nav-btn'>
+                <img className="btn-img" src={friendList} alt=""/>
+                <p className='slide-btn-text'>Lista znajomych</p>
+            </button>
+            <button className='nav-btn'>
+                <img className="btn-img" src={addFriend} alt=""/>
+                <p className='slide-btn-text'>Dodaj znajomego</p>
+            </button>
+      </div>
+      <div className='option' style={getLoginStyle} onMouseOver={showLogin}  onMouseOut={hideLogin}>
+            <div className='account-text'>Login:</div>
+            <input className='account-input'></input>
+            <div className='account-text'>Hasło:</div>
+            <input className='account-input'></input>
+            <button className='nav-btn account-btn'>
+                <p className='slide-btn-text'>Zaloguj</p>
+            </button>
+      </div>
+      <div className='option' style={getRegisterStyle} onMouseOver={showRegister}  onMouseOut={hideRegister}>
+            <div className='account-text'>Login:</div>
+            <input className='account-input'></input>
+            <div className='account-text'>Hasło:</div>
+            <input className='account-input'></input>
+            <div className='account-text account-text2'>Powtórz hasło:</div>
+            <input className='account-input'></input>
+            <button className='nav-btn account-btn'>
+                <p className='slide-btn-text'>Rejestruj</p>
+            </button>
+      </div>
+      <div className="option game-options" style={getHumanHumanOptionsStyle} >
+            
+                <div>Ustawienia rozgrywki Online Człowiek-Człowiek</div>
+                <div className='freind-invate'>
+                    <select className='friend-select'>
+                        <option value="0">Wybierz gracza</option>
+                        <option value="1">Jan Nowak</option>
+                        <option value="2">Jan Nowak</option>
+                        <option value="3">Jan Nowak</option>
+                        <option value="4">Jan Nowak</option>
+                        <option value="5">Jan Nowak</option>
+                        <option value="6">Jan Nowak</option>
+                        <option value="7">Jan Nowak</option>
+                        <option value="8">Jan Nowak</option>
+                        <option value="9">Jan Nowak</option>
+                        <option value="10">Jan Nowak</option>
+                        <option value="11">Jan Nowak</option>
+                        <option value="12">Jan Nowak</option>
+                    </select>
+                    <button className='option-btn'>Zaproś</button>
+                    <button className='option-btn'>Anuluj</button>
+                </div>
+                <div className='invate-status'>
+                    Status zaproszenia: niewysłano
+                </div>
+                    
+                <div>
+                    Mój kolor:
+                    <select className='friend-select'>
+                        <option value="0">Wybierz kolor</option>
+                        <option value="1">Czarny</option>
+                        <option value="1">Biały</option>
+                    </select>
+                </div>
+                <div>
+                    <button className='option-btn' onClick={startGameHumanHumanOnline}>Rozpocznij</button>
+                    <button className='option-btn' onClick={hideAdditionalMenu}>Anuluj</button>
+                </div>
+            
             
       </div>
+      <div className="option game-options" style={getTurnBasedOptionsStyle} >
+            <p>Ustawienia rozgrywki Turowej Człowiek-Człowiek</p>
+      </div>
       <main className="content">
+      <div className='chess-piece-info'>
+            <div className='piece-text'>
+                <div className='piece-header'>
+                   Czy wiedziałeś że?
+                </div>
+                <div className='piece-main-text'>
+                    Król w szachach jest jednym z najważniejszych pionków na planszy, ponieważ jego utrata kończy grę. Król może poruszać się o jedno pole w dowolnym kierunku - w górę, w dół, na boki i na skos. Ma również specjalny ruch nazywany roszadą, który pozwala na zamianę pozycji króla i wieży, jeśli oba pionki nie poruszały się wcześniej i nie ma żadnych innych pionków między nimi. Król może również brać udział w szachowaniu i matowaniu przeciwnika. Jego możliwości są ograniczone, ale jego utrata decyduje o wyniku gry.
+                </div>
+            </div>
+        </div>
         <div className='chess-piece-info'>
             <div className='piece'>
                 <img className='piece-img' src={king}/>
