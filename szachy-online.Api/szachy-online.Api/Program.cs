@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using szachy_online.Api.Data;
 using szachy_online.Api.Services;
 using szachy_online.Api.Settings;
 
@@ -16,6 +18,11 @@ namespace szachy_online.Api
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            builder.Services.AddDbContext<DataContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             var tokenOptions = builder.Configuration
                 .GetSection(TokenOptions.CONFIG_NAME)
