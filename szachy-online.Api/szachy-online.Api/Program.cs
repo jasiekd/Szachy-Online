@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using szachy_online.Api.Data;
 using szachy_online.Api.Services;
 using szachy_online.Api.Settings;
 
@@ -15,20 +17,25 @@ namespace szachy_online.Api
 
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add services to the container.
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://localhost:7225","http://localhost:3000")
+                                      policy.WithOrigins("http://localhost:7225", "http://localhost:3000")
                                                     .AllowAnyHeader()
                                                     .AllowAnyMethod();
                                   });
             });
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
+
+            builder.Services.AddDbContext<DataContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             var tokenOptions = builder.Configuration
                 .GetSection(TokenOptions.CONFIG_NAME)
@@ -71,7 +78,6 @@ namespace szachy_online.Api
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-
 
             app.UseHttpsRedirection();
 

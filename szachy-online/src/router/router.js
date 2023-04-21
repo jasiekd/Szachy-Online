@@ -1,10 +1,8 @@
 import React from "react";
 import Home from "../views/Home";
-import ChessBoard from "../views/ChessBoard";
 import {
     createBrowserRouter,
 } from "react-router-dom";
-
 
 const router = createBrowserRouter([
     {
@@ -14,10 +12,6 @@ const router = createBrowserRouter([
     {
         path: "/home",
         element: <Home />,
-    },
-    {
-        path: "/chessBoard",
-        element: <ChessBoard />,
     },
 ]);
 
