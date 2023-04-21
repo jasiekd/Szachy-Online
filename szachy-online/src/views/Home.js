@@ -137,7 +137,7 @@ function Home() {
                 <img className="btn-img" src={localHumanHuman} alt=""/>
                 <p className='slide-btn-text'>Turowo Człowiek - Człowiek</p>
             </button>
-            <button className='nav-btn' >
+            <button className='nav-btn' onClick={()=>console.log(localStorage.accessToken)}>
                 <img className="btn-img" src={onlineHumanComputer} alt=""/>
                 <p className='slide-btn-text'>Online Człowiek - Maszyna</p>
             </button>

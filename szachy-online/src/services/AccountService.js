@@ -11,7 +11,8 @@ export function login(login,password){
                 password: password
         })
         .then(response => {
-            console.log(response.data);
+            localStorage.accessToken = response.data.accessToken;
+            localStorage.refreshToken = response.data.refreshToken;
         })
         .catch(error => {
             console.log(error.data);
