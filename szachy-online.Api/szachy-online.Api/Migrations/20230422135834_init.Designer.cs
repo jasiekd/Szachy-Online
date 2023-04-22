@@ -12,8 +12,8 @@ using szachy_online.Api.Data;
 namespace szachy_online.Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230420212551_first")]
-    partial class first
+    [Migration("20230422135834_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace szachy_online.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("szachy_online.Api.Entities.UserEntity", b =>
+            modelBuilder.Entity("szachy_online.Api.Entities.AccountEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,7 +61,7 @@ namespace szachy_online.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Accounts");
                 });
 #pragma warning restore 612, 618
         }

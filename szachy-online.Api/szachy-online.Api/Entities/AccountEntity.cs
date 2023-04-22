@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace szachy_online.Api.Entities
 {
-    public class UserEntity: BaseDbItem
+    public class AccountEntity: BaseDbItem
     {
         [Required]
         [StringLength(50)]

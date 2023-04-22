@@ -22,7 +22,7 @@ namespace szachy_online.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("szachy_online.Api.Entities.UserEntity", b =>
+            modelBuilder.Entity("szachy_online.Api.Entities.AccountEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +58,7 @@ namespace szachy_online.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Accounts");
                 });
 #pragma warning restore 612, 618
         }

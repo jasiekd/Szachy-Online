@@ -7,6 +7,6 @@ namespace szachy_online.Api.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
-        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<AccountEntity> Accounts { get; set; }
     }
 }
