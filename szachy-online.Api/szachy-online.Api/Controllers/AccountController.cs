@@ -91,7 +91,7 @@ namespace szachy_online.Api.Controllers
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("register")]
         [AllowAnonymous]
         public async Task<ActionResult<AccountEntity>> PostAccountEntity(AccountEntity accountEntity)
         {
