@@ -1,91 +1,127 @@
 
-import React from 'react';
+import React, { startTransition, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Stage, Layer, Star, Text,Rect } from 'react-konva';
+import { Stage, Layer, Image,Rect } from 'react-konva';
+import horse from '../img/horse.png';
+import pawn from '../img/pawn.png';
+import useImage from 'use-image';
+import '../styles/ChessBoard.css';
+function generateFields() {
+    const chessBoard = [];
+    let field={};
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        let fill;
+        if(y%2===0){
+          if(x%2===0){
+            fill="white";
+          }else{
+            fill="black";
+          }
+        }else{
+          if(x%2===1){
+            fill="white";
+          }else{
+            fill="black";
+          }
+        }
+        field = {
+          idx: x.toString(),
+          idy: y.toString(),
+          x: x*100,
+          y: y*100,
+          fill:fill,
 
-
-function generateShapes() {
-    return [...Array(10)].map((_, i) => ({
-      id: i.toString(),
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      rotation: Math.random() * 180,
-      isDragging: false,
-    }));
+        };
+        chessBoard.push(field);
+      }
+      
+    }
+    return chessBoard;
+}
+function generatePawns(){
+  const pawns = [];
+  
+  for (let y = 0; y < 8; y++) {
+    console.log(y);
+    var imageObj = new window.Image();
+    imageObj.src = horse;
+    let pawn ={
+      id:y,
+      x:10,
+      y:10,
+      img:imageObj,
+    }
+    pawns.push(pawn);
   }
-  function generateSquares(){
-    return [...Array(10)].map((_, i) => ({
-        id: i.toString(),
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
+  return pawns;
 
-      }));
-  }
-  const INITIAL_STATE = generateShapes();
-  const BOARD_INITIAL_STATE = generateSquares();
+}
+
+  const FIELDS_INITIAL_STATE = generateFields();
+  const PAWNS_INITIAL_STATE = generatePawns();
 function ChessBoard() {
-    const [stars, setStars] = React.useState(INITIAL_STATE);
-    const [squares, setSquares] = React.useState(BOARD_INITIAL_STATE);
-
+  
+    const [fields, setFields] = React.useState(FIELDS_INITIAL_STATE);
+    const [pawns, setPawns] = React.useState(PAWNS_INITIAL_STATE);
+ 
     const handleDragStart = (e) => {
       const id = e.target.id();
-      setStars(
-        stars.map((star) => {
+      setPawns(
+        pawns.map((pawn) => {
           return {
-            ...star,
-            isDragging: star.id === id,
+            ...pawn,
+            isDragging: pawn.id === id,
           };
         })
       );
     };
     const handleDragEnd = (e) => {
-      setStars(
-        stars.map((star) => {
+      setPawns(
+        pawns.map((pawn) => {
           return {
-            ...star,
+            ...pawn,
             isDragging: false,
           };
         })
       );
     };
-  
     return (
       <Stage width={window.innerWidth} height={window.innerHeight}>
-        <Layer>
-          <Text text="Try to drag a star" />
-          {stars.map((star) => (
-            <Star
-              key={star.id}
-              id={star.id}
-              x={star.x}
-              y={star.y}
+        <Layer >
+          {fields.map((field,key) => (
+            <Rect
+            
+              key={key}
+              id={field.id}
+              x={field.x}
+              y={field.y}
               numPoints={5}
               innerRadius={20}
               outerRadius={40}
-              fill="#89b717"
               opacity={0.8}
-              draggable
-              rotation={star.rotation}
+              fill={field.fill}
               shadowColor="black"
               shadowBlur={10}
               shadowOpacity={0.6}
-              shadowOffsetX={star.isDragging ? 10 : 5}
-              shadowOffsetY={star.isDragging ? 10 : 5}
-              scaleX={star.isDragging ? 1.2 : 1}
-              scaleY={star.isDragging ? 1.2 : 1}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
+              width={100}
+              height={100}
             />
           ))}
-          {/* {squares.map((square)=>(
-
-            <Rect>
-             key={square.id}
-              id={square.id}
-              x={square.x}
-              y={square.y}
-            </Rect>
-          ))} */}
+           {pawns.map((pawn,key) => (
+           <Image
+              key={key}
+              image={pawn.img}
+              width={80}
+              height={90}
+              x={pawn.x}
+              y={pawn.y}
+              draggable
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+         /> 
+          ))}
+    
         </Layer>
       </Stage>
     );
@@ -93,6 +129,3 @@ function ChessBoard() {
 export default ChessBoard;
 
 
-// const container = document.getElementById('root');
-// const root = createRoot(container);
-// root.render(<App />);
