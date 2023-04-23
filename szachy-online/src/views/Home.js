@@ -21,11 +21,29 @@ import chessHistory from "../img/chessHistory.png";
 import addFriend from "../img/add.png";
 import friendList from "../img/friend.png";
 import { useNavigate } from "react-router-dom";
-import {login} from "../services/AccountService";
+import {login, logout,register} from "../services/AccountService";
+import { useEffect } from 'react';
 
 function Home() {
+    const [isLogged, setIsLogged] = useState(false);
+    useEffect(() => {
+         if(localStorage.getItem("accessToken")!=null) 
+         {
+            setIsLogged(true);
+         }
+    }, []);
+
+
+
+    const [nameVal,setNameVal] = useState("");
+    const [surnameVal,setSurnameVal] = useState("");
+    const [emailVal,setEmailVal] = useState("");
+    const [loginValReg,setLoginValReg] = useState("");
+    const [passwordValReg,setPasswordValReg] = useState("");
+    const [validLoginTextStyle,setValidLoginTextStyle] = useState("");
+    const [validLoginInputStyle,setValidLoginInputStyle] = useState("");
     const navigate = useNavigate();
-    
+ 
     const [getGameStyle, setGameStyle] = useState({width:"0rem"});
     const showGameOptions=() =>{
         setGameStyle({width:"25rem"});
@@ -97,9 +115,20 @@ function Home() {
     const startGameHumanHumanOnline=()=>{
         navigate("/chessBoard");
     }
+    const onChangeLogin = e =>{
+        setValidLoginInputStyle("");
+        setValidLoginTextStyle("");
+        setLoginVal(e.target.value);
+    }
+    const onChangePassword = e =>{
+        setValidLoginInputStyle("");
+        setValidLoginTextStyle("");
+        setPasswordnVal(e.target.value);
+    }
     
-    const[loginVal,setLoginVal] = useState("test");
-    const[passwordVal,setPasswordnVal] = useState("test");
+    
+    const[loginVal,setLoginVal] = useState("");
+    const[passwordVal,setPasswordnVal] = useState("");
   return (
     <div className="App">
       <nav className="app-nav">
@@ -115,18 +144,34 @@ function Home() {
                 <img className="btn-img" src={imgFile} alt=""/>
                 <p>Pliki</p>
             </button>
-            <button className="nav-btn" onMouseOver={showFriendOptions} onMouseOut={hideFriendOptions} onClick={hideAdditionalMenu}>
-                <img className="btn-img" src={imgFriends} alt=""/>
-                <p>Znajomi</p>
-            </button>
-            <button className="nav-btn" onMouseOver={showLogin} onMouseOut={hideLogin}  onClick={hideAdditionalMenu}>
-                <img className="btn-img" src={imgLogin} alt=""/>
-                <p>Logowanie</p>
-            </button>
-            <button className="nav-btn" onMouseOver={showRegister} onMouseOut={hideRegister}  onClick={hideAdditionalMenu}>
-                <img className="btn-img" src={imgRegister} alt=""/>
-                <p>Rejestracja</p>   
-            </button>
+
+
+
+            
+            {
+               !isLogged?
+               <div>
+                    <button className="nav-btn" onMouseOver={showLogin} onMouseOut={hideLogin}  onClick={hideAdditionalMenu}>
+                        <img className="btn-img" src={imgLogin} alt=""/>
+                        <p>Logowanie</p>
+                    </button>
+                    <button className="nav-btn" onMouseOver={showRegister} onMouseOut={hideRegister}  onClick={hideAdditionalMenu}>
+                        <img className="btn-img" src={imgRegister} alt=""/>
+                        <p>Rejestracja</p>   
+                    </button>
+                </div>
+                :
+                <div>
+                    <button className="nav-btn" onMouseOver={showFriendOptions} onMouseOut={hideFriendOptions} onClick={hideAdditionalMenu}>
+                        <img className="btn-img" src={imgFriends} alt=""/>
+                        <p>Znajomi</p>
+                    </button>
+                    <button className="nav-btn" onClick={()=>logout(setIsLogged)}>
+                        <img className="btn-img" src={imgLogin} alt=""/>
+                        <p>Wyloguj</p>
+                    </button>
+                </div>
+            }
       </nav>
       <div className='option' style={getGameStyle} onMouseOver={showGameOptions}  onMouseOut={hideGameOptions}>
             <button className='nav-btn' onClick={showHumanHumanOptions}>
@@ -152,7 +197,9 @@ function Home() {
                 <p className='slide-btn-text'>Historia rozgrywki z pliku</p>
             </button>
       </div>
-      <div className='option' style={getFriendStyle} onMouseOver={showFriendOptions}  onMouseOut={hideFriendOptions}>
+      {
+        isLogged?
+            <div className='option' style={getFriendStyle} onMouseOver={showFriendOptions}  onMouseOut={hideFriendOptions}>
             <button className='nav-btn'>
                 <img className="btn-img" src={friendList} alt=""/>
                 <p className='slide-btn-text'>Lista znajomych</p>
@@ -161,27 +208,55 @@ function Home() {
                 <img className="btn-img" src={addFriend} alt=""/>
                 <p className='slide-btn-text'>Dodaj znajomego</p>
             </button>
-      </div>
-      <div className='option' style={getLoginStyle} onMouseOver={showLogin}  onMouseOut={hideLogin}>
-            <div className='account-text'>Login:</div>
-            <input className='account-input' value={loginVal} onChange={(e)=>setLoginVal(e.target.value)}></input>
-            <div className='account-text'>Hasło:</div>
-            <input className='account-input' value={passwordVal} onChange={(e)=>setPasswordnVal(e.target.value)}></input>
-            <button className='nav-btn account-btn' onClick={()=>login(loginVal,passwordVal)}>
-                <p className='slide-btn-text'>Zaloguj</p>
-            </button>
-      </div>
-      <div className='option' style={getRegisterStyle} onMouseOver={showRegister}  onMouseOut={hideRegister}>
-            <div className='account-text'>Login:</div>
-            <input className='account-input'></input>
-            <div className='account-text'>Hasło:</div>
-            <input className='account-input'></input>
-            <div className='account-text account-text2'>Powtórz hasło:</div>
-            <input className='account-input'></input>
-            <button className='nav-btn account-btn'>
-                <p className='slide-btn-text'>Rejestruj</p>
-            </button>
-      </div>
+            </div>
+        :
+            <div></div>
+
+      }
+      
+      {
+        !isLogged?
+            <div>
+                <div className='option' style={getLoginStyle} onMouseOver={showLogin}  onMouseOut={hideLogin}>
+                    <form onSubmit={()=>login(loginVal,passwordVal,setIsLogged,setValidLoginTextStyle,setValidLoginInputStyle)}>
+                        <div className={'account-text '+validLoginTextStyle}>Login:</div>
+                        <input required className={'account-input '+validLoginInputStyle} value={loginVal} onChange={onChangeLogin}></input>
+                        <div className={'account-text '+validLoginTextStyle}>Hasło:</div>
+                        <input required className={'account-input '+validLoginInputStyle} value={passwordVal} onChange={onChangePassword} type="password"></input>
+                        <button className='nav-btn account-btn' type="submit">
+                            <p className='slide-btn-text'>Zaloguj</p>
+                        </button>
+                    </form>
+                    
+                </div>
+                    <div className='option' style={getRegisterStyle} onMouseOver={showRegister}  onMouseOut={hideRegister}>
+                    <form onSubmit={()=>register("3fa85f64-5717-4562-b3fc-2c963f66afa6",nameVal,surnameVal,emailVal,loginValReg,passwordValReg)}>
+                        <div className='account-text'>Imie:</div>
+                        <input required className='account-input' value={nameVal} onChange={(e)=>setNameVal(e.target.value)}></input>
+
+                        <div className='account-text'>Nazwisko:</div>
+                        <input required className='account-input' value={surnameVal} onChange={(e)=>setSurnameVal(e.target.value)}></input>
+
+                        <div className='account-text'>Email:</div>
+                        <input required type='email' className='account-input' value={emailVal} onChange={(e)=>setEmailVal(e.target.value)}></input>
+
+                        <div className='account-text'>Login:</div>
+                        <input required className='account-input' value={loginValReg} onChange={(e)=>setLoginValReg(e.target.value)}></input>
+
+                        <div className='account-text'>Hasło:</div>
+                        <input required className='account-input' value={passwordValReg} onChange={(e)=>setPasswordValReg(e.target.value)} type='password'></input>
+
+                        <button className='nav-btn account-btn' type='submit'>
+                            <p className='slide-btn-text'>Rejestruj</p>
+                        </button>
+                    </form>    
+                        
+                </div>
+            </div>
+        :
+        <div></div>
+      }
+           
       <div className="option game-options" style={getHumanHumanOptionsStyle} >
             
                 <div>Ustawienia rozgrywki Online Człowiek-Człowiek</div>
