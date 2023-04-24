@@ -1,6 +1,6 @@
 .chess-board{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+   width: 35vw;
+   height: 35vw;
+   margin: auto;
+   margin-top:10vh;
 }
