@@ -29,7 +29,7 @@ export default function ChessBoard() {
       to: targetSquare,
       promotion: "q", // always promote to a queen for example simplicity
     });
-    game.move({ from: 'g7', to: 'g6' })
+    //game.move({ from: 'g7', to: 'g6' })
     // illegal move
     if (move === null) return false;
     setTimeout(makeRandomMove, 200);

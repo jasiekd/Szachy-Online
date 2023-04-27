@@ -2,12 +2,9 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 import { HostName } from "../HostName";
+import Swal from 'sweetalert2';
 
-
-export function login(login,password,setIsLogged,setStyleText,setStyleInput){
-    console.log("start login");
-    console.log("login: "+login);
-    console.log("password: "+password);
+export function Login(login,password,setIsLogged,setStatus){
     axios.post(HostName+'/api/Account/login',
         {
                 userName: login,
@@ -17,20 +14,35 @@ export function login(login,password,setIsLogged,setStyleText,setStyleInput){
             localStorage.accessToken = response.data.accessToken;
             localStorage.refreshToken = response.data.refreshToken;
             setIsLogged(true);
+            setStatus(response.status);
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Zalogowano',
+                background: "#20201E",
+                showConfirmButton: false,
+                timer: 1500
+              })
         })
         .catch(error => {
-            setStyleText("account-text-error");
-            setStyleInput("account-input-error");
+            setStatus(error.response.status);
         })
-    console.log("stop login");
 }
 export function logout(setIsLogged){
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     setIsLogged(false);
+    Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Wylogowano',
+        background: "#20201E",
+        showConfirmButton: false,
+        timer: 1500
+      })
 }
-export function register(id,name,surname,email,login,password){
-    axios.post(HostName+'/api/Account',
+export function register(id,name,surname,email,login,password,setRegisterStstus){
+    axios.post(HostName+'/api/Account/register',
     {
         id: id,
         name: name,
@@ -41,10 +53,18 @@ export function register(id,name,surname,email,login,password){
         dateCreated: new Date(),
     })
     .then(response => {
-        console.log("git");
+        setRegisterStstus(response.status);
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Zarejestrowano',
+            background: "#20201E",
+            showConfirmButton: false,
+            timer: 1500
+          })
     })
     .catch(error =>{
-        console.log(error.data);
+        setRegisterStstus(error.response.status);
     })
 
 }

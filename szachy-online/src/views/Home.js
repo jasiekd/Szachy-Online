@@ -21,8 +21,11 @@ import chessHistory from "../img/chessHistory.png";
 import addFriend from "../img/add.png";
 import friendList from "../img/friend.png";
 import { useNavigate } from "react-router-dom";
-import {login, logout,register} from "../services/AccountService";
+import {Login, logout,register} from "../services/AccountService";
 import { useEffect } from 'react';
+import { ThemeInput } from '../components/ThemeInput';
+import helpIcon from "../img/help.png";
+import Swal from 'sweetalert2';
 
 function Home() {
     const [isLogged, setIsLogged] = useState(false);
@@ -40,8 +43,6 @@ function Home() {
     const [emailVal,setEmailVal] = useState("");
     const [loginValReg,setLoginValReg] = useState("");
     const [passwordValReg,setPasswordValReg] = useState("");
-    const [validLoginTextStyle,setValidLoginTextStyle] = useState("");
-    const [validLoginInputStyle,setValidLoginInputStyle] = useState("");
     const navigate = useNavigate();
  
     const [getGameStyle, setGameStyle] = useState({width:"0rem"});
@@ -115,22 +116,115 @@ function Home() {
     const startGameHumanHumanOnline=()=>{
         navigate("/chessBoard");
     }
+    ////////////////* Edit Login from inputs*////////////////////
     const onChangeLogin = e =>{
-        setValidLoginInputStyle("");
-        setValidLoginTextStyle("");
+        setIsLoginError(false);
+        setLoginHelperText("");
         setLoginVal(e.target.value);
+        setLoginStstus(200);
     }
     const onChangePassword = e =>{
-        setValidLoginInputStyle("");
-        setValidLoginTextStyle("");
+        setIsLoginError(false);
+        setLoginHelperText("");
         setPasswordnVal(e.target.value);
+        setLoginStstus(200);
     }
-    
-    
+    ///////////////////////////////////////////////////////////////////
+
+    ////////////////* Edit Register from inputs*/////////////////////////
+    const resetRegError=()=>{
+        setIsRegisterError(false);
+        setRegisterHelperLogEmailText("");
+        setRegisterHelperText("");
+        setRegisterStstus(200);
+    }
+    const onChangeNameReg = e =>{
+        setNameVal(e.target.value);
+        resetRegError();
+    }
+    const onChangeSurnameReg = e =>{
+        setSurnameVal(e.target.value);
+        resetRegError();
+    }
+    const onChangeEmailReg = e =>{
+        setEmailVal(e.target.value);
+        resetRegError();
+    }
+    const onChangeLoginReg = e =>{
+        setLoginValReg(e.target.value);
+        resetRegError();
+    }
+    const onChangePasswordReg = e =>{
+        setPasswordValReg(e.target.value);
+        resetRegError();
+    }
+
+    //////////////////////////////////////////////////////////////////
+
+    ////////////////* Login error message system*////////////////////
+    const[isLoginError,setIsLoginError] = useState(false);
+    const[loginStstus,setLoginStstus] = useState(-1);
+    const[loginHelperText,setLoginHelperText] = useState("");
+    useEffect(() => {
+        if(loginStstus==401)
+        {
+            setIsLoginError(true);
+            setLoginHelperText("Niepoprawne dane logowania");
+        }
+        setLoginStstus(-1);
+   }, [loginStstus]);
+   ///////////////////////////////////////////////////////////////////
+
+   ///////////////* Register error message system*////////////////////
+   const[isRegisterError,setIsRegisterError] = useState(false);
+   const[registerStstus,setRegisterStstus] = useState(-1);
+   const[registerHelperLogEmailText,setRegisterHelperLogEmailText] = useState("");
+   const[registerHelperText,setRegisterHelperText] = useState("");
+   useEffect(() => {
+        if(registerStstus==500)
+        {
+            setIsRegisterError(true);
+            setRegisterHelperLogEmailText("Konto o podanym loginie lub email już istnieje");
+        }
+        else if(registerStstus==400)
+        {
+            setIsRegisterError(true);
+            setRegisterHelperLogEmailText("Pola nie mogą być puste");
+            setRegisterHelperText("Pola nie mogą byc puste");
+        }
+        setRegisterStstus(-1);
+    }, [registerStstus]);
+
+    const onClickRegister=()=>{
+        register("3fa85f64-5717-4562-b3fc-2c963f66afa6",nameVal,surnameVal,emailVal,loginValReg,passwordValReg,setRegisterStstus);
+        setNameVal("");
+        setSurnameVal("");
+        setEmailVal("");
+        setLoginValReg("");
+        setPasswordValReg("");
+    }
+   ///////////////////////////////////////////////////////////////////
+
+   /////////////////////////* Help window*////////////////////////////
+    const showHelpWindow = () =>{
+        Swal.fire({
+            icon: 'question',
+            background: "#20201E",
+            color: "white",
+            width: "50rem",
+            html:"<div><div style='font-size:2rem; font-weight:800;'>Napisz do nas jeśli masz problem</div><div style='color:#C26833; font-weight:800;'>email: szachyonline@gmail.com</div></div>",
+            showConfirmButton: false,
+          })
+    }
+
+   ///////////////////////////////////////////////////////////////////
     const[loginVal,setLoginVal] = useState("");
     const[passwordVal,setPasswordnVal] = useState("");
   return (
     <div className="App">
+
+        
+
       <nav className="app-nav">
             <div className="logo">
                 <img className="img-logo" src={imgLogo} alt=""/>
@@ -144,7 +238,7 @@ function Home() {
                 <img className="btn-img" src={imgFile} alt=""/>
                 <p>Pliki</p>
             </button>
-
+            
 
 
             
@@ -171,6 +265,19 @@ function Home() {
                         <p>Wyloguj</p>
                     </button>
                 </div>
+            }
+            <button className="nav-btn" onClick={showHelpWindow}>
+                <img className="btn-img" src={helpIcon} alt="" />
+                <p>Pomoc</p>
+            </button>
+            {
+                isLogged?
+                    <div className='logedAs'>
+                        <p>Zalogowano jako:</p> 
+                        tmpName
+                    </div>
+                :
+                    <div></div>
             }
       </nav>
       <div className='option' style={getGameStyle} onMouseOver={showGameOptions}  onMouseOut={hideGameOptions}>
@@ -218,39 +325,33 @@ function Home() {
         !isLogged?
             <div>
                 <div className='option' style={getLoginStyle} onMouseOver={showLogin}  onMouseOut={hideLogin}>
-                    <form onSubmit={()=>login(loginVal,passwordVal,setIsLogged,setValidLoginTextStyle,setValidLoginInputStyle)}>
-                        <div className={'account-text '+validLoginTextStyle}>Login:</div>
-                        <input required className={'account-input '+validLoginInputStyle} value={loginVal} onChange={onChangeLogin}></input>
-                        <div className={'account-text '+validLoginTextStyle}>Hasło:</div>
-                        <input required className={'account-input '+validLoginInputStyle} value={passwordVal} onChange={onChangePassword} type="password"></input>
-                        <button className='nav-btn account-btn' type="submit">
+                    <div className='option-elements'>
+                        <ThemeInput error={isLoginError} helperText={loginHelperText} id="filled-basic" label="Login" variant="outlined" fullWidth value={loginVal} onChange={onChangeLogin}/>
+                        <ThemeInput error={isLoginError} helperText={loginHelperText} id="filled-basic" label="Hasło" variant="outlined" fullWidth value={passwordVal} onChange={onChangePassword} type="password"/>
+                        <button className='option-btn' onClick={()=>Login(loginVal,passwordVal,setIsLogged,setLoginStstus)}>
                             <p className='slide-btn-text'>Zaloguj</p>
                         </button>
-                    </form>
+                    </div>    
+                        
+                    
                     
                 </div>
                     <div className='option' style={getRegisterStyle} onMouseOver={showRegister}  onMouseOut={hideRegister}>
-                    <form onSubmit={()=>register("3fa85f64-5717-4562-b3fc-2c963f66afa6",nameVal,surnameVal,emailVal,loginValReg,passwordValReg)}>
-                        <div className='account-text'>Imie:</div>
-                        <input required className='account-input' value={nameVal} onChange={(e)=>setNameVal(e.target.value)}></input>
+                        <div className='option-elements'>
+                            <ThemeInput error={isRegisterError} helperText={registerHelperText} id="filled-basic" label="Imie" variant="outlined" fullWidth value={nameVal} onChange={onChangeNameReg}/>
+                            
+                            <ThemeInput error={isRegisterError} helperText={registerHelperText} id="filled-basic" label="Nazwisko" variant="outlined" fullWidth value={surnameVal} onChange={onChangeSurnameReg}/>
 
-                        <div className='account-text'>Nazwisko:</div>
-                        <input required className='account-input' value={surnameVal} onChange={(e)=>setSurnameVal(e.target.value)}></input>
+                            <ThemeInput type='email' error={isRegisterError} helperText={registerHelperLogEmailText} id="filled-basic" label="Email" variant="outlined" fullWidth value={emailVal} onChange={onChangeEmailReg}/>
 
-                        <div className='account-text'>Email:</div>
-                        <input required type='email' className='account-input' value={emailVal} onChange={(e)=>setEmailVal(e.target.value)}></input>
+                            <ThemeInput error={isRegisterError} helperText={registerHelperLogEmailText} id="filled-basic" label="Login" variant="outlined" fullWidth value={loginValReg} onChange={onChangeLoginReg}/>
 
-                        <div className='account-text'>Login:</div>
-                        <input required className='account-input' value={loginValReg} onChange={(e)=>setLoginValReg(e.target.value)}></input>
+                            <ThemeInput error={isRegisterError} helperText={registerHelperText} id="filled-basic" label="Hasło" variant="outlined" fullWidth  value={passwordValReg} onChange={onChangePasswordReg} type='password'/>
 
-                        <div className='account-text'>Hasło:</div>
-                        <input required className='account-input' value={passwordValReg} onChange={(e)=>setPasswordValReg(e.target.value)} type='password'></input>
-
-                        <button className='nav-btn account-btn' type='submit'>
-                            <p className='slide-btn-text'>Rejestruj</p>
-                        </button>
-                    </form>    
-                        
+                            <button className='option-btn' onClick={onClickRegister}>
+                                <p className='slide-btn-text'>Rejestruj</p>
+                            </button>    
+                        </div>
                 </div>
             </div>
         :
