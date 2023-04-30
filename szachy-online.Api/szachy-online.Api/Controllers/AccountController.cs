@@ -64,21 +64,18 @@ namespace szachy_online.Api.Controllers
         }
         [HttpGet("getUser")]
         [Authorize]
-        public async Task<ActionResult<string>> GetAccount()
+        public async Task<IActionResult> GetAccount()
         {
-            Guid userId = Guid.Parse( User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-            var accountEntity = await _context.Accounts.FindAsync(userId);
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            if (accountEntity == null)
-            {
-                return NotFound();
-            }
+            AccountEntity accountEntity =  await _context.Accounts.FindAsync(userId);
 
-            return accountEntity.Name;
+            UserInfoDto temp = new UserInfoDto { 
+                Name = accountEntity.Name,
+                Surname = accountEntity.Surname,
+            };
+
+            return Ok(temp);
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
