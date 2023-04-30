@@ -17,17 +17,17 @@ namespace szachy_online.Api.Services
             _tokenOptions = tokenOptions.Value;
         }
 
-        public string GenerateBearerToken()
+        public string GenerateBearerToken(string id)
         {
             var expiry = DateTimeOffset.Now.AddMinutes(15); //ważny przez 15 minut
-            var userClaims = GetClaimsForUser(1);
+            var userClaims = GetClaimsForUser(id);
             return CreateToken(expiry, userClaims);
         }
 
-        public string GenerateRefreshToken()
+        public string GenerateRefreshToken(string id)
         {
             var expiry = DateTimeOffset.Now.AddDays(30); //ważny przez 30 dni
-            var userClaims = GetClaimsForUser(1);
+            var userClaims = GetClaimsForUser(id);
             return CreateToken(expiry, userClaims);
         }
 
@@ -51,8 +51,8 @@ namespace szachy_online.Api.Services
             //tutaj wiemy, że id są te same - odświeżamy tokeny
             TokenInfoDto result = new TokenInfoDto
             {
-                AccessToken = GenerateBearerToken(),
-                RefreshToken = GenerateRefreshToken()
+                AccessToken = GenerateBearerToken(accessPrincipalId),
+                RefreshToken = GenerateRefreshToken(accessPrincipalId)
             };
 
             return result;
@@ -90,11 +90,10 @@ namespace szachy_online.Api.Services
             return new JwtSecurityTokenHandler().WriteToken(securityToken);
         }
 
-        private IEnumerable<Claim> GetClaimsForUser(int userId)
+        private IEnumerable<Claim> GetClaimsForUser(string id)
         {
             var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Email, "user@example.com"));
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, userId.ToString()));
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, id));
             claims.Add(new Claim(ClaimTypes.Role, "User"));
 
             return claims;

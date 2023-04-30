@@ -31,8 +31,8 @@ namespace szachy_online.Api.Services
                     string password = Convert.ToBase64String(hash);
                     if (accountEntity.Password == password) {
                         var result = new TokenInfoDto();
-                        result.AccessToken = _tokenService.GenerateBearerToken();
-                        result.RefreshToken = _tokenService.GenerateRefreshToken();
+                        result.AccessToken = _tokenService.GenerateBearerToken(accountEntity.Id.ToString());
+                        result.RefreshToken = _tokenService.GenerateRefreshToken(accountEntity.Id.ToString());
 
                         return result;
                     }
