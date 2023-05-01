@@ -21,18 +21,20 @@ import chessHistory from "../img/chessHistory.png";
 import addFriend from "../img/add.png";
 import friendList from "../img/friend.png";
 import { useNavigate } from "react-router-dom";
-import {Login, logout,register} from "../services/AccountService";
+import {Login, getUser, logout,register} from "../services/AccountService";
 import { useEffect } from 'react';
 import { ThemeInput } from '../components/ThemeInput';
 import helpIcon from "../img/help.png";
 import Swal from 'sweetalert2';
 
 function Home() {
+    const[userName,setUserName] = useState("");
     const [isLogged, setIsLogged] = useState(false);
     useEffect(() => {
          if(localStorage.getItem("accessToken")!=null) 
          {
             setIsLogged(true);
+            getUser(setUserName);
          }
     }, []);
 
@@ -181,12 +183,12 @@ function Home() {
    const[registerHelperLogEmailText,setRegisterHelperLogEmailText] = useState("");
    const[registerHelperText,setRegisterHelperText] = useState("");
    useEffect(() => {
-        if(registerStstus==500)
+        if(registerStstus===500)
         {
             setIsRegisterError(true);
             setRegisterHelperLogEmailText("Konto o podanym loginie lub email już istnieje");
         }
-        else if(registerStstus==400)
+        else if(registerStstus===400)
         {
             setIsRegisterError(true);
             setRegisterHelperLogEmailText("Pola nie mogą być puste");
@@ -196,6 +198,7 @@ function Home() {
     }, [registerStstus]);
 
     const onClickRegister=()=>{
+        
         register("3fa85f64-5717-4562-b3fc-2c963f66afa6",nameVal,surnameVal,emailVal,loginValReg,passwordValReg,setRegisterStstus);
         setNameVal("");
         setSurnameVal("");
@@ -220,6 +223,8 @@ function Home() {
    ///////////////////////////////////////////////////////////////////
     const[loginVal,setLoginVal] = useState("");
     const[passwordVal,setPasswordnVal] = useState("");
+    
+
   return (
     <div className="App">
 
@@ -260,7 +265,7 @@ function Home() {
                         <img className="btn-img" src={imgFriends} alt=""/>
                         <p>Znajomi</p>
                     </button>
-                    <button className="nav-btn" onClick={()=>logout(setIsLogged)}>
+                    <button className="nav-btn" onClick={()=>logout(setIsLogged,setUserName)}>
                         <img className="btn-img" src={imgLogin} alt=""/>
                         <p>Wyloguj</p>
                     </button>
@@ -274,7 +279,7 @@ function Home() {
                 isLogged?
                     <div className='logedAs'>
                         <p>Zalogowano jako:</p> 
-                        tmpName
+                        {userName}
                     </div>
                 :
                     <div></div>
@@ -328,7 +333,7 @@ function Home() {
                     <div className='option-elements'>
                         <ThemeInput error={isLoginError} helperText={loginHelperText} id="filled-basic" label="Login" variant="outlined" fullWidth value={loginVal} onChange={onChangeLogin}/>
                         <ThemeInput error={isLoginError} helperText={loginHelperText} id="filled-basic" label="Hasło" variant="outlined" fullWidth value={passwordVal} onChange={onChangePassword} type="password"/>
-                        <button className='option-btn' onClick={()=>Login(loginVal,passwordVal,setIsLogged,setLoginStstus)}>
+                        <button className='option-btn' onClick={()=>Login(loginVal,passwordVal,setIsLogged,setLoginStstus,setUserName)}>
                             <p className='slide-btn-text'>Zaloguj</p>
                         </button>
                     </div>    

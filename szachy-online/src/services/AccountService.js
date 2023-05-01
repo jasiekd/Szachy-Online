@@ -4,7 +4,8 @@ import { useState } from "react";
 import { HostName } from "../HostName";
 import Swal from 'sweetalert2';
 
-export function Login(login,password,setIsLogged,setStatus){
+axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('accessToken')}`;
+export function Login(login,password,setIsLogged,setStatus,setUserName){
     axios.post(HostName+'/api/Account/login',
         {
                 userName: login,
@@ -15,6 +16,7 @@ export function Login(login,password,setIsLogged,setStatus){
             localStorage.refreshToken = response.data.refreshToken;
             setIsLogged(true);
             setStatus(response.status);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('accessToken')}`;
             Swal.fire({
                 position: 'center',
                 icon: 'success',
@@ -23,15 +25,19 @@ export function Login(login,password,setIsLogged,setStatus){
                 showConfirmButton: false,
                 timer: 1500
               })
+            getUser(setUserName);
         })
         .catch(error => {
             setStatus(error.response.status);
         })
+       
 }
-export function logout(setIsLogged){
+export function logout(setIsLogged,setUserName){
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    axios.defaults.headers.common['Authorization'] = `Bearer ${null}`;
     setIsLogged(false);
+    setUserName("");
     Swal.fire({
         position: 'center',
         icon: 'success',
@@ -67,5 +73,15 @@ export function register(id,name,surname,email,login,password,setRegisterStstus)
         setRegisterStstus(error.response.status);
     })
 
+}
+export function getUser(setUserName){
+    axios.get(HostName+'/api/Account/getUser',
+    {
+    })
+    .then(response => {
+        setUserName(response.data.name+" "+response.data.surname);
+    })
+    .catch(error =>{
+    })
 }
  
