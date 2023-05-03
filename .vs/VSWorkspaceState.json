@@ -4,8 +4,10 @@
     "\\szachy-online.Api",
     "\\szachy-online.Api\\szachy-online.Api",
     "\\szachy-online.Api\\szachy-online.Api\\Controllers",
+    "\\szachy-online.Api\\szachy-online.Api\\Entities",
+    "\\szachy-online.Api\\szachy-online.Api\\GameMechanics",
     "\\szachy-online.Api\\szachy-online.Api\\Services"
   ],
-  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api\\Controllers\\FriendsController.cs",
+  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api.sln",
   "PreviewInSolutionExplorer": false
 }
