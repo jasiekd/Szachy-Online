@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using szachy_online.Api.Data;
+using szachy_online.Api.Hubs;
 using szachy_online.Api.Services;
 using szachy_online.Api.Settings;
 
@@ -70,11 +71,15 @@ namespace szachy_online.Api
             builder.Services.AddScoped<TokenService>();
             builder.Services.AddScoped<AccountService>();
 
+            builder.Services.AddSignalR();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
+
+            app.UseRouting();
 
             app.UseCors(MyAllowSpecificOrigins);
 
@@ -88,7 +93,13 @@ namespace szachy_online.Api
 
             app.UseAuthorization();
 
-            app.MapControllers();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<ChessHub>("/chesshub");
+            });
+
+
 
             app.Run();
         }

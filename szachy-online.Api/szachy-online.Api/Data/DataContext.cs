@@ -10,6 +10,7 @@ namespace szachy_online.Api.Data
 
         public DbSet<AccountEntity> Accounts { get; set; }
         public DbSet<FriendsEntity> Friends { get; set; }
+        public DbSet<GameEntity> Games { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

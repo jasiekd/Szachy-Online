@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using szachy_online.Api.Data;
@@ -34,6 +35,7 @@ namespace szachy_online.Api.Controllers
                 return Ok(result);
         }
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<AccountEntity>>> GetAccounts()
         {
             if (_context.Accounts == null)
@@ -46,6 +48,7 @@ namespace szachy_online.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AccountEntity>> GetAccountEntity(Guid id)
         {
+            
             if (_context.Accounts == null)
             {
                 return NotFound();
@@ -58,6 +61,21 @@ namespace szachy_online.Api.Controllers
             }
 
             return accountEntity;
+        }
+        [HttpGet("getUser")]
+        [Authorize]
+        public async Task<IActionResult> GetAccount()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            AccountEntity accountEntity =  await _context.Accounts.FindAsync(userId);
+
+            UserInfoDto temp = new UserInfoDto { 
+                Name = accountEntity.Name,
+                Surname = accountEntity.Surname,
+            };
+
+            return Ok(temp);
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

@@ -88,6 +88,32 @@ namespace szachy_online.Api.Migrations
                     b.ToTable("Friends");
                 });
 
+            modelBuilder.Entity("szachy_online.Api.Entities.GameEntity", b =>
+                {
+                    b.Property<Guid>("GameID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BlackPlayer")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateStarted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PGN")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("WhitePlayer")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Winner")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GameID");
+
+                    b.ToTable("Games");
+                });
+
             modelBuilder.Entity("szachy_online.Api.Entities.FriendsEntity", b =>
                 {
                     b.HasOne("szachy_online.Api.Entities.AccountEntity", "User1")

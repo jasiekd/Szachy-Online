@@ -91,10 +91,6 @@ body{
     padding:16px;
 
 }
-.account-input-error{
-    background-color:  #5f3636;
-    color: red;
-}
 .account-text{
     width: 100%;
     display: flex;
@@ -105,9 +101,6 @@ body{
     font-size:1.5rem;
     padding: 32px 32px 32px 32px;
     white-space: nowrap;
-}
-.account-text-error{
-    color: red;
 }
 .account-btn{
     margin-top:16px;
@@ -126,6 +119,9 @@ body{
     left: 15rem;
     transition: 0.5s ease;
     overflow-x: hidden;
+    padding-top: 3rem;
+
+    
 }
 .slide-btn-text{
     white-space: nowrap;
@@ -167,4 +163,22 @@ body{
 .invate-status{
     font-size: 1rem;
     text-align: left;
+}
+.option-elements{
+    gap:2rem;
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    align-items: center;
+}
+.logedAs{
+    color: white;
+    font-size: 1.5rem;
+    position: absolute;
+    bottom: 0;
+}
+.logedAs p{
+    font-weight: 800;
+    color: #C26833;
 }
