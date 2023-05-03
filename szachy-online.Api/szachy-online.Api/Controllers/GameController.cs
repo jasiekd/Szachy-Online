@@ -45,7 +45,7 @@ namespace szachy_online.Api.Controllers
 
             _context.Games.Update(gameEntity);
             _context.SaveChanges();
-
+            // Ten receivecomputermove musi sie nazywac tak samo zeby sie polaczyc
             await _hubContext.Clients.All.SendAsync("ReceiveComputerMove", computerMove);
 
             return Ok();

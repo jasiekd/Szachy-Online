@@ -946,3 +946,12 @@ C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online
 C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\obj\Debug\net6.0\szachy-online.Api.pdb
 C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\obj\Debug\net6.0\szachy-online.Api.genruntimeconfig.cache
 C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\obj\Debug\net6.0\ref\szachy-online.Api.dll
+C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\obj\Debug\net6.0\staticwebassets\msbuild.szachy-online.Api.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\obj\Debug\net6.0\staticwebassets\msbuild.build.szachy-online.Api.props
+C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.szachy-online.Api.props
+C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.szachy-online.Api.props
+C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\obj\Debug\net6.0\staticwebassets.pack.json
+C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\bin\Debug\net6.0\Microsoft.AspNet.SignalR.Core.dll
+C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\bin\Debug\net6.0\Microsoft.Owin.dll
+C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\bin\Debug\net6.0\Microsoft.Owin.Security.dll
+C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\bin\Debug\net6.0\Owin.dll

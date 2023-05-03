@@ -8,6 +8,6 @@
     "\\szachy-online.Api\\szachy-online.Api\\GameMechanics",
     "\\szachy-online.Api\\szachy-online.Api\\Services"
   ],
-  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api.sln",
+  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api\\GameMechanics\\Board.cs",
   "PreviewInSolutionExplorer": false
 }
