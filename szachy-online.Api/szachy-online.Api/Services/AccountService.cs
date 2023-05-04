@@ -25,11 +25,7 @@ namespace szachy_online.Api.Services
             {
                 var accountEntity = _context.Accounts.Where(x=> x.Login == loginData.UserName).FirstOrDefault();
                 if (accountEntity!=null) {
-                    SHA256 sha256 = SHA256Managed.Create();
-                    byte[] bytes = Encoding.UTF8.GetBytes(loginData.Password);
-                    byte[] hash = sha256.ComputeHash(bytes);
-                    string password = Convert.ToBase64String(hash);
-                    if (accountEntity.Password == password) {
+                    if (accountEntity.Password == HashPassword(loginData.Password)) {
                         var result = new TokenInfoDto();
                         result.AccessToken = _tokenService.GenerateBearerToken(accountEntity.Id.ToString());
                         result.RefreshToken = _tokenService.GenerateRefreshToken(accountEntity.Id.ToString());
@@ -46,16 +42,14 @@ namespace szachy_online.Api.Services
                     return null;
                 }
             }
-            //if (loginData.UserName == "admin" && loginData.Password == "admin")
-            //{
-            //    var result = new TokenInfoDto();
-            //    result.AccessToken = _tokenService.GenerateBearerToken();
-            //    result.RefreshToken = _tokenService.GenerateRefreshToken();
+        }
 
-            //    return result;
-            //}
-            //else
-            //    return null;
+        public string HashPassword(string password)
+        {
+            SHA256 sha256 = SHA256Managed.Create();
+            byte[] bytes = Encoding.UTF8.GetBytes(password);
+            byte[] hash = sha256.ComputeHash(bytes);
+            return Convert.ToBase64String(hash);
         }
     }
 }

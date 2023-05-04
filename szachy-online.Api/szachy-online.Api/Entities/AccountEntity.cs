@@ -26,5 +26,7 @@ namespace szachy_online.Api.Entities
         public string Password { get; set; }
 
         public DateTime DateCreated { get; set; } = DateTime.Now;
+        [Required]
+        public string Nickname { get; set; }
     }
 }

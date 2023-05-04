@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -78,6 +79,27 @@ namespace szachy_online.Api.Controllers
             return Ok(temp);
         }
 
+        [HttpGet("findByNickname/{nickname}")]
+        public async Task<IActionResult> FindByNickname(string nickname)
+        {
+
+            if(!NicknameExists(nickname))
+            {
+                return NotFound(nickname);
+            }
+
+
+            AccountEntity accountEntity = await _context.Accounts.FirstOrDefaultAsync(x => x.Nickname == nickname);
+
+            UserInfoDto temp = new UserInfoDto
+            {
+                Name = accountEntity.Name,
+                Surname = accountEntity.Surname,
+            };
+
+            return Ok(temp);
+        }
+
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAccountEntity(Guid id, AccountEntity accountEntity)
@@ -111,19 +133,26 @@ namespace szachy_online.Api.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<ActionResult<AccountEntity>> PostAccountEntity(AccountEntity accountEntity)
+        public async Task<ActionResult<RegisterInfoDto>> PostAccountEntity(RegisterInfoDto registerInfo)
         {
             if (_context.Accounts == null)
             {
                 return Problem("Entity set 'DataContext.Accounts'  is null.");
             }
-            accountEntity.Id = Guid.NewGuid();
-            SHA256 sha256 = SHA256Managed.Create();
-            byte[] bytes = Encoding.UTF8.GetBytes(accountEntity.Password);
-            byte[] hash = sha256.ComputeHash(bytes);
-            accountEntity.Password = Convert.ToBase64String(hash);
-            if (LoginEmailExists(accountEntity.Email, accountEntity.Login))
-                return Problem("Account with that email or login already exist");
+
+            AccountEntity accountEntity = new AccountEntity
+            {
+                Id = Guid.NewGuid(),
+                Name = registerInfo.Name,
+                Surname = registerInfo.Surname,
+                Login = registerInfo.Login,
+                Email = registerInfo.Email,
+                Nickname= registerInfo.Nickname,
+                Password = _accountService.HashPassword(registerInfo.Password)
+            };
+
+            if (LoginEmailNicknameExists(accountEntity.Email, accountEntity.Login, accountEntity.Nickname))
+                return Problem("Account with that email or login or nickname already exist");
             _context.Accounts.Add(accountEntity);
             await _context.SaveChangesAsync();
 
@@ -154,9 +183,13 @@ namespace szachy_online.Api.Controllers
             return (_context.Accounts?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        private bool LoginEmailExists(string email, string login) 
+        private bool LoginEmailNicknameExists(string email, string login, string nickname) 
         {
-            return (_context.Accounts?.Any(e => e.Email == email || e.Login==login)).GetValueOrDefault();
+            return (_context.Accounts?.Any(e => e.Email == email || e.Login==login || e.Nickname==nickname)).GetValueOrDefault();
+        }
+        private bool NicknameExists(string nickname)
+        {
+            return (_context.Accounts?.Any(e => e.Nickname == nickname)).GetValueOrDefault();
         }
     }
 }
