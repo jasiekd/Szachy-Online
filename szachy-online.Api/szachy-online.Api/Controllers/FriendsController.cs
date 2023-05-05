@@ -54,8 +54,8 @@ namespace szachy_online.Api.Controllers
         [HttpGet("sendInvitation/{nickname}")]
         public async Task<IActionResult> SendInvitation(string nickname)
         {
-            //Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            Guid userId = Guid.Parse("0565D667-5484-4432-B761-B8558FF6DC37");
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            //Guid userId = Guid.Parse("0565D667-5484-4432-B761-B8558FF6DC37");
             AccountEntity receiverAccountEntity = await _context.Accounts.FirstOrDefaultAsync(x => x.Nickname == nickname);
 
             if (FriendshipExists(userId, receiverAccountEntity.Id)){
@@ -82,8 +82,8 @@ namespace szachy_online.Api.Controllers
             {
                 return NotFound();
             }
-            //Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            Guid userId = Guid.Parse("0565D667-5484-4432-B761-B8558FF6DC37");
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            //Guid userId = Guid.Parse("0565D667-5484-4432-B761-B8558FF6DC37");
             return await _context.Friends.Where(x => x.User2ID == userId && x.Status == StatusFriendship.Pending.ToString()).ToListAsync();
         }
 

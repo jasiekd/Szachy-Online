@@ -17,7 +17,9 @@ import localHumanHuman from "../img/tcc.png";
 import continueIcon from "../img/right-arrow.png";
 import chessHistory from "../img/chessHistory.png";
 import addFriend from "../img/add.png";
-
+import { GetListOfPendingInvitations, SendInvitation } from "../services/FriendService";
+import withReactContent from "sweetalert2-react-content";
+import PendingFriendsInvitation from "../components/PendingFriendsInvitation";
 function Header(){
 
     const[userName,setUserName] = useState("");
@@ -37,6 +39,7 @@ function Header(){
     const [emailVal,setEmailVal] = useState("");
     const [loginValReg,setLoginValReg] = useState("");
     const [passwordValReg,setPasswordValReg] = useState("");
+    const [nicknameValReg,setNicknameValReg] = useState("");
     const navigate = useNavigate();
     const [getGameStyle, setGameStyle] = useState({width:"0rem"});
     
@@ -151,6 +154,10 @@ function Header(){
         setPasswordValReg(e.target.value);
         resetRegError();
     }
+    const onChangeNicknameReg = e =>{
+        setNicknameValReg(e.target.value);
+        resetRegError();
+    }
 
     //////////////////////////////////////////////////////////////////
 
@@ -190,12 +197,13 @@ function Header(){
 
     const onClickRegister=()=>{
         
-        register("3fa85f64-5717-4562-b3fc-2c963f66afa6",nameVal,surnameVal,emailVal,loginValReg,passwordValReg,setRegisterStstus);
+        register(nameVal,surnameVal,emailVal,loginValReg,passwordValReg,nicknameValReg,setRegisterStstus);
         setNameVal("");
         setSurnameVal("");
         setEmailVal("");
         setLoginValReg("");
         setPasswordValReg("");
+        setNicknameValReg("");
     }
    ///////////////////////////////////////////////////////////////////
 
@@ -212,6 +220,59 @@ function Header(){
     }
 
    ///////////////////////////////////////////////////////////////////
+
+
+    const addFriendWindow= () =>{
+        const nickname =  Swal.fire({
+            title: 'Dodaj znajomego',
+            background: "#20201E",
+            color: "white",
+            input: 'text',
+            inputLabel: 'Podaj nickname użytkownika',
+            inputPlaceholder: 'nickname',
+            confirmButtonText: "Wyślij zaproszenie",
+            confirmButtonColor: "#C26833"
+          }).then((result)=>{
+            if(result.isConfirmed)
+            {
+                SendInvitation(result.value);
+            }
+          })
+          
+          
+    }
+
+    const pendingFriendWindow = () =>{
+        const MySwal = withReactContent(Swal)
+        GetListOfPendingInvitations().then((result) => {
+
+            if(result!==null)
+            {
+                //console.log(result[0].user1ID);
+                result.map((val,key)=>{
+                    console.log(val.user1ID);
+                })
+                MySwal.fire({
+                    title: 'Oczekujące zaproszenia',
+                    background: "#20201E",
+                    color: "white",
+                    confirmButtonText: "Zamknij",
+                    confirmButtonColor: "#C26833",
+                    html: 
+                        result.map((val,key)=>{
+                            return(val.user1ID);
+                        })
+                    
+                       
+                    
+                    
+                })
+            }
+        });
+
+        
+    }
+
     const[loginVal,setLoginVal] = useState("");
     const[passwordVal,setPasswordnVal] = useState("");
     return(
@@ -302,9 +363,13 @@ function Header(){
             <img className="btn-img" src={friendList} alt=""/>
             <p className='slide-btn-text'>Lista znajomych</p>
         </button>
-        <button className='nav-btn'>
+        <button className='nav-btn' onClick={addFriendWindow}>
             <img className="btn-img" src={addFriend} alt=""/>
             <p className='slide-btn-text'>Dodaj znajomego</p>
+        </button>
+        <button className='nav-btn' onClick={pendingFriendWindow}>
+            <img className="btn-img" src={addFriend} alt=""/>
+            <p className='slide-btn-text'>Oczekujące zaproszenia</p>
         </button>
         </div>
     :
@@ -339,6 +404,7 @@ function Header(){
 
                         <ThemeInput error={isRegisterError} helperText={registerHelperText} id="filled-basic" label="Hasło" variant="outlined" fullWidth  value={passwordValReg} onChange={onChangePasswordReg} type='password'/>
 
+                        <ThemeInput error={isRegisterError} helperText={registerHelperText} id="filled-basic" label="Nickname" variant="outlined" fullWidth  value={nicknameValReg} onChange={onChangeNicknameReg}/>
                         <button className='option-btn' onClick={onClickRegister}>
                             <p className='slide-btn-text'>Rejestruj</p>
                         </button>    

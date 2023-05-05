@@ -1,6 +1,4 @@
-import React from "react";
 import axios from "axios";
-import { useState } from "react";
 import { HostName } from "../HostName";
 import Swal from 'sweetalert2';
 
@@ -47,16 +45,15 @@ export function logout(setIsLogged,setUserName){
         timer: 1500
       })
 }
-export function register(id,name,surname,email,login,password,setRegisterStstus){
+export function register(name,surname,email,login,password,nickname,setRegisterStstus){
     axios.post(HostName+'/api/Account/register',
     {
-        id: id,
         name: name,
         surname: surname,
         email: email,
         login: login,
         password: password,
-        dateCreated: new Date(),
+        nickname: nickname,
     })
     .then(response => {
         setRegisterStstus(response.status);
@@ -70,7 +67,7 @@ export function register(id,name,surname,email,login,password,setRegisterStstus)
           })
     })
     .catch(error =>{
-        setRegisterStstus(error.response.status);
+            setRegisterStstus(error.response.status);
     })
 
 }
