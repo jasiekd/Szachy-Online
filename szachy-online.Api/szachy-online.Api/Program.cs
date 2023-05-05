@@ -22,7 +22,7 @@ namespace szachy_online.Api
             builder.Services.AddCors(options => {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                   policy => {
-                      policy.WithOrigins("http://localhost:7225", "http://localhost:3000")
+                      policy.WithOrigins("http://localhost:7225", "http://25.51.198.141:7225", "http://localhost:3000", "http://25.51.198.141:3000")
                 .AllowAnyHeader()
                 .AllowAnyMethod();
                   });

@@ -120,7 +120,7 @@ body{
     transition: 0.5s ease;
     overflow-x: hidden;
     padding-top: 3rem;
-
+    z-index: 100;
     
 }
 .slide-btn-text{

@@ -3,6 +3,8 @@ import {Chess} from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useEffect } from "react";
 import '../styles/ChessBoard.css';
+import Header from './Header.js';
+
 export default function ChessBoard() {
   const [game, setGame] = useState(new Chess());
   useEffect(()=>{
@@ -38,9 +40,11 @@ export default function ChessBoard() {
   }
 
   return (
-    <div className="chess-board">
-      <Chessboard  position={game.fen()} onPieceDrop={onDrop} />
+    <div className="App">
+      <Header/>
+      <div className="chess-board">
+        <Chessboard  position={game.fen()} onPieceDrop={onDrop} />
+      </div>
     </div>
-  
   );
 }
