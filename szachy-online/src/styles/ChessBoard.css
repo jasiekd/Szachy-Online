@@ -2,5 +2,49 @@
    width: 35vw;
    height: 35vw;
    margin: auto;
-   margin-top:10vh;
+  
+}
+.user-nickname{
+   background-color:#20201E;
+   color:white;
+   font-weight: bolder;
+   padding: 8px;
+}
+.content-row{
+   display: flex;
+   flex-direction: row;
+   gap:16px;
+}
+.first-section{
+   display: flex;
+   flex-direction: column;
+   gap:16px;
+}
+.second-section{
+   
+   background-color:#20201E;
+   width: 20vw;
+}
+.second-section-header{
+   word-break: break-all;
+   padding: 8px;
+   color:white;
+   font-weight: bolder;
+   text-align: center;
+ 
+}
+.second-section-main{
+   max-height: 37vw;
+   overflow-y:scroll;
+}
+.move-pawn-row{
+   display: flex;
+   flex-direction: row;
+   color:white;
+   font-weight: bolder;
+   text-align: center;
+}
+.column{
+   width: 33%;
+   word-break: break-all;
 }
