@@ -1,13 +1,16 @@
  import { useEffect, useState } from "react";
 import FriendController from "../controllers/FriendController";
 
-function PendingInvitationsButtons({acceptInvitation,onGetList,setList,closeList,friendshipID}){
+function PendingInvitationsButtons({acceptInvitation,onRemoveFriend,onGetList,setList,closeList,friendshipID}){
     const onAccept = () =>{
         acceptInvitation(friendshipID,closeList);
+        closeList();
         onRefresh();
     }
     const onReject = () =>{
-        //onRefresh();
+        onRemoveFriend(friendshipID);
+        closeList();
+        onRefresh();
     }
     const onRefresh = () =>{
         onGetList().then((result)=>{

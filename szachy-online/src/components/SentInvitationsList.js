@@ -8,9 +8,10 @@ import AccountController from "../controllers/AccountController";
 import { useState } from "react";
 import FriendController from "../controllers/FriendController";
 
-function SentInvitationButtons({closeList})
+function SentInvitationButtons({closeList,onRemoveFriend,friendshipID})
 {
     const onClickCancle = () =>{
+        onRemoveFriend(friendshipID);
         closeList();
     }
     return(
@@ -18,7 +19,7 @@ function SentInvitationButtons({closeList})
     )
 }
 
-function SentInvitation({getAnyUser,userID,closeList})
+function SentInvitation({getAnyUser,userID,closeList,friendshipID})
 {
     const [userName,setUserName] = useState("");
     useEffect(()=>{
@@ -31,7 +32,7 @@ function SentInvitation({getAnyUser,userID,closeList})
             </div>
             <div>
                 <FriendController>
-                    <SentInvitationButtons closeList={closeList}/>
+                    <SentInvitationButtons closeList={closeList} friendshipID={friendshipID}/>
                 </FriendController>
             </div>
         </div>
@@ -58,7 +59,7 @@ export default function SentInvitationList({open,handleClose,data})
                                 return(
                                     <div key={key}>
                                         <AccountController>
-                                            <SentInvitation userID={val.user2ID} closeList={handleClose} />
+                                            <SentInvitation userID={val.user2ID} friendshipID={val.friendshipID} closeList={handleClose} />
                                         </AccountController>
                                     </div>
                                 )

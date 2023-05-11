@@ -60,9 +60,8 @@ export default function FriendController({children})
         }
     }
     
-    const acceptInvitation = async(invitationID,closeList) =>{
+    const acceptInvitation = async(invitationID) =>{
         const response = await gateway.acceptInvitation(invitationID);
-        closeList();
         if(response.status===200)
         {
             Swal.fire({
