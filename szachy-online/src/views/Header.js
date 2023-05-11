@@ -272,6 +272,19 @@ function Header(){
 
         
     }
+    
+    function fileReader(file){    
+   
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+            var content = reader.result;
+            navigate("/chessBoard",{state:{content}});
+
+        }
+        
+        reader.readAsText(file);    
+    }
 
     const[loginVal,setLoginVal] = useState("");
     const[passwordVal,setPasswordnVal] = useState("");
@@ -347,10 +360,16 @@ function Header(){
         </button>
     </div>
     <div className='option' style={getFileStyle} onMouseOver={showFileOptions}  onMouseOut={hideFileOptions}>
-        <button className='nav-btn'>
+        {/* <button  className='nav-btn' >
             <img className="btn-img" src={continueIcon} alt=""/>
             <p className='slide-btn-text'>Wznów gre z pliku</p>
-        </button>
+        </button> */}
+        <label htmlFor="fileInput"  className='nav-btn'>
+        <img className="btn-img" src={continueIcon} alt=""/>
+        <p className='slide-btn-text'>Wznów gre z pliku</p>
+        </label>
+        <input type="file"  id="fileInput" style={{display:'none'}} accept='.pgn' onChange={(event)=>fileReader(event.target.files[0])}/>
+
         <button className='nav-btn'>
             <img className="btn-img" src={chessHistory} alt=""/>
             <p className='slide-btn-text'>Historia rozgrywki z pliku</p>

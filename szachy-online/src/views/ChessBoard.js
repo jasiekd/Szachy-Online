@@ -4,8 +4,21 @@ import { Chessboard } from "react-chessboard";
 import { useEffect } from "react";
 import '../styles/ChessBoard.css';
 import Header from './Header.js';
+import { useLocation } from "react-router-dom";
+import Swal from 'sweetalert2';
+import withReactContent from "sweetalert2-react-content";
 
 export default function ChessBoard() {
+  const location = useLocation();
+  useEffect(() => {
+    if(location.state) {
+      const gameCopy = { ...game };
+      gameCopy.load_pgn(location.state.content);
+      setGame(gameCopy);
+      fileReadSuccessAlert();
+    }
+  }, [location]);
+
   const [game, setGame] = useState(new Chess());
   const [moveHistory, setMoveHistory] = useState([]);
  
@@ -22,6 +35,7 @@ export default function ChessBoard() {
     const randomIndex = Math.floor(Math.random() * possibleMoves.length);
     makeAMove(possibleMoves[randomIndex]);
     pawnMoves();
+
   }
 
   function onDrop(sourceSquare, targetSquare) {
@@ -44,7 +58,52 @@ export default function ChessBoard() {
     const array2=[...moveHistory,twoLastElements];
     setMoveHistory(array2);
   }
-
+  const fileReadSuccessAlert = () =>{
+    Swal.fire({
+        icon: 'success',
+        background: "#20201E",
+        color: "white",
+        width: "50rem",
+        html:"<div><div style='font-size:2rem; font-weight:800;'>Odczytano rozgrywkę z pliku</div></div>",
+        timer:1000,
+        showConfirmButton: false,
+      })
+  }
+   const fileWriterWarningAlert = () =>{
+    Swal.fire({
+        icon: 'warning',
+        background: "#20201E",
+        color: "white",
+        width: "50rem",
+        html:"<div><div style='font-size:2rem; font-weight:800;'>Aby zapisać rozgrywkę wykonaj ruch</div></div>",
+        showConfirmButton: false,
+      })
+  }
+  const fileWriterSuccessAlert = () =>{
+    Swal.fire({
+        icon: 'success',
+        background: "#20201E",
+        color: "white",
+        width: "50rem",
+        html:"<div><div style='font-size:2rem; font-weight:800;'>Zapisano rozgrywkę do pliku</div></div>",
+        showConfirmButton: false,
+      })
+  }
+  function fileWriter(){
+    
+    if(game.pgn()===''){
+      fileWriterWarningAlert();
+      return;
+    }
+    const element = document.createElement("a");
+    const file = new Blob([game.pgn()], {type: 'text/plain'});
+    
+    element.href = URL.createObjectURL(file);
+    element.download = "rozgrywka.pgn";
+    document.body.appendChild(element);
+    element.click();
+    fileWriterSuccessAlert();
+  }
   return (
     <div className="App">
       <Header/>
@@ -84,7 +143,13 @@ export default function ChessBoard() {
                 }
               
            </div>
+            <div className="second-section-footer">          
+              <button className='nav-btn text-center' onClick={fileWriter}>
+                <p className='btn-text'>Zapisz rozgrywkę</p>
+              </button>
+            </div>
           </div>
+
         </div>
       </main>
     </div>
