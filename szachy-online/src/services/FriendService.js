@@ -4,47 +4,55 @@ import Swal from 'sweetalert2';
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('accessToken')}`;
 
-export function SendInvitation(nickname){
-    axios.get(HostName+'/api/Friends/sendInvitation/'+nickname,
+export default class FriendService{
+    async getListOfPendingInvitationsc(){
+        try{
+            const response = await axios.get(HostName+'/api/Friends/GetListOfPendingInvitations',{});
+            return response;
+        }catch(error)
         {
-        })
-        .then(response => {
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Zaproszenie wysłane',
-                background: "#20201E",
-                showConfirmButton: false,
-                timer: 1500
-              })
-        })
-        .catch(error => {
-            Swal.fire({
-                position: 'center',
-                icon: 'error',
-                title: 'Niepowodzenie',
-                background: "#20201E",
-                showConfirmButton: false,
-                timer: 1500
-              })
-        })
-       
-}
-export async function GetListOfPendingInvitations(){
-    return axios.get(HostName+'/api/Friends/GetListOfPendingInvitations', {})
-        .then(response => {
-            
-            return response.data;
-        })
-        .catch(error => {
-            Swal.fire({
-                position: 'center',
-                icon: 'error',
-                title: 'Błąd pobierania listy zaproszeń',
-                background: "#20201E",
-                showConfirmButton: false,
-                timer: 1500
-              });
-            return null;
-        });
+            return error.response;
+        }
+    }
+    async sendInvitation(nickname){
+        try{
+            const response = await axios.get(HostName+'/api/Friends/sendInvitation/'+nickname,{});
+            return response;
+        }catch(error)
+        {
+            return error.response;
+        }
+    }
+    async acceptInvitation(invitationID){
+        try{
+            const response = await axios.get(HostName+'/api/Friends/acceptInvitation/'+invitationID,{});
+            return response;
+        }catch(error){
+            return error.response;
+        }
+    }
+    async getListOfFriends(){
+        try{
+            const response = await axios.get(HostName+'/api/Friends/GetListOfFriends',{});
+            return response;
+        }catch(error){
+            return error.response;
+        }
+    }
+    async removeFriend(friendID){
+        try{
+            const response = await axios.delete(HostName+'/api/Friends/removeFriend/'+friendID,{});
+            return response;
+        }catch(error){
+            return error.response;
+        }
+    }
+    async getListOfMySentInvitations(){
+        try{
+            const response = await axios.get(HostName+"/api/Friends/GetListOfMySentInvitations",{});
+            return response;
+        }catch(error){
+            return error.response
+        }
+    }
 }

@@ -94,8 +94,8 @@ namespace szachy_online.Api.Controllers
             {
                 return NotFound();
             }
-            //Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            Guid userId = Guid.Parse("0565D667-5484-4432-B761-B8558FF6DC37");
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            //Guid userId = Guid.Parse("0565D667-5484-4432-B761-B8558FF6DC37");
             return await _context.Friends.Where(x => x.User1ID == userId && x.Status == StatusFriendship.Pending.ToString()).ToListAsync();
         }
 
@@ -106,8 +106,8 @@ namespace szachy_online.Api.Controllers
             {
                 return NotFound();
             }
-            //Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            Guid userId = Guid.Parse("A95AC095-3F54-4D7B-B87C-DCAEDE141968");
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            //Guid userId = Guid.Parse("A95AC095-3F54-4D7B-B87C-DCAEDE141968");
             return await _context.Friends.Where(x => (x.User2ID == userId && x.Status == StatusFriendship.Accept.ToString()) || (x.User1ID == userId && x.Status == StatusFriendship.Accept.ToString())).ToListAsync();
         }
 
@@ -118,8 +118,8 @@ namespace szachy_online.Api.Controllers
             {
                 return NotFound();
             }
-            //Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            Guid userId = Guid.Parse("0565D667-5484-4432-B761-B8558FF6DC37");
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            //Guid userId = Guid.Parse("0565D667-5484-4432-B761-B8558FF6DC37");
             FriendsEntity friendsEntity = await _context.Friends.FindAsync(id);
 
             if (friendsEntity == null)
@@ -155,8 +155,8 @@ namespace szachy_online.Api.Controllers
                 return NotFound();
             }
 
-            //Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            Guid userId = Guid.Parse("0565D667-5484-4432-B761-B8558FF6DC37");
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            //Guid userId = Guid.Parse("0565D667-5484-4432-B761-B8558FF6DC37");
 
             if (friendsEntity.User1ID != userId)
             {
