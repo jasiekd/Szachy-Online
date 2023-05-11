@@ -21,7 +21,8 @@
    gap:16px;
 }
 .second-section{
-   
+   display: flex;
+   flex-direction: column;
    background-color:#20201E;
    width: 20vw;
 }
@@ -34,8 +35,14 @@
  
 }
 .second-section-main{
-   max-height: 37vw;
+   max-height: 30vw;
    overflow-y:scroll;
+}
+.second-section-footer{
+   margin-top: auto;
+   display: flex;
+   justify-content: center;
+   background-color: red;
 }
 .move-pawn-row{
    display: flex;
@@ -47,4 +54,12 @@
 .column{
    width: 33%;
    word-break: break-all;
+}
+.text-center{
+   text-align: center;
+   justify-content: center;
+}
+.btn-text{
+   word-break:keep-all;
+   
 }

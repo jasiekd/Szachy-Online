@@ -98,9 +98,6 @@ function Header(){
         
     }
 
-  
-   
-   
     const showHelpWindow = () =>{
         Swal.fire({
             icon: 'question',
@@ -111,19 +108,13 @@ function Header(){
             showConfirmButton: false,
           })
     }
-
-
-
-   
-    
-
     return(
         <>
         <nav className="app-nav">
             <div className="logo">
                 <img className="img-logo" src={imgLogo} alt=""/>
             </div>
-
+            
             <button className="nav-btn" onMouseOver={showGameOptions} onMouseOut={hideGameOptions} onClick={hideAdditionalMenu}>
                 <img className="btn-img" src={imgChess} alt=""/>
                 <p>Graj</p>
