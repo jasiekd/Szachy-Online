@@ -1,6 +1,7 @@
 import React from "react";
 import Home from "../views/Home";
 import ChessBoard from "../views/ChessBoard";
+import ViewHistory from "../views/ViewHistory";
 import {
     createBrowserRouter,
 } from "react-router-dom";
@@ -17,6 +18,11 @@ const router = createBrowserRouter([
     {
         path: "/chessBoard",
         element: <ChessBoard />,
+    }
+    ,
+    {
+        path: "/viewHistory",
+        element: <ViewHistory />,
     }
 ]);
 

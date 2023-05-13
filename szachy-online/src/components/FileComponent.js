@@ -5,13 +5,13 @@ import { useNavigate } from "react-router-dom";
 export default function FileComponent({getStyle,show,hide})
 {
     const navigate = useNavigate()
-    function fileReader(file){    
-   
+    function fileReader(file,path){    
+        console.log(path);
         var reader = new FileReader();
         
         reader.onload = function(e) {
             var content = reader.result;
-            navigate("/chessBoard",{state:{content}});
+            navigate(path,{state:{content}});
 
         }
         
@@ -25,15 +25,21 @@ export default function FileComponent({getStyle,show,hide})
             <p className='slide-btn-text'>Wznów gre z pliku</p>
         </button> */}
         <label htmlFor="fileInput"  className='nav-btn'>
-        <img className="btn-img" src={continueIcon} alt=""/>
-        <p className='slide-btn-text'>Wznów gre z pliku</p>
+            <img className="btn-img" src={continueIcon} alt=""/>
+            <p className='slide-btn-text'>Wznów gre z pliku</p>
         </label>
-        <input type="file"  id="fileInput" style={{display:'none'}} accept='.pgn' onChange={(event)=>fileReader(event.target.files[0])}/>
-
+        <input type="file"  id="fileInput" style={{display:'none'}} accept='.pgn' onChange={(event)=>fileReader(event.target.files[0],'/chessBoard')}/>
+        
+        <label htmlFor="fileInput2"  className='nav-btn'>
+            <img className="btn-img" src={chessHistory} alt=""/>
+            <p className='slide-btn-text'>Historia rozgrywki z pliku</p>
+        </label>
+        <input type="file"  id="fileInput2" style={{display:'none'}} accept='.pgn' onChange={(event)=>fileReader(event.target.files[0],'/viewHistory')}/>
+{/*         
         <button className='nav-btn'>
             <img className="btn-img" src={chessHistory} alt=""/>
             <p className='slide-btn-text'>Historia rozgrywki z pliku</p>
-        </button>
+        </button> */}
         </div>
 
     )
