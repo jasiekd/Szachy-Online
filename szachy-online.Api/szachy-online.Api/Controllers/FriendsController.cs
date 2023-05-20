@@ -26,10 +26,10 @@ namespace szachy_online.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FriendsEntity>>> GetFriends()
         {
-          if (_context.Friends == null)
-          {
-              return NotFound();
-          }
+            if (_context.Friends == null)
+            {
+                return NotFound();
+            }
             return await _context.Friends.ToListAsync();
         }
 
@@ -37,10 +37,10 @@ namespace szachy_online.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<FriendsEntity>> GetFriendsEntity(long id)
         {
-          if (_context.Friends == null)
-          {
-              return NotFound();
-          }
+            if (_context.Friends == null)
+            {
+                return NotFound();
+            }
             var friendsEntity = await _context.Friends.FindAsync(id);
 
             if (friendsEntity == null)
@@ -50,6 +50,7 @@ namespace szachy_online.Api.Controllers
 
             return friendsEntity;
         }
+
 
         [HttpGet("sendInvitation/{nickname}")]
         public async Task<IActionResult> SendInvitation(string nickname)

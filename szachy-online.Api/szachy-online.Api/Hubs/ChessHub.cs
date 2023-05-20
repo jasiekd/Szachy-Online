@@ -9,5 +9,13 @@ namespace szachy_online.Api.Hubs
         {
             await Clients.All.SendAsync("ReceiveComputerMove", move);
         }
+        public async Task OfferDraw(string receiverGuid) 
+        {
+            await Clients.All.SendAsync(receiverGuid, "Draw");
+        }
+        public async Task CancelDraw(string receiverGuid)
+        {
+            await Clients.All.SendAsync(receiverGuid, "CancelDraw");
+        }
     }
 }

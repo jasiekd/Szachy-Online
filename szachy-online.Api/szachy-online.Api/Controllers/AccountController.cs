@@ -79,25 +79,35 @@ namespace szachy_online.Api.Controllers
             return Ok(temp);
         }
 
-        [HttpGet("findByNickname/{nickname}")]
-        public async Task<IActionResult> FindByNickname(string nickname)
+        [HttpPost("findByNickname")]
+        public async Task<ActionResult<IEnumerable<UserInfoDto>>> FindByNickname(string nickname)
         {
 
-            if(!NicknameExists(nickname))
+            if (string.IsNullOrEmpty(nickname) || nickname.Length <= 1)
             {
-                return NotFound(nickname);
+                return BadRequest("Nickname must be longer than 2 characters.");
             }
 
 
-            AccountEntity accountEntity = await _context.Accounts.FirstOrDefaultAsync(x => x.Nickname == nickname);
-
-            UserInfoDto temp = new UserInfoDto
+            var ListOfFoundNicknames = await _context.Accounts.Where(x => x.Nickname.Contains(nickname)).ToListAsync();
+            if(ListOfFoundNicknames.Count == 0)
             {
-                Name = accountEntity.Name,
-                Surname = accountEntity.Surname,
-            };
+                return NotFound("No accounts found with the provided nickname.");
+            }
+            
+            List<UserInfoDto> nicknames = new List<UserInfoDto>();
+            foreach(var account in ListOfFoundNicknames)
+            {
+                nicknames.Add(new UserInfoDto
+                    {
+                        Name = account.Name,
+                        Surname = account.Surname,
+                        Nickname = account.Nickname,
+                    }
+                ); 
+            }
 
-            return Ok(temp);
+            return Ok(nicknames);
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

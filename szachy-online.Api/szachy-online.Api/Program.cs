@@ -97,6 +97,7 @@ namespace szachy_online.Api
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<ChessHub>("/chesshub");
+                endpoints.MapHub<InvitationHub>("/invHub");
             });
 
 
