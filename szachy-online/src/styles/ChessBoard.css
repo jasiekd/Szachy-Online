@@ -11,6 +11,8 @@
    padding: 8px;
 }
 .content-row{
+   word-break:keep-all;
+
    display: flex;
    flex-direction: row;
    gap:16px;
@@ -77,4 +79,10 @@
 .second-section-btn:hover{
    background-color: #2d2d2c;
    cursor: pointer;
+}
+
+.turn-information-section{
+   color:white;
+   word-break:keep-all;
+   font-size: clamp(1rem, 1.5rem, 2rem);
 }

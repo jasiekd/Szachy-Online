@@ -9,7 +9,7 @@ export default function GameComponent({getStyle,show,hide,showOHH,showTHH,showTH
                 <img className="btn-img" src={onlineHumanHuman} alt=""/>
                 <p className='slide-btn-text'>Online Człowiek - Człowiek</p>
             </button>
-            <button className='nav-btn' >
+            <button className='nav-btn' onClick={showTHH}>
                 <img className="btn-img" src={localHumanHuman} alt=""/>
                 <p className='slide-btn-text'>Turowo Człowiek - Człowiek</p>
             </button>

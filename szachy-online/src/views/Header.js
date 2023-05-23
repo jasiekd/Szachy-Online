@@ -13,6 +13,7 @@ import RegisterComponent from "../components/RegisterComponent";
 import RegisterController from "../controllers/RegisterController";
 import FriendsComponent from "../components/FriendsComponent";
 import GameOptionsHHComponent from "../components/GameOptionsHHComponent";
+import GameOptionsTHHComponent from "../components/GameOptionsTHHComponent";
 import GameComponent from "../components/GameComponent";
 import FileComponent from "../components/FileComponent";
 import FriendController from "../controllers/FriendController";
@@ -86,6 +87,10 @@ function Header(){
         hideGameOptions();
         showHumanHuman();
     }
+    const showTurnbasedHumanHumanOptions=()=>{
+        hideGameOptions();
+        showTurnbasedHumanHuman();
+    }
 
     const [getHumanHumanOptionsStyle,setHumanHumanOptionsStyle] = useState({width:"0rem"});
     const showHumanHuman=() =>{
@@ -95,8 +100,15 @@ function Header(){
 
     const hideAdditionalMenu=()=>{
         setHumanHumanOptionsStyle({width:"0rem"});
+        setTurnbasedHumanHumanOptionsStyle({width:"0rem"});
         
     }
+    const [getTurnbasedHumanHumanOptionsStyle,setTurnbasedHumanHumanOptionsStyle] = useState({width:"0rem"});
+    const showTurnbasedHumanHuman=() =>{
+        setTurnbasedHumanHumanOptionsStyle({width:"55rem"});
+    }
+   
+
 
     const showHelpWindow = () =>{
         Swal.fire({
@@ -162,7 +174,7 @@ function Header(){
             }
         </nav>
 
-        <GameComponent getStyle={getGameStyle} show={showGameOptions} hide={hideGameOptions} showOHH={showHumanHumanOptions}/>
+        <GameComponent getStyle={getGameStyle} show={showGameOptions} hide={hideGameOptions} showOHH={showHumanHumanOptions} showTHH={showTurnbasedHumanHumanOptions}/>
         <FileComponent getStyle={getFileStyle} show={showFileOptions} hide={hideFileOptions}/>
         {
         checkIsLogged()?
@@ -189,6 +201,7 @@ function Header(){
         null
         }
         <GameOptionsHHComponent getStyle={getHumanHumanOptionsStyle} hide={hideAdditionalMenu}/>
+        <GameOptionsTHHComponent getStyle={getTurnbasedHumanHumanOptionsStyle} hide={hideAdditionalMenu}/>
         
 </>
     );

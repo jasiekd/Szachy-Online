@@ -4,17 +4,35 @@ import { Chessboard } from "react-chessboard";
 import { useEffect } from "react";
 import '../styles/ChessBoard.css';
 import Header from './Header.js';
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
 import withReactContent from "sweetalert2-react-content";
+import { useNavigate } from "react-router-dom";
+import winnerIcon from "../img/winner.png";
 
 export default function ChessBoard() {
   const location = useLocation();
+  const navigate = useNavigate()
+
   const [moveHistory, setMoveHistory] = useState([]);
 
+  const [nickname,setNickname] = useState("");
+  const [nicknameSecondPlayer,setNicknameSecondPlayer] = useState("");
+  const [turn,setTurn]= useState('Tura białych');
 
   useEffect(() => {
-    if(location.state) {
+    if(!location.state){
+        navigate("/");
+    }
+    if(location.state.nick) {
+        setNickname(location.state.nick);
+        setTurn("Tura gracza "+location.state.nick);
+    }
+    if(location.state.secondNick) setNicknameSecondPlayer(location.state.secondNick);
+
+
+    
+    if(location.state.content) {
       const gameCopy = { ...game };
       gameCopy.load_pgn(location.state.content);
       setGame(gameCopy);
@@ -54,27 +72,7 @@ export default function ChessBoard() {
 
   
 
-  function makeRandomMove() {
-    const possibleMoves = game.moves();
-    if (game.game_over()) {
-      console.log('przegrana');
-      return;
-    } 
-    if (game.in_draw()) {
-      console.log('remis');
-
-      return;
-    } 
-    if (possibleMoves.length === 0) {
-      console.log('koniec ruchów');
-
-      return;
-    } 
-    const randomIndex = Math.floor(Math.random() * possibleMoves.length);
-    makeAMove(possibleMoves[randomIndex]);
-    pawnMoves();
-
-  }
+  
 
   function onDrop(sourceSquare, targetSquare) {
     
@@ -83,10 +81,69 @@ export default function ChessBoard() {
       to: targetSquare,
       promotion: "q", // always promote to a queen for example simplicity
     });
-    //game.move({ from: 'g7', to: 'g6' })
+    let winner;
+    if(game.turn()==='w'){
+        game.turn('b');
+        // setTurn("Tura białych");
+        winner=nicknameSecondPlayer;
+        setTurn("Tura gracza "+ nickname);
+
+    }
+    else{
+    game.turn('w');
+    // setTurn("Tura czarnych");
+    winner=nickname;
+    setTurn("Tura gracza "+ nicknameSecondPlayer);
+
+    }
+
     // illegal move
     if (move === null) return false;
-    setTimeout(makeRandomMove, 200);
+
+    var imageElement = document.createElement('img');
+    imageElement.src = winnerIcon;
+    imageElement.style.width = '100%';
+    imageElement.style.height = '90%';
+    const possibleMoves = game.moves();
+    
+    if (game.game_over()) {
+        Swal.fire({
+            position: 'center',
+            color:'white',
+            html: imageElement.outerHTML+('<p>Wygrał gracz '+winner+'</p>'),
+            background: "#20201E",
+            showConfirmButton: true,
+    
+        })
+        return;
+      } 
+      if (game.in_draw()) {
+        Swal.fire({
+            position: 'center',
+            icon: 'warning',
+            title: 'Remis',
+            color:'white',
+            background: "#20201E",
+            showConfirmButton: true,
+        })
+        return;
+      } 
+      if (possibleMoves.length === 0) {
+        Swal.fire({
+            position: 'center',
+            icon: 'warning',
+            title: 'Koniec ruchów',
+            color:'white',
+            background: "#20201E",
+            showConfirmButton: true,
+        })
+        return;
+      } 
+
+
+
+
+    if(game.turn()==='w')  pawnMoves();
     return true;
   }
   function pawnMoves(){
@@ -147,16 +204,21 @@ export default function ChessBoard() {
     <div className="App">
       <Header/>
       <main className="content">
+
+        <div className="turn-information-section">
+            <p>{turn}</p>
+        </div>
         <div className="content-row">
           <div className="first-section">
+            
             <div className="user-nickname">
-              <p>Makrol</p>
+              <p>{nickname}</p>
             </div>
             <div className="chess-board">
               <Chessboard  position={game.fen()} onPieceDrop={onDrop} />
             </div>
             <div className="user-nickname">
-              <p>Zetux</p>
+              <p>{nicknameSecondPlayer}</p>
             </div>
           </div>
           <div className="second-section">
@@ -164,8 +226,8 @@ export default function ChessBoard() {
                 <p>Ruchy pionków:</p>
                 <div className="move-pawn-row">
                   <p className="column">lp.</p>
-                  <p className="column">Zetux</p>
-                  <p className="column">Makrol</p>
+                  <p className="column">{nickname}</p>
+                  <p className="column">{nicknameSecondPlayer}</p>
                 </div>
             </div>
             <div className="second-section-main">
