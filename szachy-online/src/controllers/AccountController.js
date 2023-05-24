@@ -4,15 +4,7 @@ import Swal from "sweetalert2";
 export default function AccountController({children})
 {
     const gateway = new AccountService();
-
-    const getAnyUser = async(userId,setUserName) => {
-        const response = await gateway.getAnyUser(userId);
-
-        if(response.status === 200)
-        {
-            setUserName(response.data.nickname);
-        } 
-    }
+    
     const getUser = async() => {
         const response = await gateway.getUser();
 
@@ -47,7 +39,6 @@ export default function AccountController({children})
     }
 
     return React.cloneElement(children,{
-        getAnyUser,
         getUser,
         findByNickName,
     })

@@ -29,19 +29,11 @@ function PendingInvitationsButtons({acceptInvitation,onRemoveFriend,onGetList,se
     )
 }
 
-export default function PendingInvitations({getAnyUser,data,setList,closeList,friendshipID}){
-
-    const [userName,setUserName] = useState("");
-    useEffect(()=>{
-        getAnyUser(data,setUserName);
-    },[])
-  
-
-
+export default function PendingInvitations({nick,setList,closeList,friendshipID}){
     return (
         <div className="friendElementOnList">
             <div>
-                {userName}
+                {nick}
             </div>
             <div>
                 <FriendController>

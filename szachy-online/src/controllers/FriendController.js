@@ -90,6 +90,7 @@ export default function FriendController({children})
         const response = await gateway.getListOfFriends();
         if(response.status === 200)
         {
+            console.log(response.data);
             return response.data;
         }
         else{

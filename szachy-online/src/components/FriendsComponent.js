@@ -55,7 +55,7 @@ export default function FriendsComponent({onGetSentList,onGetList,onGetFriendsLi
     };
     const openMyFriendsList = () =>{
         onGetFriendsList().then((result)=>{
-           
+           console.log(result);
             setOpenMyFriends(true);
             setMyFriendListData(result);
         })

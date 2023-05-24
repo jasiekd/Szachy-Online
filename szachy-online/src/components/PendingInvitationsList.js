@@ -4,10 +4,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-import AccountController from "../controllers/AccountController";
 import PendingInvitations from "./PendingInvitations";
-import { useState } from "react";
+
 
 
 export default function PendingInvitationsList({open,handleClose,data,setData})
@@ -27,13 +25,19 @@ export default function PendingInvitationsList({open,handleClose,data,setData})
                     {
                         data?
                             data.map((val,key)=>{
-                                return(
-                                    <div key={key}>
-                                        <AccountController>
-                                            <PendingInvitations data={val.user1ID} friendshipID={val.friendshipID} closeList={handleClose} setList={setData}/>
-                                        </AccountController>
-                                    </div>
-                                )
+                                if(localStorage.uid === val.userId1)
+                                {
+                                    return(
+                                        <PendingInvitations nick={val.user2Nickname} friendshipID={val.friendshipId} closeList={handleClose} setList={setData} key={key}/>
+                                    )
+                                }
+                                else
+                                {
+                                    return(
+                                        <PendingInvitations nick={val.user1Nickname} friendshipID={val.friendshipId} closeList={handleClose} setList={setData} key={key}/>
+                                    )
+                                }
+                                
                             })
                         :
                         null

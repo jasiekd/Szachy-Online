@@ -4,8 +4,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import AccountController from "../controllers/AccountController";
-import { useState } from "react";
 import FriendController from "../controllers/FriendController";
 import '../styles/FriendsStyle.css';
 function SentInvitationButtons({closeList,onRemoveFriend,friendshipID})
@@ -19,16 +17,13 @@ function SentInvitationButtons({closeList,onRemoveFriend,friendshipID})
     )
 }
 
-function SentInvitation({getAnyUser,userID,closeList,friendshipID})
+function SentInvitation({nick,closeList,friendshipID})
 {
-    const [userName,setUserName] = useState("");
-    useEffect(()=>{
-        getAnyUser(userID,setUserName);
-    },[])
+   
     return(
         <div className="friendElementOnList">
             <div>
-                {userName}
+                {nick}
             </div>
             <div>
                 <FriendController>
@@ -56,13 +51,17 @@ export default function SentInvitationList({open,handleClose,data})
                     {
                         data?
                             data.map((val,key)=>{
-                                return(
-                                    <div key={key}>
-                                        <AccountController>
-                                            <SentInvitation userID={val.user2ID} friendshipID={val.friendshipID} closeList={handleClose} />
-                                        </AccountController>
-                                    </div>
-                                )
+                                if(localStorage.uid === val.userId1)
+                                {
+                                    return(
+                                        <div key={key}>
+                                                <SentInvitation nick={val.user2Nickname} friendshipID={val.friendshipId} closeList={handleClose} key={key}/>
+                                        </div>
+                                    )
+                                }else{
+                                                <SentInvitation nick={val.user1Nickname} friendshipID={val.friendshipId} closeList={handleClose} key={key}/>
+                                }
+                               
                             })
                         :
                         null

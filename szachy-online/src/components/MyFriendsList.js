@@ -4,8 +4,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useEffect, useState } from 'react';
-import AccountController from "../controllers/AccountController";
 import FriendController from "../controllers/FriendController";
 import "../styles/FriendsStyle.css"
 function MyFriendsButtons ({onRemoveFriend,closeList,friendshipID}){
@@ -18,20 +16,16 @@ function MyFriendsButtons ({onRemoveFriend,closeList,friendshipID}){
     )
 }
 
-function MyFriend ({getAnyUser,userID,closeList,friendshipID})
+function MyFriend ({closeList,friendshipID,nick})
 {
-    const [userName,setUserName] = useState("");
-    useEffect(()=>{
-        getAnyUser(userID,setUserName);
-    },[])
     return(
         <div className="friendElementOnList">
             <div>
-                {userName}
+                {nick}
             </div>
             <div>
                 <FriendController>
-                    <MyFriendsButtons closeList={closeList} userID={userID} friendshipID={friendshipID}/>
+                    <MyFriendsButtons closeList={closeList} friendshipID={friendshipID}/>
                 </FriendController>
             </div>
         </div>
@@ -54,13 +48,18 @@ export default function MyFriendsList({open,handleClose,data})
                     {
                         data?
                             data.map((val,key)=>{
-                                return(
-                                    <div key={key}>
-                                        <AccountController>
-                                            <MyFriend friendshipID={val.friendshipID} userID={val.user1ID} closeList={handleClose}/>
-                                        </AccountController>
-                                    </div>
-                                )
+                                if(localStorage.uid === val.userId1)
+                                {
+                                    return(
+                                                <MyFriend friendshipID={val.friendshipId} nick={val.user2Nickname} closeList={handleClose} key={key}/>
+                                    )
+                                }
+                                else{
+                                    return(
+                                                <MyFriend friendshipID={val.friendshipId} nick={val.user1Nickname} closeList={handleClose} key={key}/>
+                                    )
+                                }
+                               
                             })
                         :
                         null    
