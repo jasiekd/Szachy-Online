@@ -74,6 +74,7 @@ namespace szachy_online.Api.Controllers
             UserInfoDto temp = new UserInfoDto { 
                 Name = accountEntity.Name,
                 Surname = accountEntity.Surname,
+                Nickname = accountEntity.Nickname,
             };
 
             return Ok(temp);

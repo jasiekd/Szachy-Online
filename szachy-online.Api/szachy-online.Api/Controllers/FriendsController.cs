@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using szachy_online.Api.Data;
+using szachy_online.Api.Dto;
 using szachy_online.Api.Entities;
 
 namespace szachy_online.Api.Controllers
@@ -77,7 +78,7 @@ namespace szachy_online.Api.Controllers
         }
 
         [HttpGet("GetListOfPendingInvitations")]
-        public async Task<ActionResult<IEnumerable<FriendsEntity>>> GetListOfPendingInvitations()
+        public async Task<ActionResult<IEnumerable<FriendshipInfoDto>>> GetListOfPendingInvitations()
         {
             if (_context.Friends == null)
             {
@@ -85,11 +86,28 @@ namespace szachy_online.Api.Controllers
             }
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             //Guid userId = Guid.Parse("0565D667-5484-4432-B761-B8558FF6DC37");
-            return await _context.Friends.Where(x => x.User2ID == userId && x.Status == StatusFriendship.Pending.ToString()).ToListAsync();
+
+            var friendships = await _context.Friends
+                .Where(x => (x.User2ID == userId && x.Status == StatusFriendship.Pending.ToString()))
+                .Include(x => x.User1).Include(x => x.User2).Select(z => new FriendshipInfoDto
+                {
+                    FriendshipId = z.FriendshipID,
+                    UserId1 = z.User1ID,
+                    User1Name = z.User1.Name,
+                    User1Surname = z.User1.Surname,
+                    User1Nickname = z.User1.Nickname,
+                    UserId2 = z.User2ID,
+                    User2Name = z.User2.Name,
+                    User2Surname = z.User2.Surname,
+                    User2Nickname = z.User2.Nickname,
+                    DateModified = z.DateModified,
+                }).ToListAsync();
+
+            return friendships;
         }
 
         [HttpGet("GetListOfMySentInvitations")]
-        public async Task<ActionResult<IEnumerable<FriendsEntity>>> GetListOfMySentInvitations()
+        public async Task<ActionResult<IEnumerable<FriendshipInfoDto>>> GetListOfMySentInvitations()
         {
             if (_context.Friends == null)
             {
@@ -97,19 +115,54 @@ namespace szachy_online.Api.Controllers
             }
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             //Guid userId = Guid.Parse("0565D667-5484-4432-B761-B8558FF6DC37");
-            return await _context.Friends.Where(x => x.User1ID == userId && x.Status == StatusFriendship.Pending.ToString()).ToListAsync();
+
+            var friendships = await _context.Friends
+                .Where(x => (x.User1ID == userId && x.Status == StatusFriendship.Pending.ToString()))
+                .Include(x => x.User1).Include(x => x.User2).Select(z => new FriendshipInfoDto
+                {
+                    FriendshipId = z.FriendshipID,
+                    UserId1 = z.User1ID,
+                    User1Name = z.User1.Name,
+                    User1Surname = z.User1.Surname,
+                    User1Nickname = z.User1.Nickname,
+                    UserId2 = z.User2ID,
+                    User2Name = z.User2.Name,
+                    User2Surname = z.User2.Surname,
+                    User2Nickname = z.User2.Nickname,
+                    DateModified = z.DateModified,
+                }).ToListAsync();
+
+            return friendships;
         }
 
         [HttpGet("GetListOfFriends")]
-        public async Task<ActionResult<IEnumerable<FriendsEntity>>> GetListOfFriends()
+        public async Task<ActionResult<IEnumerable<FriendshipInfoDto>>> GetListOfFriends()
         {
             if (_context.Friends == null)
             {
                 return NotFound();
             }
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            //Guid userId = Guid.Parse("A95AC095-3F54-4D7B-B87C-DCAEDE141968");
-            return await _context.Friends.Where(x => (x.User2ID == userId && x.Status == StatusFriendship.Accept.ToString()) || (x.User1ID == userId && x.Status == StatusFriendship.Accept.ToString())).ToListAsync();
+
+
+            //Guid userId = Guid.Parse("26E9E04F-3E34-4FDA-8147-377B62B031A1");
+            var friendships = await _context.Friends
+                .Where(x => (x.User2ID == userId && x.Status == StatusFriendship.Accept.ToString()) ||
+                (x.User1ID == userId && x.Status == StatusFriendship.Accept.ToString())).Include(x => x.User1).Include(x => x.User2).Select(z => new FriendshipInfoDto
+                {
+                    FriendshipId = z.FriendshipID,
+                    UserId1 = z.User1ID,
+                    User1Name = z.User1.Name,
+                    User1Surname = z.User1.Surname,
+                    User1Nickname = z.User1.Nickname,
+                    UserId2 = z.User2ID,
+                    User2Name = z.User2.Name,
+                    User2Surname = z.User2.Surname,
+                    User2Nickname = z.User2.Nickname,
+                    DateModified = z.DateModified,
+                }).ToListAsync();
+
+            return friendships;      
         }
 
         [HttpGet("acceptInvitation/{id}")]
