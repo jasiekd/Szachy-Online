@@ -19,6 +19,7 @@ export default function AccountController({children})
         if(response.status === 200)
         {
             return response.data;
+            
         }
         else{
             Swal.fire({
@@ -31,8 +32,23 @@ export default function AccountController({children})
               })
         }
     }
+
+    const findByNickName = async(nickname) =>{
+        const response = await gateway.findByNickName(nickname);
+
+        if(response.status === 200)
+        {
+            return response.data;
+        }
+        else{
+           
+            return [];
+        }
+    }
+
     return React.cloneElement(children,{
         getAnyUser,
-        getUser
+        getUser,
+        findByNickName,
     })
 }

@@ -14,12 +14,12 @@ export default function PendingInvitationsList({open,handleClose,data,setData})
 {
     return(
         <Dialog
-
+                sx={{ '& .MuiDialog-paper': { background:'#1d1d1b' }}}
                 open={open}
                 onClose={handleClose}
                 maxWidth
             >
-                <DialogTitle>
+                <DialogTitle style={{color:"white"}}>
                 {"Oczekujące zaproszenia"}
                 </DialogTitle>
                 <DialogContent>
@@ -44,7 +44,7 @@ export default function PendingInvitationsList({open,handleClose,data,setData})
                 </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <button onClick={handleClose}>Zamknij</button>
+                    <button onClick={handleClose} className='option-btn'>Zamknij</button>
                 </DialogActions>
             </Dialog>
     )

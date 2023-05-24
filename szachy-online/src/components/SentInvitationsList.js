@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import AccountController from "../controllers/AccountController";
 import { useState } from "react";
 import FriendController from "../controllers/FriendController";
-
+import '../styles/FriendsStyle.css';
 function SentInvitationButtons({closeList,onRemoveFriend,friendshipID})
 {
     const onClickCancle = () =>{
@@ -15,7 +15,7 @@ function SentInvitationButtons({closeList,onRemoveFriend,friendshipID})
         closeList();
     }
     return(
-        <button onClick={()=>onClickCancle()}>Anuluj</button>
+        <button onClick={()=>onClickCancle()} className="option-btn friends-btn-reject">Anuluj</button>
     )
 }
 
@@ -26,7 +26,7 @@ function SentInvitation({getAnyUser,userID,closeList,friendshipID})
         getAnyUser(userID,setUserName);
     },[])
     return(
-        <div style={{display:"flex"}}>
+        <div className="friendElementOnList">
             <div>
                 {userName}
             </div>
@@ -43,12 +43,12 @@ export default function SentInvitationList({open,handleClose,data})
 {
     return(
         <Dialog
-
+                sx={{ '& .MuiDialog-paper': { background:'#1d1d1b' }}}
                 open={open}
                 onClose={handleClose}
                 maxWidth
             >
-                <DialogTitle>
+                <DialogTitle style={{color:"white"}}>
                 {"Wysłane zaproszenia"}
                 </DialogTitle>
                 <DialogContent>
@@ -71,7 +71,7 @@ export default function SentInvitationList({open,handleClose,data})
                 </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <button onClick={handleClose}>Zamknij</button>
+                    <button onClick={handleClose} className='option-btn'>Zamknij</button>
                 </DialogActions>
             </Dialog>
     )

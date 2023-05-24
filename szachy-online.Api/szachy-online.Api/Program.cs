@@ -24,7 +24,9 @@ namespace szachy_online.Api
                   policy => {
                       policy.WithOrigins("http://localhost:7225", "http://25.51.198.141:7225", "http://localhost:3000", "http://25.51.198.141:3000")
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .WithMethods("GET","POST")
+                .AllowAnyMethod()
+                .AllowCredentials();
                   });
             });
 

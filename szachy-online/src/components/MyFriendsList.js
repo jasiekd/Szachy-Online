@@ -7,14 +7,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from 'react';
 import AccountController from "../controllers/AccountController";
 import FriendController from "../controllers/FriendController";
-
+import "../styles/FriendsStyle.css"
 function MyFriendsButtons ({onRemoveFriend,closeList,friendshipID}){
     const onClickRemove = () => {
         onRemoveFriend(friendshipID);
         closeList();
     }
     return(
-        <button onClick={()=>onClickRemove()}>Usuń</button>
+        <button className="option-btn friends-btn-reject" onClick={()=>onClickRemove()}>Usuń</button>
     )
 }
 
@@ -25,7 +25,7 @@ function MyFriend ({getAnyUser,userID,closeList,friendshipID})
         getAnyUser(userID,setUserName);
     },[])
     return(
-        <div style={{display:"flex"}}>
+        <div className="friendElementOnList">
             <div>
                 {userName}
             </div>
@@ -41,12 +41,12 @@ export default function MyFriendsList({open,handleClose,data})
 {
     return(
         <Dialog
-
+                sx={{ '& .MuiDialog-paper': { background:'#1d1d1b' }}}
                 open={open}
                 onClose={handleClose}
                 maxWidth
             >
-                <DialogTitle>
+                <DialogTitle style={{color:"white"}}>
                 {"Moi Znajomi"}
                 </DialogTitle>
                 <DialogContent>
@@ -69,7 +69,7 @@ export default function MyFriendsList({open,handleClose,data})
                 </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <button onClick={handleClose}>Zamknij</button>
+                    <button className="option-btn" onClick={handleClose}>Zamknij</button>
                 </DialogActions>
             </Dialog>
     )

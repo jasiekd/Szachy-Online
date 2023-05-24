@@ -156,6 +156,11 @@ body{
     background-color: #9c5328;
     color: rgb(192, 192, 192);
 }
+.option-btn:disabled{
+    cursor: auto;
+    background-color: #a57f69;
+    color: rgb(185, 185, 185);
+}
 .friend-select{
     width: 20rem;
     border-radius: 1rem;

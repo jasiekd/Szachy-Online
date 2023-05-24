@@ -18,6 +18,7 @@ import GameComponent from "../components/GameComponent";
 import FileComponent from "../components/FileComponent";
 import FriendController from "../controllers/FriendController";
 import AccountController from "../controllers/AccountController";
+import GameController from "../controllers/GameController";
 
 
 function LoggeAs({getUser}){
@@ -200,7 +201,9 @@ function Header(){
         :
         null
         }
+        <GameController>
         <GameOptionsHHComponent getStyle={getHumanHumanOptionsStyle} hide={hideAdditionalMenu}/>
+        </GameController>
         <GameOptionsTHHComponent getStyle={getTurnbasedHumanHumanOptionsStyle} hide={hideAdditionalMenu}/>
         
 </>

@@ -20,5 +20,12 @@ export default class AccountService{
             return error.response;
         }
     }
-    
+    async findByNickName(nickname){
+        try{
+            const response = await axios.post(HostName+'/api/Account/findByNickname?nickname='+nickname,{})
+            return response;
+        }catch(error){
+            return error.response;
+        }
+    }  
 }
