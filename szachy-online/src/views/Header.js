@@ -174,8 +174,10 @@ function Header(){
                     null
             }
         </nav>
-
-        <GameComponent getStyle={getGameStyle} show={showGameOptions} hide={hideGameOptions} showOHH={showHumanHumanOptions} showTHH={showTurnbasedHumanHumanOptions}/>
+        <GameController>
+            <GameComponent getStyle={getGameStyle} show={showGameOptions} hide={hideGameOptions} showOHH={showHumanHumanOptions} showTHH={showTurnbasedHumanHumanOptions}/>
+        </GameController>
+        
         <FileComponent getStyle={getFileStyle} show={showFileOptions} hide={hideFileOptions}/>
         {
         checkIsLogged()?

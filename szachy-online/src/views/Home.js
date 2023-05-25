@@ -6,13 +6,22 @@ import queen from '../img/queen.png';
 import bishop from '../img/bishop.png';
 import horse from '../img/horse.png';
 import rook from '../img/rook.png';
-
+import { checkIsLogged} from "../controllers/LoginController";
 import Header from './Header.js';
+import { useEffect } from 'react';
 
-function Home() {
-    
+function Home({createConnectToInvHub,startConnectionToInvHub,invateHubConection}) {
+    /*useEffect(()=>{
+            console.log("dziala1");
+            createConnectToInvHub();  
+    },[])
+
+    useEffect(()=>{
+        console.log("dziala2");
+        startConnectionToInvHub();
+    },[invateHubConection])
  
-    
+    */
 
    
     

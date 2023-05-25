@@ -6,15 +6,16 @@ import TurnbasedGameplay from "../views/TurnbasedGameplay";
 import {
     createBrowserRouter,
 } from "react-router-dom";
+import GameController from "../controllers/GameController";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Home />,
+        element: <GameController><Home/></GameController>,
     },
     {
         path: "/home",
-        element: <Home />,
+        element: <GameController><Home/></GameController>,
     },
     {
         path: "/chessBoard",

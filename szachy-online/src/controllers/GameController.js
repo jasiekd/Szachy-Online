@@ -1,39 +1,34 @@
 import React, { useState } from "react"
-import { HubConnection,HubConnectionBuilder,LogLevel } from "@microsoft/signalr"
-import axios from "axios"
+import InvHub from "../services/GameServices";
 export default function GameController({children})
 {
-    const [gameHubConection,setGameHubConection] = useState(null);
-    const createGame = () =>{
-        const response = axios.get("https://localhost:7225/api/Game/CreateGameWithComputer")
-        console.log(response);
-    }
-    const createConnectToChessHub = () =>{
-        const hubConnection = new HubConnectionBuilder()
-        .withUrl('https://localhost:7225/chesshub')
-        .withAutomaticReconnect()
-        .build();
+    //const [handleOpenInvate,setHandleOPenInvate] = useState(null);
+    //const [handleCloseInvate,setHandleCloseInvate] = useState(null);
+    const invHubInstance =  new InvHub();
+   
+  
 
-        setGameHubConection(hubConnection)
-        startConnectionToChessHub()
-
+    const receiveInvate = (senderUid,color) =>{
+        InvHub.senderUid = senderUid;
+        InvHub.color = color;
+        InvHub.openInvate();
     }
-    const startConnectionToChessHub = () =>{
-        console.log("1")
-        if(gameHubConection){
-            console.log("2")
-            
-            gameHubConection.start()
-                .then(result =>{
-                    console.log("Conected");
-                })
-                .catch(error =>{
-                    console.log("Error");
-                    console.log(error)
-                })
-        }
+    const invateToGame = (receiverUid) =>{
+        //handleOpenInvate();
+        invHubInstance.sendInvate(receiverUid);
     }
+    const setInvateDialogRef = (open,close) =>{
+ 
+        console.log("ustawiam");
+        InvHub.openInvate = open;
+       // setHandleCloseInvate(close);
+        //setHandleOPenInvate(open);
+    }
+    InvHub.onReceiveInvate = receiveInvate;
     return React.cloneElement(children,{
-        createConnectToChessHub
+        invateToGame,
+        setInvateDialogRef
     })
+
+    
 }

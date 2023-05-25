@@ -3,11 +3,35 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { ThemeInput } from "./ThemeInput";
 import { useEffect, useState } from "react";
 import FriendController from "../controllers/FriendController";
+import GameController from "../controllers/GameController";
+
+function SendInvate({invateToGame,friendId}){
+    const invate = () => {
+       // console.log("Fuid:"+friendId);
+        invateToGame(friendId);
+    }
+    return(
+        <>
+             <button className='option-btn' onClick={()=>invate()}>Zaproś</button>
+            <button className='option-btn'>Anuluj</button>
+        </>
+    )
+}
 
 function FreindInvate({onGetFriendsList}){
     const [data,setData] = useState([]);
-
+    const [selectedFriendId,setSelectedFriendId] = useState(null);
    
+    const selectFriend = (friendObj) =>{
+        
+        if(friendObj.userId1 === localStorage.uid)
+        {
+            setSelectedFriendId(friendObj.userId2);
+        }else
+        {
+            setSelectedFriendId(friendObj.userId1);
+        }
+    }
 
     const getMyFriendsList = () => {
         onGetFriendsList().then(r=>{
@@ -21,26 +45,33 @@ function FreindInvate({onGetFriendsList}){
             <Autocomplete
                 options={data}
                 disableClearable
-                getOptionLabel={(option)=>option.user1ID}
+                getOptionLabel={(option)=>
+                    localStorage.uid===option.userId1?
+                    option.user2Nickname
+                    :
+                    option.user1Nickname
+                }
                 sx={{width:"100%"}}
-                //onChange={(event,value) => onSearchFriend(value)}
+                onChange={(event,value) => selectFriend(value)}
                 renderInput={(params) => <ThemeInput {...params}  label="Nickname" onClick={()=>getMyFriendsList()}/>}
             />
-                
-            <button className='option-btn'>Zaproś</button>
-            <button className='option-btn'>Anuluj</button>
+            <GameController>
+               <SendInvate friendId={selectedFriendId}/>
+            </GameController>  
+            
         </div>
     )
 }
 
-export default function GameOptionsHHComponent({getStyle,hide,createConnectToChessHub}){
+export default function GameOptionsHHComponent({getStyle,hide,createConnectToInvHub}){
     const navigate = useNavigate();
 
     const startGameHumanHumanOnline=()=>{
         navigate("/chessBoard");
     }
     const conect = () =>{
-        createConnectToChessHub();
+        createConnectToInvHub();
+        
     }
     return(
         <>
