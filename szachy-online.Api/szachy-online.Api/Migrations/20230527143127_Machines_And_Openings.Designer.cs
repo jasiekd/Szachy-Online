@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using szachy_online.Api.Data;
 
@@ -11,9 +12,11 @@ using szachy_online.Api.Data;
 namespace szachy_online.Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230527143127_Machines_And_Openings")]
+    partial class Machines_And_Openings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,22 +148,22 @@ namespace szachy_online.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3264ff97-928e-4eff-be63-69f21d204067"),
-                            DateCreated = new DateTime(2023, 5, 27, 16, 59, 45, 477, DateTimeKind.Local).AddTicks(6053),
+                            Id = new Guid("d18840d1-9ca3-4fcd-aa78-5a21618521c1"),
+                            DateCreated = new DateTime(2023, 5, 27, 16, 31, 26, 928, DateTimeKind.Local).AddTicks(9957),
                             Level = "One",
                             Nickname = "Stephan"
                         },
                         new
                         {
-                            Id = new Guid("2ace6dc4-7fea-46b3-90f4-1839341a86af"),
-                            DateCreated = new DateTime(2023, 5, 27, 16, 59, 45, 477, DateTimeKind.Local).AddTicks(6059),
+                            Id = new Guid("da6a73a3-98f4-4cda-ac42-85126087c6a0"),
+                            DateCreated = new DateTime(2023, 5, 27, 16, 31, 26, 928, DateTimeKind.Local).AddTicks(9962),
                             Level = "Two",
                             Nickname = "Lora"
                         },
                         new
                         {
-                            Id = new Guid("958e78fb-5e6b-4822-9f04-8a4a19d15257"),
-                            DateCreated = new DateTime(2023, 5, 27, 16, 59, 45, 477, DateTimeKind.Local).AddTicks(6062),
+                            Id = new Guid("37979414-d6ae-4746-8150-8f269b697a0e"),
+                            DateCreated = new DateTime(2023, 5, 27, 16, 31, 26, 928, DateTimeKind.Local).AddTicks(9966),
                             Level = "Random",
                             Nickname = "Brandon"
                         });
@@ -211,60 +214,6 @@ namespace szachy_online.Api.Migrations
                             Description = "Otwarcie szachowe oznaczone kodem A40 ECO rzadko stosowane debiut zamknięty, wprowadzone do praktyki turniejowej przez Aleksandra Wagnera w roku 1913 i charakteryzujące się posunięciami:\r\n\r\n1.d4 b5\r\nIdea tego otwarcia polega na:\r\n\r\nrozwinięciu hetmańskiego gońca czarnych na pole b7, skąd, wzdłuż przekątnej a8-h1 oddziałuje on na skrzydło królewskie białych, a przede wszystkim kontroluje ważny punkt e4.\r\ndzięki obecności piona na polu b5 czarne mogą walczyć o przewagę przestrzeni na skrzydle hetmańskim.\r\nobrana przez czarne strategia nie narzuca zwykle forsownych rozwiązań w początkowej fazie gry, ewentualna erudycja przeciwnika traci na znaczeniu.",
                             Name = "Obrona Polska",
                             PGN = "1.d4 b5 2.e4 Bb7 3.Bd3 Nf6"
-                        });
-                });
-
-            modelBuilder.Entity("szachy_online.Api.Entities.TipEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tips");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Zachowaj równowagę między atakiem a obroną: Wskazówka ta sugeruje, że ważne jest, aby skupić się zarówno na atakowaniu figury przeciwnika, jak i na ochronie swoich własnych. Unikaj zbytniego poświęcania swoich sił na atak, kosztem osłabienia swojej pozycji."
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Pamiętaj o wartości figur: W tej wskazówce wartości figur są ustalone tak, że pion jest wart 1 punkt, skoczek i goniec - 3 punkty, wieża - 5 punktów, a hetman - 9 punktów. Utrzymuj świadomość względnych wartości figur i staraj się nie tracić na zbędnych wymianach."
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Planuj z góry: Zawsze warto mieć jasny plan i strategię, zanim zaczniesz podejmować konkretne posunięcia. Staraj się przewidzieć reakcje przeciwnika i opracuj odpowiednie plany, aby zwiększyć swoje szanse na sukces."
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Utrzymuj kontrolę nad centrum: Centrum planszy jest strategicznie ważne w szachach. Postaraj się kontrolować pola centralne swoimi pionami i figurami, co pozwoli ci na większą swobodę ruchów i łatwiejsze przeprowadzenie ataku."
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "Zawsze sprawdzaj możliwe zagrożenia: Przed wykonaniem ruchu zawsze sprawdź, czy nie narażasz swojego króla na szach lub czy nie zostajesz zmuszony do utraty materiału. Bądź czujny i staraj się przewidzieć potencjalne zagrożenia."
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Description = "Praktykuj taktykę szachową: Skup się na doskonaleniu umiejętności taktycznych, takich jak kombinacje, motywy szachowe i pułapki. Regularne rozwiązywanie zadań taktycznych pomoże w rozwoju twojego spostrzegawczości i umiejętności znajdowania najlepszych ruchów."
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Description = "Baw się i ucz się od swoich partii: Nie zapomnij czerpać radości z gry w szachy! Po zakończeniu partii analizuj swoje posunięcia, poszukuj błędów i próbuj wyciągać wnioski. Każda partia jest szansą do nauki i rozwoju jako szachista."
                         });
                 });
 

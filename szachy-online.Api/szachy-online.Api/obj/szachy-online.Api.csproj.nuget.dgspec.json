@@ -91,6 +91,10 @@
             "Swashbuckle.AspNetCore.SwaggerUI": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "pax.chess": {
+              "target": "Package",
+              "version": "[0.6.1, )"
             }
           },
           "imports": [

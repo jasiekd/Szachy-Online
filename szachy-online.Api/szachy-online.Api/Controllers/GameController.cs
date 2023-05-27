@@ -1,11 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using pax.chess;
+using System;
+using System.Drawing;
+using System.Reflection.PortableExecutable;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using szachy_online.Api.Data;
 using szachy_online.Api.Dto;
 using szachy_online.Api.Entities;
 using szachy_online.Api.Hubs;
+using szachy_online.Api.Migrations;
 using szachy_online.Api.Services;
 
 namespace szachy_online.Api.Controllers
@@ -19,19 +26,23 @@ namespace szachy_online.Api.Controllers
         private readonly IHubContext<ChessHub> _hubContext;
         private readonly IHubContext<InvitationHub> _invHubContext;
         private readonly InvitationHub _invitationHub;
-        public GameController(AccountService accountService, DataContext context, IHubContext<ChessHub> hubContext, IHubContext<InvitationHub> invHubContext, InvitationHub invitationHub)
+        private readonly GameService _gameService;
+        public GameController(AccountService accountService, DataContext context, IHubContext<ChessHub> hubContext, IHubContext<InvitationHub> invHubContext, InvitationHub invitationHub, GameService gameService)
         {
             _accountService = accountService;
             _context = context;
             _hubContext = hubContext;
             _invHubContext = invHubContext;
             _invitationHub = invitationHub;
+            _gameService = gameService;
         }
 
         [HttpGet("ComputerMove/{gid}/{move}")]
         public async Task<IActionResult> ComputerMove(Guid gid, string move)
         {
             var gameEntity = await _context.Games.FindAsync(gid);
+
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             if (gameEntity.PGN == null)
                 gameEntity.PGN = "1. " + move; // Rozpoczynamy numerację ruchów od 1
@@ -52,18 +63,30 @@ namespace szachy_online.Api.Controllers
             _context.Games.Update(gameEntity);
             _context.SaveChanges();
 
-            //przeliczenie pozycji na podstawie bazy
+            var machine = await _context.Machines.FindAsync((gameEntity.BlackPlayer == userId) ? gameEntity.WhitePlayer : gameEntity.BlackPlayer);
+            string computerMove = (machine.Level != "Random") ? await _gameService.GetBestMove(gameEntity.PGN, machine.Level) : await _gameService.GetRandomMove(gameEntity.PGN);
 
-
-
-            string computerMove = "e5";
-
-            gameEntity.PGN += " e5";
+            if (gameEntity.PGN == null)
+                gameEntity.PGN = "1. " + computerMove; // Rozpoczynamy numerację ruchów od 1
+            else
+            {
+                var moves = gameEntity.PGN.Split(' ').ToList();
+                var lastMove = moves.LastOrDefault();
+                if (lastMove != null && lastMove.Contains("."))
+                {
+                    // Pobieramy ostatni numer ruchu i zwiększamy go o 1
+                    var lastMoveNumber = int.Parse(lastMove.Split('.')[0]);
+                    var newMoveNumber = lastMoveNumber + 1;
+                    computerMove = newMoveNumber + ". " + computerMove;
+                }
+                gameEntity.PGN += " " + computerMove;
+            }
 
             _context.Games.Update(gameEntity);
             _context.SaveChanges();
-            // Ten receivecomputermove musi sie nazywac tak samo zeby sie polaczyc
-            await _hubContext.Clients.All.SendAsync("ReceiveComputerMove", computerMove);
+
+
+            await _hubContext.Clients.All.SendAsync(gid.ToString(), computerMove);
 
             return Ok();
         }
@@ -105,23 +128,92 @@ namespace szachy_online.Api.Controllers
             return Ok();
         }
 
-        [HttpGet("CreateGameWithComputer")]
-        public async Task<IActionResult> CreateGameWithComputer()
+        [HttpPost("CreateGameWithComputer")]
+        public async Task<IActionResult> CreateGameWithComputer(string level, string color, int openingId)
         {
-            GameEntity temp = new GameEntity { 
-                GameID= Guid.NewGuid(),
-                WhitePlayer = Guid.NewGuid(),
-                BlackPlayer= Guid.NewGuid(),
-                DateStarted= DateTime.Now,
-            };
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var machine = await _context.Machines.Where(x => x.Level == level).FirstOrDefaultAsync();
 
-            _context.Games.Add(temp);
+            
+
+            GameEntity game = new GameEntity
+            {
+                GameID = Guid.NewGuid(),
+                WhitePlayer = Guid.NewGuid(),
+                BlackPlayer = Guid.NewGuid(),
+                DateStarted = DateTime.Now,
+            };
+            if (openingId != 0)
+            {
+                var opening = await _context.Openings.FindAsync(openingId);
+                game.PGN = opening.PGN;
+            }
+
+                if (color == "Random")
+            {
+                Random random = new Random();
+                int randomNumber = random.Next(2);
+                color = (randomNumber == 0) ? "Black" : "White";
+            }
+            if (color == "White")
+            {
+                game.WhitePlayer = userId;
+                game.BlackPlayer = machine.Id;
+            }
+            else if (color == "Black")
+            {
+                game.BlackPlayer = userId;
+                game.WhitePlayer = machine.Id;
+            }
+
+            _context.Games.Add(game);
             await _context.SaveChangesAsync();
 
-            GameIdDto tmp = new GameIdDto { GameID = temp.GameID.ToString() };
-
-            return Ok(tmp);
+            GameIdDto gamedto = new GameIdDto { 
+                GameID = game.GameID.ToString(),
+                PGN = game.PGN,
+            };
+            
+            return Ok(gamedto);
         }
+
+        [HttpPost("StartGameWithComputer")]
+        public async Task<IActionResult> StartGameWithComputer(Guid guid)
+        {
+            var gameEntity = await _context.Games.FindAsync(guid);
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+
+            if (gameEntity.WhitePlayer != userId)
+            {
+                var machine = await _context.Machines.FindAsync((gameEntity.BlackPlayer == userId) ? gameEntity.WhitePlayer : gameEntity.BlackPlayer);
+                string computerMove = (machine.Level != "Random") ? await _gameService.GetBestMove(gameEntity.PGN, machine.Level) : await _gameService.GetRandomMove(gameEntity.PGN);
+
+                if (gameEntity.PGN == null)
+                    gameEntity.PGN = "1. " + computerMove; // Rozpoczynamy numerację ruchów od 1
+                else
+                {
+                    var moves = gameEntity.PGN.Split(' ').ToList();
+                    var lastMove = moves.LastOrDefault();
+                    if (lastMove != null && lastMove.Contains("."))
+                    {
+                        // Pobieramy ostatni numer ruchu i zwiększamy go o 1
+                        var lastMoveNumber = int.Parse(lastMove.Split('.')[0]);
+                        var newMoveNumber = lastMoveNumber + 1;
+                        computerMove = newMoveNumber + ". " + computerMove;
+                    }
+                    gameEntity.PGN += " " + computerMove;
+                }
+
+                _context.Games.Update(gameEntity);
+                _context.SaveChanges();
+
+
+                await _hubContext.Clients.All.SendAsync(guid.ToString(), computerMove);
+            }
+            return Ok();
+        }
+
 
 
         [HttpPost("CreateGameOnlineWithPlayer")]
@@ -163,7 +255,7 @@ namespace szachy_online.Api.Controllers
             await _hubContext.Clients.All.SendAsync(guid.ToString(), temp.GameID);
             await _hubContext.Clients.All.SendAsync(userId.ToString(), temp.GameID);
 
-            return Ok();
+            return Ok(temp.GameID);
         }
 
 
@@ -203,5 +295,6 @@ namespace szachy_online.Api.Controllers
             return Ok();
 
         }
+
     }
 }

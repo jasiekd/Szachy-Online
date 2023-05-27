@@ -72,6 +72,7 @@ namespace szachy_online.Api
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<TokenService>();
             builder.Services.AddScoped<AccountService>();
+            builder.Services.AddScoped<GameService>();
 
             builder.Services.AddSignalR();
 

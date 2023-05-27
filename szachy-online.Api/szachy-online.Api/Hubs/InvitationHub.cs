@@ -18,8 +18,8 @@ namespace szachy_online.Api.Hubs
                 if (!cancellationTokenSource.Token.IsCancellationRequested)
                 {
                     // Wysyłanie informacji o upływie czasu
-                    await Clients.All.SendAsync(receiverGuid, "Time expired");
-                    await Clients.All.SendAsync(senderGuid, "Time expired");
+                    //await Clients.All.SendAsync(receiverGuid, "Time expired");
+                    //await Clients.All.SendAsync(senderGuid, "Time expired");
                 }
             });
 
