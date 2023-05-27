@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\szachy-online.Api",
+    "\\szachy-online.Api\\szachy-online.Api",
+    "\\szachy-online.Api\\szachy-online.Api\\Controllers"
   ],
+  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api\\Controllers\\AccountController.cs",
   "PreviewInSolutionExplorer": false
 }
