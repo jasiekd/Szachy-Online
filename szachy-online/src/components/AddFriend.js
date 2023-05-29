@@ -9,7 +9,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import FriendController from "../controllers/FriendController";
 import Autocomplete from '@mui/material/Autocomplete';
 import AccountController from "../controllers/AccountController";
-import { createFilterOptions } from "@mui/material/Autocomplete";
 
 function AddFriendButtons({handleClose,onSendInvitation,nickname,isActive}){
     const onClickSend = () => {

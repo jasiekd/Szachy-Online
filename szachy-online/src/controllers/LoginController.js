@@ -2,6 +2,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import React from "react";
 import LoginService from "../services/LoginServices";
+import InvHub from "../services/GameServices";
 
 export function checkIsLogged(){
     if(localStorage.getItem("accessToken")!=null)
@@ -13,6 +14,7 @@ export function checkIsLogged(){
 export function logOut(){
     localStorage.clear();
     axios.defaults.headers.common['Authorization'] = `Bearer ${null}`;
+    InvHub.connection.stop();
     Swal.fire({
         position: 'center',
         icon: 'success',
@@ -24,6 +26,7 @@ export function logOut(){
     checkIsLogged();
 }
 
+
 export default function LoginController({children})
 {
 
@@ -34,6 +37,7 @@ export default function LoginController({children})
             setStatus(response.status);
         }
         else if(response.status === 200){
+            new InvHub().refactorConnection();
             Swal.fire({
                 position: 'center',
                 icon: 'success',

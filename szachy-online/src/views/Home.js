@@ -8,23 +8,23 @@ import horse from '../img/horse.png';
 import rook from '../img/rook.png';
 import { checkIsLogged} from "../controllers/LoginController";
 import Header from './Header.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import TipController from '../controllers/TipController';
+
+function TipElement({getRandomTip})
+{
+    const [tip,setTip] = useState("");
+    useEffect(()=>{
+        getRandomTip().then((r)=>{
+            setTip(r);
+        })
+    },[])
+    return(
+        tip
+    )
+}
 
 function Home({createConnectToInvHub,startConnectionToInvHub,invateHubConection}) {
-    /*useEffect(()=>{
-            console.log("dziala1");
-            createConnectToInvHub();  
-    },[])
-
-    useEffect(()=>{
-        console.log("dziala2");
-        startConnectionToInvHub();
-    },[invateHubConection])
- 
-    */
-
-   
-    
 
   return (
     <div className="App">
@@ -40,7 +40,9 @@ function Home({createConnectToInvHub,startConnectionToInvHub,invateHubConection}
                    Czy wiedziałeś że?
                 </div>
                 <div className='piece-main-text'>
-                    Król w szachach jest jednym z najważniejszych pionków na planszy, ponieważ jego utrata kończy grę. Król może poruszać się o jedno pole w dowolnym kierunku - w górę, w dół, na boki i na skos. Ma również specjalny ruch nazywany roszadą, który pozwala na zamianę pozycji króla i wieży, jeśli oba pionki nie poruszały się wcześniej i nie ma żadnych innych pionków między nimi. Król może również brać udział w szachowaniu i matowaniu przeciwnika. Jego możliwości są ograniczone, ale jego utrata decyduje o wyniku gry.
+                   <TipController>
+                        <TipElement/>
+                   </TipController>
                 </div>
             </div>
         </div>

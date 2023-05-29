@@ -1,56 +1,8 @@
 import * as signalR from "@microsoft/signalr";
+import axios from "axios";
+import { HostName } from "../HostName";
 
-class InvHub{/*
-     connection;
-     events = (onInvateReceive) =>{}
-    static instance = InvHub;
-
-    constructor(){
-        if(InvHub.instance){
-            return InvHub.instance;
-        }
-
-
-        this.connection = new signalR.HubConnectionBuilder()
-        .withUrl('https://localhost:7225/invHub')
-        .withAutomaticReconnect()
-        .build();
-
-        this.connection.start()
-        .then(result =>{
-            console.log("Conected");
-        })
-        .catch(error =>{
-            console.log("Error");
-            console.log(error)
-        })
-        //this.events = (onInvateReceive)=>{
-            this.connection.on(localStorage.uid,(message,hgfds)=>{
-                console.log("zaproszenie");
-            });
-        //}
-        InvHub.instance = this;
-    }
-
-    sendInvate(receiverUid){
-        console.log(InvHub.connection);
-        
-        //this.connection.send("SendGameInvitation",localStorage.uid,receiverUid,"white");
-    }
-    
-    static getInstance(){
-        if(!InvHub.instance){
-            InvHub.instance = new InvHub();
-            console.log("create new");
-        }else{
-            console.log('alredy exist')
-        }
-           
-        return InvHub.instance;
-    }*/
-    /*static events = (
-        onReceiveInvate = (senderUid,color) =>{}
-    ) */
+class InvHub{
     static senderUid = null;
     static senderColor = null;
     static openInvate = ()=>{};
@@ -64,31 +16,7 @@ class InvHub{/*
             return InvHub.instance;
 
         InvHub.instance = this;
-        InvHub.connection= new signalR.HubConnectionBuilder()
-        .withUrl('https://localhost:7225/invHub')
-        .withAutomaticReconnect()
-        .build();
-
-        //console.log("test");
-        InvHub.connection.start()
-        .then(result =>{
-            console.log("Conected");
-            //InvHub.events = (onReceiveInvate) =>{
-                InvHub.connection.on(localStorage.uid,(senderUid,color)=>{
-                    //console.log("zaproszenie "+message+" "+hgfds);
-                    InvHub.onReceiveInvate(senderUid,color);
-                });
-           // } 
-        })
-        .catch(error =>{
-            console.log("Error");
-            console.log(error)
-        })
-        //this.events = (onInvateReceive)=>{
-            /*InvHub.connection.on(localStorage.uid,(message,hgfds)=>{
-                console.log("zaproszenie "+message+" "+hgfds);
-            });*/
-        //}
+        this.refactorConnection();
     }
     getSenderUid(){
         return InvHub.senderUid;
@@ -99,10 +27,80 @@ class InvHub{/*
 
     sendInvate(receiverUid){
         //console.log(InvHub.connection);
-        InvHub.connection.send("SendGameInvitation",localStorage.uid,receiverUid,"White");
+        InvHub.connection.send("SendGameInvitation",localStorage.uid,receiverUid,"Random");
+    }
+
+    refactorConnection(){
+        if(InvHub.connection){
+            InvHub.connection.stop();
+        }
+
+        InvHub.connection= new signalR.HubConnectionBuilder()
+        .withUrl('https://localhost:7225/invHub')
+        .withAutomaticReconnect()
+        .build();
+
+        InvHub.connection.start()
+        .then(result =>{
+            console.log("Conected");
+                InvHub.connection.on(localStorage.uid,(senderUid,color)=>{
+                    InvHub.onReceiveInvate(senderUid,color);
+                });
+        })
+        .catch(error =>{
+            console.log("Error");
+            console.log(error)
+        })
     }
 }
 
+export class GameService{
+    async createGameOnlineWithPlayer(guid,color){
+        let count = 0;
+        
+        while(true){
+            try{
+                const response = await axios.post(HostName+'/api/Game/CreateGameOnlineWithPlayer',
+                {
+                    guid: guid,
+                    color: color
+                });
+                return response;
+            }catch(error)
+            {
+                if(count===1)
+                {
+                    console.log(error.response);
+                    return error.response;
+                }
+                count = 1;
+            }
+        }
 
+        
+        
+    }
+
+    async createGameWithComputer(level,color,openingId){
+        let count = 0;
+        while(true){
+            try{
+                const response = await axios.post(HostName+'/api/Game/CreateGameWithComputer',{
+                    level: level,
+                    color: color,
+                    openingId: openingId
+                })
+                return response;
+            }
+            catch(error){
+                if(count === 1)
+                {
+                    return error.response
+                }
+                count = 1;
+            }
+        }
+    }
+}
 
 export default InvHub;

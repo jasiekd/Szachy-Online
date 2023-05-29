@@ -6,53 +6,107 @@ axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(
 
 export default class FriendService{
     async getListOfPendingInvitationsc(){
-        try{
-            const response = await axios.get(HostName+'/api/Friends/GetListOfPendingInvitations',{});
-            return response;
-        }catch(error)
-        {
-            return error.response;
+        let count = 0;
+
+        while(true){
+            try{
+                const response = await axios.get(HostName+'/api/Friends/GetListOfPendingInvitations',{});
+                return response;
+            }catch(error)
+            {
+                if(count===1)
+                {
+                    return error.response;
+                }
+                count = 1;
+            }
         }
+       
     }
     async sendInvitation(nickname){
-        try{
-            const response = await axios.get(HostName+'/api/Friends/sendInvitation/'+nickname,{});
-            return response;
-        }catch(error)
-        {
-            return error.response;
+        let count = 0;
+
+        while(true){
+            try{
+                const response = await axios.get(HostName+'/api/Friends/sendInvitation/'+nickname,{});
+                return response;
+            }catch(error)
+            {
+                if(count===1)
+                {
+                    return error.response;
+                }
+                count = 1;
+            }
         }
+        
     }
     async acceptInvitation(invitationID){
-        try{
-            const response = await axios.get(HostName+'/api/Friends/acceptInvitation/'+invitationID,{});
-            return response;
-        }catch(error){
-            return error.response;
+        let count = 0;
+
+        while(true){
+            try{
+                const response = await axios.get(HostName+'/api/Friends/acceptInvitation/'+invitationID,{});
+                return response;
+            }catch(error){
+                if(count === 1)
+                {
+                    return error.response;
+                }
+                count = 1;
+            }
         }
+        
     }
     async getListOfFriends(){
-        try{
-            const response = await axios.get(HostName+'/api/Friends/GetListOfFriends',{});
-            return response;
-        }catch(error){
-            return error.response;
+        let count = 0;
+
+        while(true){
+            try{
+                const response = await axios.get(HostName+'/api/Friends/GetListOfFriends',{});
+                return response;
+            }catch(error){
+                if(count === 1)
+                {
+                    return error.response;
+                }
+                count = 1;
+            }
         }
+        
     }
     async removeFriend(friendID){
-        try{
-            const response = await axios.delete(HostName+'/api/Friends/removeFriend/'+friendID,{});
-            return response;
-        }catch(error){
-            return error.response;
+        let count = 0;
+
+        while(true){
+            try{
+                const response = await axios.delete(HostName+'/api/Friends/removeFriend/'+friendID,{});
+                return response;
+            }catch(error){
+                if(count === 1)
+                {
+                    return error.response;
+                }
+                count = 1;
+            }
         }
+        
     }
     async getListOfMySentInvitations(){
-        try{
-            const response = await axios.get(HostName+"/api/Friends/GetListOfMySentInvitations",{});
-            return response;
-        }catch(error){
-            return error.response
+        let count = 0;
+
+        while(true){
+            try{
+                const response = await axios.get(HostName+"/api/Friends/GetListOfMySentInvitations",{});
+                return response;
+            }catch(error){
+                if(count ===1)
+                {
+                    return error.response
+                }
+                count = 1;
+            }
         }
+        
     }
 }

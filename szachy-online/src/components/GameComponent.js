@@ -1,3 +1,4 @@
+import GameController from "../controllers/GameController";
 import onlineHumanHuman from "../img/occ.png";
 import onlineHumanComputer from "../img/ocm.png";
 import localHumanHuman from "../img/tcc.png";
@@ -6,11 +7,9 @@ import { useEffect, useState } from "react";
 export default function GameComponent({getStyle,show,hide,showOHH,showTHH,showTHC,setInvateDialogRef}){
     const [openGameInvate, setOpenGameInvate] = useState(false);
     const handleCloseGameInvate = () => {
-        console.log("zamykam");
         setOpenGameInvate(false);
     };
     const openGameInvateDialog = () =>{
-            console.log("otwieram");
             setOpenGameInvate(true);   
     }
     
@@ -19,7 +18,9 @@ export default function GameComponent({getStyle,show,hide,showOHH,showTHH,showTH
     },[])
     return(
         <div className='option' style={getStyle} onMouseOver={show}  onMouseOut={hide}>
-            <GameInvate open={openGameInvate} handleClose={handleCloseGameInvate}/>
+            <GameController>
+                <GameInvate open={openGameInvate} handleClose={handleCloseGameInvate}/>
+            </GameController>
             <button className='nav-btn' onClick={showOHH}>
                 <img className="btn-img" src={onlineHumanHuman} alt=""/>
                 <p className='slide-btn-text'>Online Człowiek - Człowiek</p>
@@ -28,7 +29,7 @@ export default function GameComponent({getStyle,show,hide,showOHH,showTHH,showTH
                 <img className="btn-img" src={localHumanHuman} alt=""/>
                 <p className='slide-btn-text'>Turowo Człowiek - Człowiek</p>
             </button>
-            <button className='nav-btn' >
+            <button className='nav-btn' onClick={showTHC}>
                 <img className="btn-img" src={onlineHumanComputer} alt=""/>
                 <p className='slide-btn-text'>Online Człowiek - Maszyna</p>
             </button>
