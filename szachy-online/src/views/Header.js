@@ -19,6 +19,7 @@ import FileComponent from "../components/FileComponent";
 import FriendController from "../controllers/FriendController";
 import AccountController from "../controllers/AccountController";
 import GameController from "../controllers/GameController";
+import GameOptionHMComponent from "../components/GameOptionHMComponent";
 
 
 function LoggeAs({getUser}){
@@ -92,6 +93,10 @@ function Header(){
         hideGameOptions();
         showTurnbasedHumanHuman();
     }
+    const [getHumanComputerOptionsStyle,setHumanComputerOptionsStyle] = useState({width:"0rem"});
+    const showHumanComputer = () =>{
+        setHumanComputerOptionsStyle({width:"55rem"});
+    }
 
     const [getHumanHumanOptionsStyle,setHumanHumanOptionsStyle] = useState({width:"0rem"});
     const showHumanHuman=() =>{
@@ -102,6 +107,7 @@ function Header(){
     const hideAdditionalMenu=()=>{
         setHumanHumanOptionsStyle({width:"0rem"});
         setTurnbasedHumanHumanOptionsStyle({width:"0rem"});
+        setHumanComputerOptionsStyle({width:"0rem"})
         
     }
     const [getTurnbasedHumanHumanOptionsStyle,setTurnbasedHumanHumanOptionsStyle] = useState({width:"0rem"});
@@ -175,7 +181,7 @@ function Header(){
             }
         </nav>
         <GameController>
-            <GameComponent getStyle={getGameStyle} show={showGameOptions} hide={hideGameOptions} showOHH={showHumanHumanOptions} showTHH={showTurnbasedHumanHumanOptions}/>
+            <GameComponent getStyle={getGameStyle} show={showGameOptions} hide={hideGameOptions} showOHH={showHumanHumanOptions} showTHH={showTurnbasedHumanHumanOptions} showTHC={showHumanComputer}/>
         </GameController>
         
         <FileComponent getStyle={getFileStyle} show={showFileOptions} hide={hideFileOptions}/>
@@ -207,6 +213,10 @@ function Header(){
         <GameOptionsHHComponent getStyle={getHumanHumanOptionsStyle} hide={hideAdditionalMenu}/>
         </GameController>
         <GameOptionsTHHComponent getStyle={getTurnbasedHumanHumanOptionsStyle} hide={hideAdditionalMenu}/>
+        <GameController>
+            <GameOptionHMComponent  getStyle={getHumanComputerOptionsStyle} hide={hideAdditionalMenu}/>
+        </GameController>
+        
         
 </>
     );

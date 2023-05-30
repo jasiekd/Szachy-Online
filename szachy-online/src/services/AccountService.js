@@ -1,5 +1,6 @@
 import axios from "axios";
 import { HostName } from "../HostName";
+import { refreshTonke } from "./LoginServices";
 
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('accessToken')}`;
 
@@ -13,12 +14,21 @@ export default class AccountService{
         }
     }*/
     async getUser(){
-        try{
-            const response = await axios.get(HostName+'/api/Account/getUser',{});
-            return response;
-        }catch(error){
-            return error.response;
+        let count = 0;
+        while(true)
+        {
+            try{
+                const response = await axios.get(HostName+'/api/Account/getUser',{});
+                return response;
+            }catch(error){
+                if(count===1){
+                    return error.response;
+                }
+                count = 1
+                refreshTonke();
+            }
         }
+        
     }
     async findByNickName(nickname){
         try{

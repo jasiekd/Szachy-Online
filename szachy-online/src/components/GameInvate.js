@@ -5,8 +5,15 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import InvHub from '../services/GameServices';
 
-export default function GameInvate({open,handleClose}){
+export default function GameInvate({open,handleClose,createGameOnlineWithPlayer}){
     const invHub = new InvHub();
+    const onAccept = () =>{
+        handleClose();
+        createGameOnlineWithPlayer(invHub.getSenderUid(),invHub.getSenderColor());
+    }
+    const onReject = () =>{
+
+    }
     return(
         <Dialog 
                 sx={{ '& .MuiDialog-paper': { background:'#1d1d1b' }}}
@@ -27,8 +34,8 @@ export default function GameInvate({open,handleClose}){
                
                 </DialogContent>
                 <DialogActions>
-                    <button className='option-btn friends-btn-accept'>Dołącz</button>
-                    <button className='option-btn friends-btn-reject'>Usuń</button>
+                    <button className='option-btn friends-btn-accept' onClick={()=>onAccept()}>Dołącz</button>
+                    <button className='option-btn friends-btn-reject' onClick={()=>onReject()}>Usuń</button>
                 </DialogActions>
             </Dialog>
     )
