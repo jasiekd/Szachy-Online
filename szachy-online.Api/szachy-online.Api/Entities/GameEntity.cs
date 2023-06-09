@@ -9,8 +9,10 @@ namespace szachy_online.Api.Entities
         public Guid GameID { get; set; }
         [Required]
         public Guid WhitePlayer { get; set; }
+        public virtual AccountEntity? White { get; set; }
         [Required]
         public Guid BlackPlayer { get; set; }
+        public virtual AccountEntity? Black { get; set; }
         public string? Winner { get; set; }
         public string? PGN { get; set; }
         [Required]

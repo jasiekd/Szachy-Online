@@ -33,21 +33,21 @@ namespace szachy_online.Api.Data
             modelBuilder.Entity<MachineEntity>().HasData(
                 new MachineEntity
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("3264FF97-928E-4EFF-BE63-69F21D204067"),
                     Nickname = "Stephan",
                     DateCreated = DateTime.Now,
                     Level = "One",
                 },
                 new MachineEntity
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("2ACE6DC4-7FEA-46B3-90F4-1839341A86AF"),
                     Nickname = "Lora",
                     DateCreated = DateTime.Now,
                     Level = "Two",
                 },
                 new MachineEntity
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.Parse("958E78FB-5E6B-4822-9F04-8A4A19D15257"),
                     Nickname = "Brandon",
                     DateCreated = DateTime.Now,
                     Level = "Random",

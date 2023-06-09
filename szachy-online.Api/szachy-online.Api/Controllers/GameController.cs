@@ -37,6 +37,27 @@ namespace szachy_online.Api.Controllers
             _gameService = gameService;
         }
 
+        [HttpPost("GetInfoAboutGame")]
+        public async Task<IActionResult> GetInfoAboutGame([FromBody] Guid gameID)
+        {
+            var gameEntity = await _context.Games.Include(x => x.White).Include(x => x.Black).FirstOrDefaultAsync(x => x.GameID == gameID);
+            if (gameEntity == null)
+            {
+                return NotFound();
+            }
+
+            var response = new
+            {
+                GameID = gameEntity.GameID,
+                WhiteID = gameEntity.White.Id,
+                WhiteNickname = gameEntity.White.Nickname,
+                BlackID = gameEntity.Black.Id,
+                BlackNickname = gameEntity.Black.Nickname,
+            };
+
+            return Ok(response);
+        }
+
         [HttpGet("ComputerMove/{gid}/{move}")]
         public async Task<IActionResult> ComputerMove(Guid gid, string move)
         {
