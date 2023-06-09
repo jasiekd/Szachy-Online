@@ -1455,3 +1455,4 @@ C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online
 C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\bin\Debug\net6.0\Microsoft.Extensions.Features.dll
 C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\bin\Debug\net6.0\System.IO.Pipelines.dll
 C:\Users\artur\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\bin\Debug\net6.0\pax.chess.dll
+C:\Users\Johny\Source\Repos\Makrol\Szachy-Online\szachy-online.Api\szachy-online.Api\bin\Debug\net6.0\pax.chess.dll
