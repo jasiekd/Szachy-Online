@@ -101,10 +101,7 @@ namespace szachy_online.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BlackId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BlackPlayer")
+                    b.Property<Guid>("BlackPlayerID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateStarted")
@@ -113,10 +110,7 @@ namespace szachy_online.Api.Migrations
                     b.Property<string>("PGN")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("WhiteId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("WhitePlayer")
+                    b.Property<Guid>("WhitePlayerID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Winner")
@@ -124,9 +118,9 @@ namespace szachy_online.Api.Migrations
 
                     b.HasKey("GameID");
 
-                    b.HasIndex("BlackId");
+                    b.HasIndex("BlackPlayerID");
 
-                    b.HasIndex("WhiteId");
+                    b.HasIndex("WhitePlayerID");
 
                     b.ToTable("Games");
                 });
@@ -156,21 +150,21 @@ namespace szachy_online.Api.Migrations
                         new
                         {
                             Id = new Guid("3264ff97-928e-4eff-be63-69f21d204067"),
-                            DateCreated = new DateTime(2023, 6, 9, 21, 23, 59, 614, DateTimeKind.Local).AddTicks(6984),
+                            DateCreated = new DateTime(2023, 6, 10, 15, 48, 51, 393, DateTimeKind.Local).AddTicks(1560),
                             Level = "One",
                             Nickname = "Stephan"
                         },
                         new
                         {
                             Id = new Guid("2ace6dc4-7fea-46b3-90f4-1839341a86af"),
-                            DateCreated = new DateTime(2023, 6, 9, 21, 23, 59, 614, DateTimeKind.Local).AddTicks(6989),
+                            DateCreated = new DateTime(2023, 6, 10, 15, 48, 51, 393, DateTimeKind.Local).AddTicks(1565),
                             Level = "Two",
                             Nickname = "Lora"
                         },
                         new
                         {
                             Id = new Guid("958e78fb-5e6b-4822-9f04-8a4a19d15257"),
-                            DateCreated = new DateTime(2023, 6, 9, 21, 23, 59, 614, DateTimeKind.Local).AddTicks(6992),
+                            DateCreated = new DateTime(2023, 6, 10, 15, 48, 51, 393, DateTimeKind.Local).AddTicks(1568),
                             Level = "Random",
                             Nickname = "Brandon"
                         });
@@ -299,17 +293,21 @@ namespace szachy_online.Api.Migrations
 
             modelBuilder.Entity("szachy_online.Api.Entities.GameEntity", b =>
                 {
-                    b.HasOne("szachy_online.Api.Entities.AccountEntity", "Black")
+                    b.HasOne("szachy_online.Api.Entities.AccountEntity", "BlackPlayer")
                         .WithMany()
-                        .HasForeignKey("BlackId");
+                        .HasForeignKey("BlackPlayerID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.HasOne("szachy_online.Api.Entities.AccountEntity", "White")
+                    b.HasOne("szachy_online.Api.Entities.AccountEntity", "WhitePlayer")
                         .WithMany()
-                        .HasForeignKey("WhiteId");
+                        .HasForeignKey("WhitePlayerID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.Navigation("Black");
+                    b.Navigation("BlackPlayer");
 
-                    b.Navigation("White");
+                    b.Navigation("WhitePlayer");
                 });
 #pragma warning restore 612, 618
         }

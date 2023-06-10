@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\szachy-online.Api"
+    "\\szachy-online.Api",
+    "\\szachy-online.Api\\szachy-online.Api",
+    "\\szachy-online.Api\\szachy-online.Api\\Data"
   ],
-  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api.sln",
+  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api\\Data\\DataContext.cs",
   "PreviewInSolutionExplorer": false
 }

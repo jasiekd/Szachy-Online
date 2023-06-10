@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using szachy_online.Api.Entities;
-using szachy_online.Api.Migrations;
+
 
 namespace szachy_online.Api.Data
 {
@@ -29,6 +29,18 @@ namespace szachy_online.Api.Data
                 .WithMany()
                 .HasForeignKey(f => f.User2ID)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GameEntity>()
+                .HasOne(f => f.BlackPlayer)
+                .WithMany()
+                .HasForeignKey(f => f.BlackPlayerID)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            modelBuilder.Entity<GameEntity>()
+                .HasOne(f => f.WhitePlayer)
+                .WithMany()
+                .HasForeignKey(f => f.WhitePlayerID)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<MachineEntity>().HasData(
                 new MachineEntity

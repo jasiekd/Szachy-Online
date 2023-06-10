@@ -12,8 +12,8 @@ using szachy_online.Api.Data;
 namespace szachy_online.Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230527145945_Tips")]
-    partial class Tips
+    [Migration("20230610134851_finalMigration")]
+    partial class finalMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -104,7 +104,7 @@ namespace szachy_online.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("BlackPlayer")
+                    b.Property<Guid>("BlackPlayerID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateStarted")
@@ -113,13 +113,17 @@ namespace szachy_online.Api.Migrations
                     b.Property<string>("PGN")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("WhitePlayer")
+                    b.Property<Guid>("WhitePlayerID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Winner")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("GameID");
+
+                    b.HasIndex("BlackPlayerID");
+
+                    b.HasIndex("WhitePlayerID");
 
                     b.ToTable("Games");
                 });
@@ -149,21 +153,21 @@ namespace szachy_online.Api.Migrations
                         new
                         {
                             Id = new Guid("3264ff97-928e-4eff-be63-69f21d204067"),
-                            DateCreated = new DateTime(2023, 5, 27, 16, 59, 45, 477, DateTimeKind.Local).AddTicks(6053),
+                            DateCreated = new DateTime(2023, 6, 10, 15, 48, 51, 393, DateTimeKind.Local).AddTicks(1560),
                             Level = "One",
                             Nickname = "Stephan"
                         },
                         new
                         {
                             Id = new Guid("2ace6dc4-7fea-46b3-90f4-1839341a86af"),
-                            DateCreated = new DateTime(2023, 5, 27, 16, 59, 45, 477, DateTimeKind.Local).AddTicks(6059),
+                            DateCreated = new DateTime(2023, 6, 10, 15, 48, 51, 393, DateTimeKind.Local).AddTicks(1565),
                             Level = "Two",
                             Nickname = "Lora"
                         },
                         new
                         {
                             Id = new Guid("958e78fb-5e6b-4822-9f04-8a4a19d15257"),
-                            DateCreated = new DateTime(2023, 5, 27, 16, 59, 45, 477, DateTimeKind.Local).AddTicks(6062),
+                            DateCreated = new DateTime(2023, 6, 10, 15, 48, 51, 393, DateTimeKind.Local).AddTicks(1568),
                             Level = "Random",
                             Nickname = "Brandon"
                         });
@@ -288,6 +292,25 @@ namespace szachy_online.Api.Migrations
                     b.Navigation("User1");
 
                     b.Navigation("User2");
+                });
+
+            modelBuilder.Entity("szachy_online.Api.Entities.GameEntity", b =>
+                {
+                    b.HasOne("szachy_online.Api.Entities.AccountEntity", "BlackPlayer")
+                        .WithMany()
+                        .HasForeignKey("BlackPlayerID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("szachy_online.Api.Entities.AccountEntity", "WhitePlayer")
+                        .WithMany()
+                        .HasForeignKey("WhitePlayerID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("BlackPlayer");
+
+                    b.Navigation("WhitePlayer");
                 });
 #pragma warning restore 612, 618
         }
