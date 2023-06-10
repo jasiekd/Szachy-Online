@@ -75,7 +75,6 @@ namespace szachy_online.Api
             builder.Services.AddScoped<GameService>();
 
             builder.Services.AddSignalR();
-            builder.Services.AddScoped<InvitationHub>();
 
             var app = builder.Build();
 

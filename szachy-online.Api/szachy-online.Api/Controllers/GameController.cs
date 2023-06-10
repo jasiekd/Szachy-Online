@@ -18,15 +18,13 @@ namespace szachy_online.Api.Controllers
         private readonly DataContext _context;
         private readonly IHubContext<ChessHub> _hubContext;
         private readonly IHubContext<InvitationHub> _invHubContext;
-        private readonly InvitationHub _invitationHub;
         private readonly GameService _gameService;
-        public GameController(AccountService accountService, DataContext context, IHubContext<ChessHub> hubContext, IHubContext<InvitationHub> invHubContext, InvitationHub invitationHub, GameService gameService)
+        public GameController(AccountService accountService, DataContext context, IHubContext<ChessHub> hubContext, IHubContext<InvitationHub> invHubContext, GameService gameService)
         {
             _accountService = accountService;
             _context = context;
             _hubContext = hubContext;
             _invHubContext = invHubContext;
-            _invitationHub = invitationHub;
             _gameService = gameService;
         }
 
@@ -233,8 +231,6 @@ namespace szachy_online.Api.Controllers
         [HttpPost("CreateGameOnlineWithPlayer")]
         public async Task<IActionResult> CreateGameOnlineWithPlayer(Guid guid, string color)
         {
-            _invitationHub.StopCountdown();
-
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             GameEntity temp = new GameEntity
