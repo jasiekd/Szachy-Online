@@ -3,8 +3,9 @@
     "",
     "\\szachy-online.Api",
     "\\szachy-online.Api\\szachy-online.Api",
-    "\\szachy-online.Api\\szachy-online.Api\\Data"
+    "\\szachy-online.Api\\szachy-online.Api\\Data",
+    "\\szachy-online.Api\\szachy-online.Api\\Hubs"
   ],
-  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api.sln",
+  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api\\Hubs\\InvitationHub.cs",
   "PreviewInSolutionExplorer": false
 }
