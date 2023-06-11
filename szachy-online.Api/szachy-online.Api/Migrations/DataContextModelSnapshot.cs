@@ -32,37 +32,51 @@ namespace szachy_online.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Login")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Nickname")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Surname")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Accounts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("3264ff97-928e-4eff-be63-69f21d204067"),
+                            DateCreated = new DateTime(2023, 6, 11, 15, 36, 8, 221, DateTimeKind.Local).AddTicks(8471),
+                            Nickname = "Stephan"
+                        },
+                        new
+                        {
+                            Id = new Guid("2ace6dc4-7fea-46b3-90f4-1839341a86af"),
+                            DateCreated = new DateTime(2023, 6, 11, 15, 36, 8, 221, DateTimeKind.Local).AddTicks(8476),
+                            Nickname = "Lora"
+                        },
+                        new
+                        {
+                            Id = new Guid("958e78fb-5e6b-4822-9f04-8a4a19d15257"),
+                            DateCreated = new DateTime(2023, 6, 11, 15, 36, 8, 221, DateTimeKind.Local).AddTicks(8509),
+                            Nickname = "Brandon"
+                        });
                 });
 
             modelBuilder.Entity("szachy_online.Api.Entities.FriendsEntity", b =>
@@ -107,9 +121,6 @@ namespace szachy_online.Api.Migrations
                     b.Property<DateTime>("DateStarted")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("MachineID")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("PGN")
                         .HasColumnType("nvarchar(max)");
 
@@ -122,8 +133,6 @@ namespace szachy_online.Api.Migrations
                     b.HasKey("GameID");
 
                     b.HasIndex("BlackPlayerID");
-
-                    b.HasIndex("MachineID");
 
                     b.HasIndex("WhitePlayerID");
 
@@ -155,21 +164,21 @@ namespace szachy_online.Api.Migrations
                         new
                         {
                             Id = new Guid("3264ff97-928e-4eff-be63-69f21d204067"),
-                            DateCreated = new DateTime(2023, 6, 11, 15, 14, 52, 213, DateTimeKind.Local).AddTicks(6360),
+                            DateCreated = new DateTime(2023, 6, 11, 15, 36, 8, 221, DateTimeKind.Local).AddTicks(8651),
                             Level = "One",
                             Nickname = "Stephan"
                         },
                         new
                         {
                             Id = new Guid("2ace6dc4-7fea-46b3-90f4-1839341a86af"),
-                            DateCreated = new DateTime(2023, 6, 11, 15, 14, 52, 213, DateTimeKind.Local).AddTicks(6368),
+                            DateCreated = new DateTime(2023, 6, 11, 15, 36, 8, 221, DateTimeKind.Local).AddTicks(8654),
                             Level = "Two",
                             Nickname = "Lora"
                         },
                         new
                         {
                             Id = new Guid("958e78fb-5e6b-4822-9f04-8a4a19d15257"),
-                            DateCreated = new DateTime(2023, 6, 11, 15, 14, 52, 213, DateTimeKind.Local).AddTicks(6373),
+                            DateCreated = new DateTime(2023, 6, 11, 15, 36, 8, 221, DateTimeKind.Local).AddTicks(8657),
                             Level = "Random",
                             Nickname = "Brandon"
                         });
@@ -282,13 +291,13 @@ namespace szachy_online.Api.Migrations
                     b.HasOne("szachy_online.Api.Entities.AccountEntity", "User1")
                         .WithMany()
                         .HasForeignKey("User1ID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("szachy_online.Api.Entities.AccountEntity", "User2")
                         .WithMany()
                         .HasForeignKey("User2ID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User1");
@@ -304,12 +313,6 @@ namespace szachy_online.Api.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("szachy_online.Api.Entities.MachineEntity", "Machine")
-                        .WithMany()
-                        .HasForeignKey("MachineID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("szachy_online.Api.Entities.AccountEntity", "WhitePlayer")
                         .WithMany()
                         .HasForeignKey("WhitePlayerID")
@@ -317,8 +320,6 @@ namespace szachy_online.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("BlackPlayer");
-
-                    b.Navigation("Machine");
 
                     b.Navigation("WhitePlayer");
                 });

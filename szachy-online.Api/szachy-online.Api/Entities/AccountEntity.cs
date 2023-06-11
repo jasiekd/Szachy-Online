@@ -5,28 +5,22 @@ namespace szachy_online.Api.Entities
 {
     public class AccountEntity: BaseDbItem
     {
-        [Required]
         [StringLength(50)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        [Required]
         [StringLength(50)]
-        public string Surname { get; set; }
+        public string? Surname { get; set; }
 
-        [Required]
         [StringLength(100)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
-        [Required]
         [StringLength(50)]
-        public string Login { get; set; }
+        public string? Login { get; set; }
 
-        [Required]
         [StringLength(50)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         public DateTime DateCreated { get; set; } = DateTime.Now;
-        [Required]
-        public string Nickname { get; set; }
+        public string? Nickname { get; set; }
     }
 }

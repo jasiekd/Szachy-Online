@@ -22,13 +22,13 @@ namespace szachy_online.Api.Data
                 .HasOne(f => f.User1)
                 .WithMany()
                 .HasForeignKey(f => f.User1ID)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<FriendsEntity>()
                 .HasOne(f => f.User2)
                 .WithMany()
                 .HasForeignKey(f => f.User2ID)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<GameEntity>()
                 .HasOne(f => f.BlackPlayer)
@@ -42,6 +42,28 @@ namespace szachy_online.Api.Data
                 .HasForeignKey(f => f.WhitePlayerID)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<AccountEntity>().HasData(
+                new AccountEntity
+                {
+                    Id = Guid.Parse("3264FF97-928E-4EFF-BE63-69F21D204067"),
+                    Nickname = "Stephan",
+                    DateCreated = DateTime.Now,
+
+                },
+                new AccountEntity
+                {
+                    Id = Guid.Parse("2ACE6DC4-7FEA-46B3-90F4-1839341A86AF"),
+                    Nickname = "Lora",
+                    DateCreated = DateTime.Now,
+
+                },
+                new AccountEntity
+                {
+                    Id = Guid.Parse("958E78FB-5E6B-4822-9F04-8A4A19D15257"),
+                    Nickname = "Brandon",
+                    DateCreated = DateTime.Now,
+                }
+                );
             modelBuilder.Entity<MachineEntity>().HasData(
                 new MachineEntity
                 {

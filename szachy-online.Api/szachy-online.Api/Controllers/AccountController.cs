@@ -99,13 +99,17 @@ namespace szachy_online.Api.Controllers
             List<UserInfoDto> nicknames = new List<UserInfoDto>();
             foreach(var account in ListOfFoundNicknames)
             {
-                nicknames.Add(new UserInfoDto
+                if(!account.Id.Equals(Guid.Parse("3264FF97-928E-4EFF-BE63-69F21D204067")) && !account.Id.Equals(Guid.Parse("2ACE6DC4-7FEA-46B3-90F4-1839341A86AF")) && !account.Id.Equals(Guid.Parse("958E78FB-5E6B-4822-9F04-8A4A19D15257")))
+                {
+                    nicknames.Add(new UserInfoDto
                     {
                         Name = account.Name,
                         Surname = account.Surname,
                         Nickname = account.Nickname,
                     }
-                ); 
+                );
+                }
+                 
             }
 
             return Ok(nicknames);

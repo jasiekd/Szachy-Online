@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace szachy_online.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class finalMigration : Migration
+    public partial class final : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,13 +18,13 @@ namespace szachy_online.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Surname = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Login = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Surname = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Login = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Nickname = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Nickname = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -91,14 +91,12 @@ namespace szachy_online.Api.Migrations
                         name: "FK_Friends_Accounts_User1ID",
                         column: x => x.User1ID,
                         principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Friends_Accounts_User2ID",
                         column: x => x.User2ID,
                         principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -128,13 +126,23 @@ namespace szachy_online.Api.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Accounts",
+                columns: new[] { "Id", "DateCreated", "Email", "Login", "Name", "Nickname", "Password", "Surname" },
+                values: new object[,]
+                {
+                    { new Guid("2ace6dc4-7fea-46b3-90f4-1839341a86af"), new DateTime(2023, 6, 11, 15, 36, 8, 221, DateTimeKind.Local).AddTicks(8476), null, null, null, "Lora", null, null },
+                    { new Guid("3264ff97-928e-4eff-be63-69f21d204067"), new DateTime(2023, 6, 11, 15, 36, 8, 221, DateTimeKind.Local).AddTicks(8471), null, null, null, "Stephan", null, null },
+                    { new Guid("958e78fb-5e6b-4822-9f04-8a4a19d15257"), new DateTime(2023, 6, 11, 15, 36, 8, 221, DateTimeKind.Local).AddTicks(8509), null, null, null, "Brandon", null, null }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Machines",
                 columns: new[] { "Id", "DateCreated", "Level", "Nickname" },
                 values: new object[,]
                 {
-                    { new Guid("2ace6dc4-7fea-46b3-90f4-1839341a86af"), new DateTime(2023, 6, 10, 15, 48, 51, 393, DateTimeKind.Local).AddTicks(1565), "Two", "Lora" },
-                    { new Guid("3264ff97-928e-4eff-be63-69f21d204067"), new DateTime(2023, 6, 10, 15, 48, 51, 393, DateTimeKind.Local).AddTicks(1560), "One", "Stephan" },
-                    { new Guid("958e78fb-5e6b-4822-9f04-8a4a19d15257"), new DateTime(2023, 6, 10, 15, 48, 51, 393, DateTimeKind.Local).AddTicks(1568), "Random", "Brandon" }
+                    { new Guid("2ace6dc4-7fea-46b3-90f4-1839341a86af"), new DateTime(2023, 6, 11, 15, 36, 8, 221, DateTimeKind.Local).AddTicks(8654), "Two", "Lora" },
+                    { new Guid("3264ff97-928e-4eff-be63-69f21d204067"), new DateTime(2023, 6, 11, 15, 36, 8, 221, DateTimeKind.Local).AddTicks(8651), "One", "Stephan" },
+                    { new Guid("958e78fb-5e6b-4822-9f04-8a4a19d15257"), new DateTime(2023, 6, 11, 15, 36, 8, 221, DateTimeKind.Local).AddTicks(8657), "Random", "Brandon" }
                 });
 
             migrationBuilder.InsertData(
