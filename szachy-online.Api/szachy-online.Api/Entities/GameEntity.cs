@@ -7,12 +7,12 @@ namespace szachy_online.Api.Entities
     {
         [Key]
         public Guid GameID { get; set; }
-        [Required]
         public Guid WhitePlayerID { get; set; }
         public virtual AccountEntity? WhitePlayer { get; set; }
-        [Required]
         public Guid BlackPlayerID { get; set; }
         public virtual AccountEntity? BlackPlayer { get; set; }
+        public Guid MachineID { get; set; }
+        public virtual MachineEntity? Machine { get; set; }
         public string? Winner { get; set; }
         public string? PGN { get; set; }
         [Required]
