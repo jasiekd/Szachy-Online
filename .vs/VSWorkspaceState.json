@@ -3,10 +3,11 @@
     "",
     "\\szachy-online.Api",
     "\\szachy-online.Api\\szachy-online.Api",
+    "\\szachy-online.Api\\szachy-online.Api\\Controllers",
     "\\szachy-online.Api\\szachy-online.Api\\Data",
     "\\szachy-online.Api\\szachy-online.Api\\Hubs",
     "\\szachy-online.Api\\szachy-online.Api\\Services"
   ],
-  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api\\Services\\GameService.cs",
+  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api\\Controllers\\MachineController.cs",
   "PreviewInSolutionExplorer": false
 }
