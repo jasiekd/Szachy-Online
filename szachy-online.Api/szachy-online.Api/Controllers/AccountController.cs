@@ -46,7 +46,7 @@ namespace szachy_online.Api.Controllers
             return await _context.Accounts.ToListAsync();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("gerUser/{id}")]
         public async Task<ActionResult<AccountEntity>> GetAccountEntity(Guid id)
         {
             
@@ -60,8 +60,14 @@ namespace szachy_online.Api.Controllers
             {
                 return NotFound();
             }
+            UserInfoDto temp = new UserInfoDto
+            {
+                Name = accountEntity.Name,
+                Surname = accountEntity.Surname,
+                Nickname = accountEntity.Nickname,
+            };
 
-            return accountEntity;
+            return Ok(temp);
         }
         [HttpGet("getUser")]
         [Authorize]
