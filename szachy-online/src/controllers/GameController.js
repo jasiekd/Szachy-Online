@@ -31,6 +31,7 @@ export default function GameController({children,getOpenings})
     }
 
     const onReceiveStartGame = (gameId) =>{
+        debugger
         localStorage.gameId = gameId;
         console.log(gameId);
         setChessHubOnGame()
@@ -39,7 +40,6 @@ export default function GameController({children,getOpenings})
     }
 
     const onReceivePlayerMove = (move) =>{
-        
         console.log("odbieram: "+move);
         setLastEnemyMove(move);
         setReceiveMoveAlert(!receiveMoveAlert);
@@ -51,6 +51,8 @@ export default function GameController({children,getOpenings})
         //game.current=gameCopy;
         //console.log(move)
     }
+
+
     const createGameOnlineWithPlayer = async(guid,color) =>{
         const response = await gameGateway.createGameOnlineWithPlayer(guid,color);
 
@@ -73,18 +75,39 @@ export default function GameController({children,getOpenings})
         const response = await gameGateway.createGameWithComputer(level,color,openingId);
         if(response.status === 200)
         {
-            console.log(response);
+            localStorage.gameIdComputer = response.data.gameID;
+            localStorage.pgnComputer = response.data.pgn;
+            navigate("/chessBoardComputer",{state:{color:color}});
         }else{
             Swal.fire({
                 position: 'center',
                 icon: 'error',
-                title: 'Błąd tworzenia nowej rozgrywki',
+                title: 'Błąd tworzenia rozgrywki z komputerem',
                 background: "#20201E",
                 showConfirmButton: false,
                 timer: 1500
               });
             return null;
         }
+    }
+
+    const startGameWithComputer = async(gameId) =>{
+        const response = await gameGateway.startGameWithComputer(gameId);
+        if(response.status === 200)
+        {
+            console.log(response);
+        }else{
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Błąd rozpoczęcia rozgrywki z komputerem',
+                background: "#20201E",
+                showConfirmButton: false,
+                timer: 1500
+              });
+            return null;
+        }
+
     }
 
     const sendPlayerMove = async(move)=>{
@@ -102,8 +125,23 @@ export default function GameController({children,getOpenings})
         }
         
     }    
-    const getInfoAboutGame = async() =>{
-        const response = await gameGateway.getInfoAboutGame();
+    const sendPlayerMoveComputer = async(move)=>{
+        
+        
+        const response = await gameGateway.computerMove(move);
+
+        if(response.status === 200)
+        {
+            
+            return response.data;
+        }
+        else{
+            //console.log(response);
+        }
+        
+    }    
+    const getInfoAboutGame = async(gameId) =>{
+        const response = await gameGateway.getInfoAboutGame(gameId);
 
         if(response.status === 200)
         {
@@ -130,9 +168,10 @@ export default function GameController({children,getOpenings})
         if(ChessHub.onReceiveGameData !== onReceivePlayerMove)
         {
             ChessHub.onReceiveGameData = onReceivePlayerMove;
-            chessHub.refactorConnection();
+            await chessHub.refactorConnection();
         }
     }
+
     const setRefToGame = async(gameRef)=>{
         game.current = gameRef;
     }
@@ -152,7 +191,9 @@ export default function GameController({children,getOpenings})
         getInfoAboutGame,
         receiveMoveAlert,
         lastEnemyMove,
-        getOpenings
+        getOpenings,
+        startGameWithComputer,
+        sendPlayerMoveComputer,
     })
 
     

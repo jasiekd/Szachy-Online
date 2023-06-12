@@ -7,6 +7,7 @@ import {
     createBrowserRouter,
 } from "react-router-dom";
 import GameController from "../controllers/GameController";
+import ChessBoardComputer from "../views/ChessBoardComputer";
 
 const router = createBrowserRouter([
     {
@@ -31,6 +32,12 @@ const router = createBrowserRouter([
         path: "/turnbasedGameplay",
         element: <TurnbasedGameplay />,
     }
+    ,
+    {
+        path: "/chessBoardComputer",
+        element: <GameController><ChessBoardComputer /></GameController>,
+    }
+    ,
 ]);
 
 export default router;

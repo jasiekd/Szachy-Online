@@ -60,6 +60,7 @@ export class ChessHub{
     static openInvate = ()=>{};
     static closeInvate = ()=>{};
     static onReceiveGameData = (gameData) =>{};
+    static onReceiveGameComputerData = (gameData) =>{};
     static connection = null;
     static instance = null;
     constructor(){
@@ -72,7 +73,7 @@ export class ChessHub{
             this.refactorConnection();
     }
 
-    refactorConnection(){
+    async refactorConnection(){
        
         if(ChessHub.connection){
             ChessHub.connection.stop();
@@ -87,9 +88,13 @@ export class ChessHub{
         .then(result =>{
             console.log("Conected");
             console.log(ChessHub.onReceiveGameData);
+            console.log(ChessHub.onReceiveGameComputerData)
             ChessHub.connection.on(localStorage.uid,(gameData)=>{
                 ChessHub.onReceiveGameData(gameData);
-                });
+            });
+            ChessHub.connection.on(localStorage.gameIdComputer,(gameData)=>{
+                ChessHub.onReceiveGameData(gameData);
+            });
         })
         .catch(error =>{
             console.log("Error");
@@ -144,6 +149,14 @@ export class GameService{
             }
         //}
     }
+    async startGameWithComputer(gameId){
+        try{
+            const response = await axios.post(HostName+'/api/Game/StartGameWithComputer?guid='+gameId);
+            return response;
+        }catch(error){
+            return error.response;
+        }
+    }
 
     async playerMove(move){
         try{
@@ -153,11 +166,19 @@ export class GameService{
             return error.response;
         }
     }
-
-    async getInfoAboutGame(){
-        console.log(localStorage.gameId);
+    async computerMove(move){
         try{
-            const response = await axios.post(HostName+'/api/Game/GetInfoAboutGame/',localStorage.gameId,{
+            const response = await axios.get(HostName+'/api/Game/ComputerMove/'+localStorage.gameIdComputer+"/"+move,{})
+            return response;
+        }catch(error){
+            return error.response;
+        }
+    }
+
+    async getInfoAboutGame(gameId){
+
+        try{
+            const response = await axios.post(HostName+'/api/Game/GetInfoAboutGame/',gameId,{
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: '*/*',

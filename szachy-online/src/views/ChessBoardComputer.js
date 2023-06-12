@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 
-export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMove,setRefToGame,getInfoAboutGame,receiveMoveAlert,lastEnemyMove}) {
+export default function ChessBoardComputer({startGameWithComputer,sendPlayerMoveComputer,getInfoAboutGame,setChessHubOnGame,lastEnemyMove}) {
   const location = useLocation();
   const navigate = useNavigate();
   const [moveHistory, setMoveHistory] = useState([]);
@@ -22,7 +22,7 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
     setMoveHistory([]);
   },[]);
   useEffect(() => {
-    if(location.state) {
+    if(location.state && location.state.content) {
       const gameCopy = { ...game };
       gameCopy.load_pgn(location.state.content);
       setGame(gameCopy);
@@ -51,42 +51,19 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
   }, [location]);
 
   const [game, setGame] = useState(new Chess());
-  //game.move("d4")
- // game.move("e5")
  
   function makeAMove(move) {
     const gameCopy = { ...game };
     const result = gameCopy.move(move);
-    
     setGame(gameCopy);
     return result; // null if the move was illegal, the move object if the move was legal
   }
 
   
 
-  function makeRandomMove() {
-    const possibleMoves = game.moves();
-    if (game.game_over()) {
-      console.log('przegrana');
-      return;
-    } 
-    if (game.in_draw()) {
-      console.log('remis');
 
-      return;
-    } 
-    if (possibleMoves.length === 0) {
-      console.log('koniec ruchów');
-
-      return;
-    } 
-
-    //pawnMoves();
-
-  }
 
   function onDrop(sourceSquare, targetSquare) {
-    // console.log(game.turn());
     if((localStorage.uid === gameInfo.blackID && game.turn() === 'w')||
       (localStorage.uid === gameInfo.whiteID && game.turn() === 'b')){
         return false;
@@ -95,12 +72,10 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
     const move = makeAMove({
       from: sourceSquare,
       to: targetSquare,
-      promotion: "q", // always promote to a queen for example simplicity
+      promotion: "q",
     });
     if(move){
-      // console.log("wykonano: ");
-      // console.log(move)
-      sendPlayerMove(move.san);
+      sendPlayerMoveComputer(move.san);
     }
     return true;
   }
@@ -167,23 +142,24 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
   }
   
   useEffect(()=>{
-
-    if(localStorage.getItem("gameId")===null)
+    if(localStorage.gameIdComputer && localStorage.pgnComputer && location.state && location.state.color)
     {
-      navigate("/home");
-    }else{
-      setChessHubOnGame();
-      setRefToGame(game);
-      getInfoAboutGame(localStorage.gameId).then((r)=>{
-        setGameInfo(r);
+        game.load_pgn(localStorage.pgnComputer);
+        if(location.state.color === "BlackPlayer")
+            setOrientation("black")
+        else if(location.state.color === "WhitePlayer")
+            setOrientation("white")
+        setChessHubOnGame().then(r=>{
+            startGameWithComputer(localStorage.gameIdComputer)
+            getInfoAboutGame(localStorage.gameIdComputer).then((r)=>{
+                setGameInfo(r)
+            })
+        });
         
-        if(r.blackID === localStorage.uid){
-          setOrientation("black");
-        }
-      })
+    }else{
+        navigate("/home");
     }
   },[])
-
   useEffect(()=>{
     
 
@@ -194,7 +170,7 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
     {
       //gameCopy.remove(lastEnemyMove);
       //game.move(lastEnemyMove);
-      // console.log("mamy problem");
+       console.log("mamy problem: "+lastEnemyMove);
     }
     pawnMoves();
     console.log('a');
@@ -202,6 +178,7 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
     
 
   },[lastEnemyMove])
+  
   return (
     <div className="App">
       <Header/>
