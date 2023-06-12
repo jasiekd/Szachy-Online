@@ -4,23 +4,27 @@ import { ThemeInput } from "./ThemeInput";
 import { useEffect, useState } from "react";
 import FriendController from "../controllers/FriendController";
 import GameController from "../controllers/GameController";
-
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 function SendInvate({invateToGame,friendId}){
     const invate = () => {
        // console.log("Fuid:"+friendId);
         invateToGame(friendId);
     }
     return(
-        <>
+        <div style={{display:"flex",gap:"10rem"}}>
              <button className='option-btn' onClick={()=>invate()}>Zaproś</button>
             <button className='option-btn'>Anuluj</button>
-        </>
+        </div>
     )
 }
 
-function FreindInvate({onGetFriendsList}){
+function FreindInvate({onGetFriendsList,setSelectedFriendId}){
     const [data,setData] = useState([]);
-    const [selectedFriendId,setSelectedFriendId] = useState(null);
+   
    
     const selectFriend = (friendObj) =>{
         
@@ -42,7 +46,9 @@ function FreindInvate({onGetFriendsList}){
 
     return(
         <div className='freind-invate'>
-            <Autocomplete
+            <FormControl style={{width:"100%"}}>
+                <FormLabel style={{color:"white",fontSize:"2rem"}}>Przciwnik</FormLabel>
+                <Autocomplete
                 options={data}
                 disableClearable
                 getOptionLabel={(option)=>
@@ -55,9 +61,9 @@ function FreindInvate({onGetFriendsList}){
                 onChange={(event,value) => selectFriend(value)}
                 renderInput={(params) => <ThemeInput {...params}  label="Nickname" onClick={()=>getMyFriendsList()}/>}
             />
-            <GameController>
-               <SendInvate friendId={selectedFriendId}/>
-            </GameController>  
+            </FormControl>
+           
+            
             
         </div>
     )
@@ -65,7 +71,7 @@ function FreindInvate({onGetFriendsList}){
 
 export default function GameOptionsHHComponent({getStyle,hide,createConnectToInvHub}){
     const navigate = useNavigate();
-
+    const [selectedFriendId,setSelectedFriendId] = useState(null);
     const startGameHumanHumanOnline=()=>{
         navigate("/chessBoard");
     }
@@ -79,23 +85,30 @@ export default function GameOptionsHHComponent({getStyle,hide,createConnectToInv
             
             <div>Ustawienia rozgrywki Online Człowiek-Człowiek</div>
             <FriendController>
-                <FreindInvate/>
+                <FreindInvate setSelectedFriendId={setSelectedFriendId}/>
             </FriendController>
-            <div className='invate-status'>
-                Status zaproszenia: niewysłano
-            </div>
                 
-            <div>
-                Mój kolor:
-                <select className='friend-select'>
-                    <option value="0">Wybierz kolor</option>
-                    <option value="1">Czarny</option>
-                    <option value="1">Biały</option>
-                </select>
+            <div style={{width:"50rem"}}>  
+
+                
+                <FormControl style={{width:"100%"}}>
+                <FormLabel style={{color:"white",fontSize:"2rem"}}>Kolor pionków</FormLabel>
+                <RadioGroup
+                    row
+                    style={{width:"100%",gap:"10rem"}}
+                >
+                    <FormControlLabel value="White" control={<Radio style={{color:"white"}}/>} label="Białe" />
+                    <FormControlLabel value="Black" control={<Radio style={{color:"white"}}/>} label="Czarne" />
+                    <FormControlLabel value="Random" control={<Radio style={{color:"white"}}/>} label="Losowe" />
+
+                </RadioGroup>
+                </FormControl>
             </div>
             <div>
-                <button className='option-btn' onClick={conect}>Rozpocznij</button>
-                <button className='option-btn' onClick={hide}>Anuluj</button>
+                <GameController>
+                    <SendInvate friendId={selectedFriendId}/>
+                </GameController>
+                
             </div>
         
         

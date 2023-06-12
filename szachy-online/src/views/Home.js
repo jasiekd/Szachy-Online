@@ -24,8 +24,11 @@ function TipElement({getRandomTip})
     )
 }
 
-function Home({createConnectToInvHub,startConnectionToInvHub,invateHubConection}) {
+function Home({createConnectToInvHub,startConnectionToInvHub,invateHubConection,setChessHubOnReceive}) {
 
+    useEffect(()=>{
+        setChessHubOnReceive()
+    },[])
   return (
     <div className="App">
 

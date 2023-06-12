@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/chessBoard",
-        element: <ChessBoard />,
+        element: <GameController><ChessBoard /></GameController>,
     }
     ,
     {

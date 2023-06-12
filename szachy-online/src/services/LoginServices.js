@@ -3,26 +3,38 @@ import { HostName } from "../HostName";
 import jwtDecode from "jwt-decode";
 import Swal from "sweetalert2";
 
-export async function refreshTonke(){
-    try{
-        const response = await axios.post(HostName+'/api/Token/refresh',
-        {
-            accessToken: localStorage.accessToken,
-            refreshTokken: localStorage.refreshToken
-        })
+
+async function refreshAccessToken() {
+    try {
+      const response = await axios.post(HostName+'/api/Token/refresh', {
+        accessToken: localStorage.accessToken,
+        refreshToken: localStorage.refreshToken
+      });
         localStorage.accessToken = response.data.accessToken;
         localStorage.refreshToken = response.data.refreshToken;
-    }catch(error){
-        Swal.fire({
-            position: 'center',
-            icon: 'error',
-            title: 'Błąd odnawiania sesji',
-            background: "#20201E",
-            showConfirmButton: false,
-            timer: 1500
-          })
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
-}
+  }
+  
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      const originalRequest = error.config;
+  
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        return refreshAccessToken().then(() => {
+          originalRequest.headers.Authorization = `Bearer ${localStorage.accessToken}`;
+          return axios(originalRequest);
+        });
+      }
+  
+      return Promise.reject(error);
+    }
+  );
+
 
 export default class LoginService{
     

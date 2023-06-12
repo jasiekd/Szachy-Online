@@ -4,14 +4,20 @@ import { Chessboard } from "react-chessboard";
 import { useEffect } from "react";
 import '../styles/ChessBoard.css';
 import Header from './Header.js';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
-import withReactContent from "sweetalert2-react-content";
 
-export default function ChessBoard() {
+
+export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMove,setRefToGame,getInfoAboutGame,receiveMoveAlert,lastEnemyMove}) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [moveHistory, setMoveHistory] = useState([]);
-
+  const [orientation,setOrientation] = useState("white");
+  const [gameInfo,setGameInfo] = useState(null);
+  const [playerNicks,setPlayerNicks] = useState({
+    black: "",
+    white: ""
+  })
 
   useEffect(() => {
     if(location.state) {
@@ -43,6 +49,8 @@ export default function ChessBoard() {
   }, [location]);
 
   const [game, setGame] = useState(new Chess());
+  //game.move("d4")
+ // game.move("e5")
  
   function makeAMove(move) {
     const gameCopy = { ...game };
@@ -70,23 +78,28 @@ export default function ChessBoard() {
 
       return;
     } 
-    const randomIndex = Math.floor(Math.random() * possibleMoves.length);
-    makeAMove(possibleMoves[randomIndex]);
-    pawnMoves();
+
+    //pawnMoves();
 
   }
 
   function onDrop(sourceSquare, targetSquare) {
+    console.log(game.turn());
+    if((localStorage.uid === gameInfo.blackID && game.turn() === 'w')||
+      (localStorage.uid === gameInfo.whiteID && game.turn() === 'b')){
+        return false;
+      }
     
     const move = makeAMove({
       from: sourceSquare,
       to: targetSquare,
       promotion: "q", // always promote to a queen for example simplicity
     });
-    //game.move({ from: 'g7', to: 'g6' })
-    // illegal move
-    if (move === null) return false;
-    setTimeout(makeRandomMove, 200);
+    if(move){
+      console.log("wykonano: ");
+      console.log(move)
+      sendPlayerMove(move.san);
+    }
     return true;
   }
   function pawnMoves(){
@@ -94,6 +107,7 @@ export default function ChessBoard() {
     const twoLastElements ={move:moveHistory.length+1,white: array[array.length-2],black: array[array.length-1]};
     const array2=[...moveHistory,twoLastElements];
     setMoveHistory(array2);
+    console.log(game.history());
   }
 
   const fileWriterSuccessAlert = () =>{
@@ -143,6 +157,41 @@ export default function ChessBoard() {
       })
   }
   
+  useEffect(()=>{
+
+    if(localStorage.getItem("gameId")===null)
+    {
+      navigate("/home");
+    }else{
+      setChessHubOnGame();
+      setRefToGame(game);
+      getInfoAboutGame().then((r)=>{
+        setGameInfo(r);
+        
+        if(r.blackID === localStorage.uid){
+          setOrientation("black");
+        }
+      })
+    }
+  },[])
+
+  useEffect(()=>{
+    
+
+    const gameCopy = {...game};
+    console.log("tura: "+gameCopy.turn())
+    console.log(gameCopy.moves());
+    if(gameCopy.move(lastEnemyMove)===null)
+    {
+      //gameCopy.remove(lastEnemyMove);
+      //game.move(lastEnemyMove);
+      console.log("mamy problem");
+    }
+    pawnMoves()
+    setGame(gameCopy);
+    
+
+  },[lastEnemyMove])
   return (
     <div className="App">
       <Header/>
@@ -150,13 +199,13 @@ export default function ChessBoard() {
         <div className="content-row">
           <div className="first-section">
             <div className="user-nickname">
-              <p>Makrol</p>
+              <p>{gameInfo?gameInfo.blackNickname:null}</p>
             </div>
             <div className="chess-board">
-              <Chessboard  position={game.fen()} onPieceDrop={onDrop} />
+              <Chessboard  position={game.fen()} onPieceDrop={onDrop} boardOrientation={orientation}/>
             </div>
             <div className="user-nickname">
-              <p>Zetux</p>
+              <p>{gameInfo?gameInfo.whiteNickname:null}</p>
             </div>
           </div>
           <div className="second-section">
@@ -164,8 +213,8 @@ export default function ChessBoard() {
                 <p>Ruchy pionków:</p>
                 <div className="move-pawn-row">
                   <p className="column">lp.</p>
-                  <p className="column">Zetux</p>
-                  <p className="column">Makrol</p>
+                  <p className="column">{gameInfo?gameInfo.whiteNickname:null}</p>
+                  <p className="column">{gameInfo?gameInfo.blackNickname:null}</p>
                 </div>
             </div>
             <div className="second-section-main">

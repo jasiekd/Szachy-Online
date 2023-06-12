@@ -13,7 +13,7 @@ import winnerIcon from "../img/winner.png";
 export default function ChessBoard() {
   const location = useLocation();
   const navigate = useNavigate()
-
+  const [orientation,setOrientation] = useState('white');
   const [moveHistory, setMoveHistory] = useState([]);
 
   const [nickname,setNickname] = useState("");
@@ -100,6 +100,11 @@ export default function ChessBoard() {
     // illegal move
     if (move === null) return false;
 
+    if(orientation === "white"){
+      setOrientation("black");
+    }else{
+      setOrientation("white");
+    }
     var imageElement = document.createElement('img');
     imageElement.src = winnerIcon;
     imageElement.style.width = '100%';
@@ -215,7 +220,7 @@ export default function ChessBoard() {
               <p>{nickname}</p>
             </div>
             <div className="chess-board">
-              <Chessboard  position={game.fen()} onPieceDrop={onDrop} />
+              <Chessboard  position={game.fen()} onPieceDrop={onDrop} boardOrientation={orientation}/>
             </div>
             <div className="user-nickname">
               <p>{nicknameSecondPlayer}</p>

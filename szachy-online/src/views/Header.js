@@ -20,6 +20,8 @@ import FriendController from "../controllers/FriendController";
 import AccountController from "../controllers/AccountController";
 import GameController from "../controllers/GameController";
 import GameOptionHMComponent from "../components/GameOptionHMComponent";
+import { useNavigate } from "react-router-dom";
+import OpeningController from "../controllers/OpeningController";
 
 
 function LoggeAs({getUser}){
@@ -38,6 +40,7 @@ function LoggeAs({getUser}){
 }
 
 function Header(){
+    const navigate = useNavigate();
     const[userName,setUserName] = useState("");//huba wywalic
     
 
@@ -130,7 +133,7 @@ function Header(){
     return(
         <>
         <nav className="app-nav">
-            <div className="logo">
+            <div className="logo" onClick={()=>navigate("/home")}>
                 <img className="img-logo" src={imgLogo} alt=""/>
             </div>
             
@@ -212,11 +215,17 @@ function Header(){
         <GameController>
         <GameOptionsHHComponent getStyle={getHumanHumanOptionsStyle} hide={hideAdditionalMenu}/>
         </GameController>
-        <GameOptionsTHHComponent getStyle={getTurnbasedHumanHumanOptionsStyle} hide={hideAdditionalMenu}/>
-        <GameController>
-            <GameOptionHMComponent  getStyle={getHumanComputerOptionsStyle} hide={hideAdditionalMenu}/>
-        </GameController>
+
         
+            <GameOptionsTHHComponent getStyle={getTurnbasedHumanHumanOptionsStyle} hide={hideAdditionalMenu}/>
+        
+            
+        
+        <OpeningController>
+            <GameController>
+                <GameOptionHMComponent  getStyle={getHumanComputerOptionsStyle} hide={hideAdditionalMenu}/>
+            </GameController>
+        </OpeningController>
         
 </>
     );

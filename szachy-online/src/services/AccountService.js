@@ -14,20 +14,20 @@ export default class AccountService{
         }
     }*/
     async getUser(){
-        let count = 0;
-        while(true)
-        {
+        //let count = 0;
+       // while(true)
+       // {
             try{
                 const response = await axios.get(HostName+'/api/Account/getUser',{});
                 return response;
             }catch(error){
-                if(count===1){
+               // if(count===1){
                     return error.response;
-                }
-                count = 1
-                refreshTonke();
+              //  }
+               // count = 1
+               // refreshTonke();
             }
-        }
+        //}
         
     }
     async findByNickName(nickname){
