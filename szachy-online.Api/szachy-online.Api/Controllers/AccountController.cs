@@ -46,7 +46,7 @@ namespace szachy_online.Api.Controllers
             return await _context.Accounts.ToListAsync();
         }
 
-        [HttpGet("gerUser/{id}")]
+        [HttpGet("getUser/{id}")]
         public async Task<ActionResult<AccountEntity>> GetAccountEntity(Guid id)
         {
             
