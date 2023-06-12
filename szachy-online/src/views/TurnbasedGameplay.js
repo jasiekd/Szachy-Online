@@ -217,13 +217,14 @@ export default function ChessBoard() {
           <div className="first-section">
             
             <div className="user-nickname">
-              <p>{nickname}</p>
+              <p>{nicknameSecondPlayer}</p>
             </div>
             <div className="chess-board">
-              <Chessboard  position={game.fen()} onPieceDrop={onDrop} boardOrientation={orientation}/>
+              {/* <Chessboard  position={game.fen()} onPieceDrop={onDrop} boardOrientation={orientation}/> */}
+              <Chessboard  position={game.fen()} onPieceDrop={onDrop}/>
             </div>
             <div className="user-nickname">
-              <p>{nicknameSecondPlayer}</p>
+              <p>{nickname}</p>
             </div>
           </div>
           <div className="second-section">

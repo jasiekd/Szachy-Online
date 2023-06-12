@@ -18,7 +18,9 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
     black: "",
     white: ""
   })
-
+  useEffect(() => {
+    setMoveHistory([]);
+  },[]);
   useEffect(() => {
     if(location.state) {
       const gameCopy = { ...game };
@@ -84,7 +86,7 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
   }
 
   function onDrop(sourceSquare, targetSquare) {
-    console.log(game.turn());
+    // console.log(game.turn());
     if((localStorage.uid === gameInfo.blackID && game.turn() === 'w')||
       (localStorage.uid === gameInfo.whiteID && game.turn() === 'b')){
         return false;
@@ -96,18 +98,25 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
       promotion: "q", // always promote to a queen for example simplicity
     });
     if(move){
-      console.log("wykonano: ");
-      console.log(move)
+      // console.log("wykonano: ");
+      // console.log(move)
       sendPlayerMove(move.san);
     }
     return true;
   }
   function pawnMoves(){
     const array=game.history();
-    const twoLastElements ={move:moveHistory.length+1,white: array[array.length-2],black: array[array.length-1]};
-    const array2=[...moveHistory,twoLastElements];
+    if(array.length===0) return;
+    let array2=[];
+
+    for (let i = 0; i < array.length; i += 2) {
+      if (i + 1 < array.length) {
+        const pair = { white: array[i], black: array[i + 1] };
+        array2.push(pair);
+      }
+    }
+
     setMoveHistory(array2);
-    console.log(game.history());
   }
 
   const fileWriterSuccessAlert = () =>{
@@ -179,15 +188,16 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
     
 
     const gameCopy = {...game};
-    console.log("tura: "+gameCopy.turn())
-    console.log(gameCopy.moves());
+    // console.log("tura: "+gameCopy.turn())
+    // console.log(gameCopy.moves());
     if(gameCopy.move(lastEnemyMove)===null)
     {
       //gameCopy.remove(lastEnemyMove);
       //game.move(lastEnemyMove);
-      console.log("mamy problem");
+      // console.log("mamy problem");
     }
-    pawnMoves()
+    pawnMoves();
+    console.log('a');
     setGame(gameCopy);
     
 
@@ -199,13 +209,18 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
         <div className="content-row">
           <div className="first-section">
             <div className="user-nickname">
-              <p>{gameInfo?gameInfo.blackNickname:null}</p>
+              <p> {orientation === 'black' && (gameInfo ? gameInfo.whiteNickname : null)}
+                  {orientation === 'white' && (gameInfo ? gameInfo.blackNickname : null)}
+              </p>
             </div>
             <div className="chess-board">
               <Chessboard  position={game.fen()} onPieceDrop={onDrop} boardOrientation={orientation}/>
             </div>
             <div className="user-nickname">
-              <p>{gameInfo?gameInfo.whiteNickname:null}</p>
+              <p> 
+                {orientation === 'black' && (gameInfo ? gameInfo.blackNickname : null)}
+                {orientation === 'white' && (gameInfo ? gameInfo.whiteNickname : null)}
+              </p>
             </div>
           </div>
           <div className="second-section">
@@ -219,9 +234,9 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
             </div>
             <div className="second-section-main">
                 {
-                  moveHistory.map((single,index)=>(
+                 moveHistory && moveHistory.map((single,index)=>(
                     <div className="move-pawn-row" key={index}>
-                      <p className="column">{single.move}.</p>
+                      <p className="column">{index+1}.</p>
                       <p className="column">{single.white}</p>
                       <p className="column">{single.black}</p>
                     </div>
