@@ -13,7 +13,7 @@ namespace szachy_online.Api.Services
         {
             _tokenService = tokenService;
             _context = context;
-    }
+        }
 
         public TokenInfoDto LoginUser(UserLoginRequestDto loginData)
         {
@@ -23,9 +23,11 @@ namespace szachy_online.Api.Services
             }
             else
             {
-                var accountEntity = _context.Accounts.Where(x=> x.Login == loginData.UserName).FirstOrDefault();
-                if (accountEntity!=null) {
-                    if (accountEntity.Password == HashPassword(loginData.Password)) {
+                var accountEntity = _context.Accounts.Where(x => x.Login == loginData.UserName).FirstOrDefault();
+                if (accountEntity != null)
+                {
+                    if (accountEntity.Password == HashPassword(loginData.Password))
+                    {
                         var result = new TokenInfoDto();
                         result.AccessToken = _tokenService.GenerateBearerToken(accountEntity.Id.ToString());
                         result.RefreshToken = _tokenService.GenerateRefreshToken(accountEntity.Id.ToString());
