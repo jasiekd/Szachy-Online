@@ -8,6 +8,6 @@
     "\\szachy-online.Api\\szachy-online.Api\\Hubs",
     "\\szachy-online.Api\\szachy-online.Api\\Services"
   ],
-  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api\\Services\\GameService.cs",
+  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api\\Controllers\\AccountController.cs",
   "PreviewInSolutionExplorer": false
 }
