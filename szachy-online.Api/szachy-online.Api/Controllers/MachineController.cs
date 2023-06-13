@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +22,8 @@ namespace szachy_online.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Machine
         [HttpGet("GetMachines")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<MachineEntity>>> GetMachines()
         {
           if (_context.Machines == null)
@@ -32,8 +33,8 @@ namespace szachy_online.Api.Controllers
             return await _context.Machines.ToListAsync();
         }
 
-        // GET: api/Machine/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<MachineEntity>> GetMachineEntity(Guid id)
         {
           if (_context.Machines == null)
@@ -50,9 +51,8 @@ namespace szachy_online.Api.Controllers
             return machineEntity;
         }
 
-        // PUT: api/Machine/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutMachineEntity(Guid id, MachineEntity machineEntity)
         {
             if (id != machineEntity.Id)
@@ -81,9 +81,8 @@ namespace szachy_online.Api.Controllers
             return NoContent();
         }
 
-        // POST: api/Machine
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<MachineEntity>> PostMachineEntity(MachineEntity machineEntity)
         {
           if (_context.Machines == null)
@@ -96,8 +95,8 @@ namespace szachy_online.Api.Controllers
             return CreatedAtAction("GetMachineEntity", new { id = machineEntity.Id }, machineEntity);
         }
 
-        // DELETE: api/Machine/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteMachineEntity(Guid id)
         {
             if (_context.Machines == null)

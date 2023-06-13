@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace szachy_online.Api.Controllers
 
         // GET: api/OpeningEntities
         [HttpGet("GetOpenings")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<OpeningEntity>>> GetOpenings()
         {
           if (_context.Openings == null)
@@ -33,7 +35,8 @@ namespace szachy_online.Api.Controllers
         }
 
         // GET: api/OpeningEntities/5
-        [HttpPost(("GetOpening"))]
+        [HttpPost("GetOpening")]
+        [Authorize]
         public async Task<ActionResult<OpeningEntity>> GetOpening(int id)
         {
           if (_context.Openings == null)
@@ -53,6 +56,7 @@ namespace szachy_online.Api.Controllers
         // PUT: api/OpeningEntities/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutOpeningEntity(int id, OpeningEntity openingEntity)
         {
             if (id != openingEntity.Id)
@@ -84,6 +88,7 @@ namespace szachy_online.Api.Controllers
         // POST: api/OpeningEntities
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<OpeningEntity>> PostOpening(OpeningEntity openingEntity)
         {
           if (_context.Openings == null)
@@ -98,6 +103,7 @@ namespace szachy_online.Api.Controllers
 
         // DELETE: api/OpeningEntities/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteOpening(int id)
         {
             if (_context.Openings == null)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,6 @@ namespace szachy_online.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Tip
         [HttpGet("GetTips")]
         public async Task<ActionResult<IEnumerable<TipEntity>>> GetTips()
         {
@@ -50,6 +50,7 @@ namespace szachy_online.Api.Controllers
             return tipEntity;
         }
         [HttpPost("GetRandomTip")]
+        [AllowAnonymous]
         public async Task<ActionResult<TipEntity>> GetRandomTip()
         {
             if (_context.Tips == null)

@@ -13,7 +13,6 @@ namespace szachy_online.Api.Services
 
         }
 
-
         public async Task<int> EvaluatePosition(Game game)
         {
             int score = 0;
@@ -26,7 +25,6 @@ namespace szachy_online.Api.Services
             {
                 score += await GetPiecePositionScore(tmp);
             }
-
 
             return score;
         }
@@ -121,17 +119,81 @@ namespace szachy_online.Api.Services
 
             // Oceny dla skoczków w różnych pozycjach planszy
             // Preferencje dla centralnych pozycji
-            int[,] knightPositionScores =
-            {
-                { -10, -5, -5, -5, -5, -5, -5, -10 },
-                { -5, 0, 0, 0, 0, 0, 0, -5 },
-                { -5, 0, 5, 5, 5, 5, 0, -5 },
-                { -5, 0, 5, 10, 10, 5, 0, -5 },
-                { -5, 0, 5, 10, 10, 5, 0, -5 },
-                { -5, 0, 5, 5, 5, 5, 0, -5 },
-                { -5, 0, 0, 0, 0, 0, 0, -5 },
-                { -10, -5, -5, -5, -5, -5, -5, -10 }
-            };
+            int[,] knightPositionScores = {
+        {
+          -10, -5, -5, -5, -5, -5, -5, -10
+        },
+        {
+          -5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          -5
+        },
+        {
+          -5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          -5
+        },
+        {
+          -5,
+          0,
+          5,
+          10,
+          10,
+          5,
+          0,
+          -5
+        },
+        {
+          -5,
+          0,
+          5,
+          10,
+          10,
+          5,
+          0,
+          -5
+        },
+        {
+          -5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          -5
+        },
+        {
+          -5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          -5
+        },
+        {
+          -10,
+          -5,
+          -5,
+          -5,
+          -5,
+          -5,
+          -5,
+          -10
+        }
+      };
 
             // Przydzielanie oceny na podstawie pozycji planszy
             int x = knight.Position.X;
@@ -156,17 +218,81 @@ namespace szachy_online.Api.Services
 
             // Oceny dla gońców w różnych pozycjach planszy
             // Preferencje dla otwartych diagonalnych linii
-            int[,] bishopPositionScores =
-            {
-                { -5, -5, -5, -5, -5, -5, -5, -5 },
-                { -5, 0, 0, 0, 0, 0, 0, -5 },
-                { -5, 0, 5, 5, 5, 5, 0, -5 },
-                { -5, 0, 5, 10, 10, 5, 0, -5 },
-                { -5, 0, 5, 10, 10, 5, 0, -5 },
-                { -5, 0, 5, 5, 5, 5, 0, -5 },
-                { -5, 0, 0, 0, 0, 0, 0, -5 },
-                { -5, -5, -5, -5, -5, -5, -5, -5 }
-            };
+            int[,] bishopPositionScores = {
+        {
+          -5, -5, -5, -5, -5, -5, -5, -5
+        },
+        {
+          -5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          -5
+        },
+        {
+          -5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          -5
+        },
+        {
+          -5,
+          0,
+          5,
+          10,
+          10,
+          5,
+          0,
+          -5
+        },
+        {
+          -5,
+          0,
+          5,
+          10,
+          10,
+          5,
+          0,
+          -5
+        },
+        {
+          -5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          -5
+        },
+        {
+          -5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          -5
+        },
+        {
+          -5,
+          -5,
+          -5,
+          -5,
+          -5,
+          -5,
+          -5,
+          -5
+        }
+      };
 
             // Przydzielanie oceny na podstawie pozycji planszy
             int x = bishop.Position.X;
@@ -193,17 +319,88 @@ namespace szachy_online.Api.Services
             // Preferencje dla pionowych i poziomych linii
             if (!rook.IsBlack)
             {
-                int[,] rookPositionScores =
-                {
-                    { 0, 0, 0, 0, 0, 0, 0, 0 },
-                    { 5, 10, 10, 10, 10, 10, 10, 5 },
-                    { -5, 0, 0, 0, 0, 0, 0, -5 },
-                    { -5, 0, 0, 0, 0, 0, 0, -5 },
-                    { -5, 0, 0, 0, 0, 0, 0, -5 },
-                    { -5, 0, 0, 0, 0, 0, 0, -5 },
-                    { -5, 0, 0, 0, 0, 0, 0, -5 },
-                    { 0, 0, 0, 5, 5, 0, 0, 0 }
-                };
+                int[,] rookPositionScores = {
+          {
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          },
+          {
+            5,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            5
+          },
+          {
+            -5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -5
+          },
+          {
+            -5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -5
+          },
+          {
+            -5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -5
+          },
+          {
+            -5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -5
+          },
+          {
+            -5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -5
+          },
+          {
+            0,
+            0,
+            0,
+            5,
+            5,
+            0,
+            0,
+            0
+          }
+        };
                 // Przydzielanie oceny na podstawie pozycji planszy
                 int x = rook.Position.X;
                 int y = rook.Position.Y;
@@ -211,21 +408,92 @@ namespace szachy_online.Api.Services
             }
             else
             {
-                int[,] rookPositionScores =
-                {
-                    { 0, 0, 0, 5, 5, 0, 0, 0 },
-                    { -5, 0, 0, 0, 0, 0, 0, -5 },
-                    { -5, 0, 0, 0, 0, 0, 0, -5 },
-                    { -5, 0, 0, 0, 0, 0, 0, -5 },
-                    { -5, 0, 0, 0, 0, 0, 0, -5 },
-                    { -5, 0, 0, 0, 0, 0, 0, -5 },
-                    { 5, 10, 10, 10, 10, 10, 10, 5 },
-                    { 0, 0, 0, 0, 0, 0, 0, 0 }
-                };
+                int[,] rookPositionScores = {
+          {
+            0,
+            0,
+            0,
+            5,
+            5,
+            0,
+            0,
+            0
+          },
+          {
+            -5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -5
+          },
+          {
+            -5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -5
+          },
+          {
+            -5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -5
+          },
+          {
+            -5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -5
+          },
+          {
+            -5,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -5
+          },
+          {
+            5,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            5
+          },
+          {
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          }
+        };
                 // Przydzielanie oceny na podstawie pozycji planszy
                 int x = rook.Position.X;
                 int y = rook.Position.Y;
-                score -=  rookPositionScores[x, y];
+                score -= rookPositionScores[x, y];
             }
 
             return score;
@@ -238,17 +506,81 @@ namespace szachy_online.Api.Services
             // Oceny dla królowej w różnych pozycjach planszy
             // Preferencje dla centralnych pozycji
 
-            int[,] queenPositionScores =
-            {
-                    { -20, -10, -10, -5, -5, -10, -10, -20 },
-                    { -10, 0, 0, 0, 0, 0, 0, -10 },
-                    { -10, 0, 5, 5, 5, 5, 0, -10 },
-                    { -5, 0, 5, 5, 5, 5, 0, -5 },
-                    { -5, 0, 5, 5, 5, 5, 0, -5 },
-                    { -10, 5, 5, 5, 5, 5, 0, -10 },
-                    { -10, 0, 5, 0, 0, 0, 0, -10 },
-                    { -20, -10, -10, -5, -5, -10, -10, -20 }
-                };
+            int[,] queenPositionScores = {
+        {
+          -20, -10, -10, -5, -5, -10, -10, -20
+        },
+        {
+          -10,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          -10
+        },
+        {
+          -10,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          -10
+        },
+        {
+          -5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          -5
+        },
+        {
+          -5,
+          0,
+          5,
+          5,
+          5,
+          5,
+          0,
+          -5
+        },
+        {
+          -10,
+          5,
+          5,
+          5,
+          5,
+          5,
+          0,
+          -10
+        },
+        {
+          -10,
+          0,
+          5,
+          0,
+          0,
+          0,
+          0,
+          -10
+        },
+        {
+          -20,
+          -10,
+          -10,
+          -5,
+          -5,
+          -10,
+          -10,
+          -20
+        }
+      };
             // Przydzielanie oceny na podstawie pozycji planszy
             int x = queen.Position.X;
             int y = queen.Position.Y;
@@ -263,7 +595,6 @@ namespace szachy_online.Api.Services
                 score += queenPositionScores[x, y];
             }
 
-
             return score;
         }
 
@@ -273,17 +604,88 @@ namespace szachy_online.Api.Services
 
             // Oceny dla króla w różnych pozycjach planszy
             // Preferencje dla bezpiecznych pozycji i roszad
-            int[,] kingPositionScores =
-            {
-                { 20, 30, 10, 0, 0, 10, 30, 20 },
-                { 20, 20, 0, 0, 0, 0, 20, 20 },
-                { -10, -20, -20, -20, -20, -20, -20, -10 },
-                { -20, -30, -30, -40, -40, -30, -30, -20 },
-                { -20, -30, -30, -40, -40, -30, -30, -20 },
-                { -10, -20, -20, -20, -20, -20, -20, -10 },
-                { 20, 20, 0, 0, 0, 0, 20, 20 },
-                { 20, 30, 10, 0, 0, 10, 30, 20 }
-            };
+            int[,] kingPositionScores = {
+        {
+          20,
+          30,
+          10,
+          0,
+          0,
+          10,
+          30,
+          20
+        },
+        {
+          20,
+          20,
+          0,
+          0,
+          0,
+          0,
+          20,
+          20
+        },
+        {
+          -10,
+          -20,
+          -20,
+          -20,
+          -20,
+          -20,
+          -20,
+          -10
+        },
+        {
+          -20,
+          -30,
+          -30,
+          -40,
+          -40,
+          -30,
+          -30,
+          -20
+        },
+        {
+          -20,
+          -30,
+          -30,
+          -40,
+          -40,
+          -30,
+          -30,
+          -20
+        },
+        {
+          -10,
+          -20,
+          -20,
+          -20,
+          -20,
+          -20,
+          -20,
+          -10
+        },
+        {
+          20,
+          20,
+          0,
+          0,
+          0,
+          0,
+          20,
+          20
+        },
+        {
+          20,
+          30,
+          10,
+          0,
+          0,
+          10,
+          30,
+          20
+        }
+      };
 
             // Przydzielanie oceny na podstawie pozycji planszy
             int x = king.Position.X;
@@ -373,8 +775,7 @@ namespace szachy_online.Api.Services
                                     minEval = Math.Min(minEval, eval);
                                 }
                             }
-                                
-                                
+
                         }
                     };
 
@@ -482,11 +883,11 @@ namespace szachy_online.Api.Services
         {
             Game game = Pgn.MapString(pgn);
             int depth = 0;
-            if( level == "One" )
+            if (level == "One")
             {
                 depth = 1;
             }
-            else if ( level == "Two" )
+            else if (level == "Two")
             {
                 depth = 2;
             }
@@ -497,8 +898,6 @@ namespace szachy_online.Api.Services
         {
             Game game = Pgn.MapString(pgn);
             List<string> listOfAvailableMoves = new List<string>();
-            
-            //mimo ze check to i tak znajduje validposition dla innych pionkow :)
 
             foreach (var test in game.State.Pieces.ToList())
             {
@@ -506,7 +905,7 @@ namespace szachy_online.Api.Services
                 foreach (var test2 in game.State.ValidPositions(test).ToList())
                 {
                     Game clonedGame = new Game(game);
-                    if(clonedGame.State.Info.IsCheck)
+                    if (clonedGame.State.Info.IsCheck)
                     {
                         clonedGame.Move(test, test2.X, test2.Y);
                         if (!clonedGame.State.Info.IsCheck)

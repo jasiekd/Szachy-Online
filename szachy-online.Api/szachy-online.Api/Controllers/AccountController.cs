@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Plugins;
-using pax.chess;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using szachy_online.Api.Data;
 using szachy_online.Api.Dto;
 using szachy_online.Api.Entities;
@@ -48,9 +44,10 @@ namespace szachy_online.Api.Controllers
         }
 
         [HttpGet("getUser/{id}")]
+        [Authorize]
         public async Task<ActionResult<AccountEntity>> GetAccountEntity(Guid id)
         {
-            
+
             if (_context.Accounts == null)
             {
                 return NotFound();
@@ -76,9 +73,10 @@ namespace szachy_online.Api.Controllers
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            AccountEntity accountEntity =  await _context.Accounts.FindAsync(userId);
+            AccountEntity accountEntity = await _context.Accounts.FindAsync(userId);
 
-            UserInfoDto temp = new UserInfoDto { 
+            UserInfoDto temp = new UserInfoDto
+            {
                 Name = accountEntity.Name,
                 Surname = accountEntity.Surname,
                 Nickname = accountEntity.Nickname,
@@ -88,6 +86,7 @@ namespace szachy_online.Api.Controllers
         }
 
         [HttpPost("findByNickname")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<UserInfoDto>>> FindByNickname(string nickname)
         {
 
@@ -96,61 +95,37 @@ namespace szachy_online.Api.Controllers
                 return BadRequest("Nickname must be longer than 2 characters.");
             }
 
-
             var ListOfFoundNicknames = await _context.Accounts.Where(x => x.Nickname.Contains(nickname)).ToListAsync();
-            if(ListOfFoundNicknames.Count == 0)
+            if (ListOfFoundNicknames.Count == 0)
             {
                 return NotFound("No accounts found with the provided nickname.");
             }
-            
+
             List<UserInfoDto> nicknames = new List<UserInfoDto>();
-            foreach(var account in ListOfFoundNicknames)
+            foreach (var account in ListOfFoundNicknames)
             {
-                if(!account.Id.Equals(Guid.Parse("3264FF97-928E-4EFF-BE63-69F21D204067")) && !account.Id.Equals(Guid.Parse("2ACE6DC4-7FEA-46B3-90F4-1839341A86AF")) && !account.Id.Equals(Guid.Parse("958E78FB-5E6B-4822-9F04-8A4A19D15257")))
+                if (!account.Id.Equals(Guid.Parse("3264FF97-928E-4EFF-BE63-69F21D204067")) && !account.Id.Equals(Guid.Parse("2ACE6DC4-7FEA-46B3-90F4-1839341A86AF")) && !account.Id.Equals(Guid.Parse("958E78FB-5E6B-4822-9F04-8A4A19D15257")))
                 {
                     nicknames.Add(new UserInfoDto
                     {
                         Name = account.Name,
                         Surname = account.Surname,
                         Nickname = account.Nickname,
-                    }
-                );
+                    });
                 }
-                 
+
             }
 
             return Ok(nicknames);
         }
 
         [HttpGet("GetMyHistory")]
+        [Authorize]
         public async Task<IActionResult> GetMyHistory()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x=>(x.BlackPlayerID.Equals(userId))||(x.WhitePlayerID.Equals(userId))).ToListAsync();
-
-            var response = new List<object>();
-
-            foreach(var temp in gameEntity)
-            {
-                response.Add(new
-                {
-                    GameID = temp.GameID,
-                    WhiteID = temp.WhitePlayer.Id,
-                    WhiteNickname = temp.WhitePlayer.Nickname,
-                    BlackID = temp.BlackPlayer.Id,
-                    BlackNickname = temp.BlackPlayer.Nickname,
-                    Date = temp.DateStarted
-                });
-            }
-            return Ok(response);
-        }
-
-        [HttpGet("GetMyFriendHistory/{idFriend}")]
-        public async Task<IActionResult> GetMyFriendHistory(Guid idFriend)
-        {
-            
-            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x => (x.BlackPlayerID.Equals(idFriend)) || (x.WhitePlayerID.Equals(idFriend))).ToListAsync();
+            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x => (x.BlackPlayerID.Equals(userId)) || (x.WhitePlayerID.Equals(userId))).ToListAsync();
 
             var response = new List<object>();
 
@@ -169,8 +144,31 @@ namespace szachy_online.Api.Controllers
             return Ok(response);
         }
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpGet("GetMyFriendHistory/{idFriend}")]
+        [Authorize]
+        public async Task<IActionResult> GetMyFriendHistory(Guid idFriend)
+        {
+
+            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x => (x.BlackPlayerID.Equals(idFriend)) || (x.WhitePlayerID.Equals(idFriend))).ToListAsync();
+
+            var response = new List<object>();
+
+            foreach (var temp in gameEntity)
+            {
+                response.Add(new
+                {
+                    GameID = temp.GameID,
+                    WhiteID = temp.WhitePlayer.Id,
+                    WhiteNickname = temp.WhitePlayer.Nickname,
+                    BlackID = temp.BlackPlayer.Id,
+                    BlackNickname = temp.BlackPlayer.Nickname,
+                    Date = temp.DateStarted
+                });
+            }
+            return Ok(response);
+        }
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutAccountEntity(Guid id, AccountEntity accountEntity)
         {
             if (id != accountEntity.Id)
@@ -199,7 +197,6 @@ namespace szachy_online.Api.Controllers
             return NoContent();
         }
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<ActionResult<RegisterInfoDto>> PostAccountEntity(RegisterInfoDto registerInfo)
@@ -216,7 +213,7 @@ namespace szachy_online.Api.Controllers
                 Surname = registerInfo.Surname,
                 Login = registerInfo.Login,
                 Email = registerInfo.Email,
-                Nickname= registerInfo.Nickname,
+                Nickname = registerInfo.Nickname,
                 Password = _accountService.HashPassword(registerInfo.Password)
             };
 
@@ -225,10 +222,14 @@ namespace szachy_online.Api.Controllers
             _context.Accounts.Add(accountEntity);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAccountEntity", new { id = accountEntity.Id }, accountEntity);
+            return CreatedAtAction("GetAccountEntity", new
+            {
+                id = accountEntity.Id
+            }, accountEntity);
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteAccountEntity(Guid id)
         {
             if (_context.Accounts == null)
@@ -252,9 +253,9 @@ namespace szachy_online.Api.Controllers
             return (_context.Accounts?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        private bool LoginEmailNicknameExists(string email, string login, string nickname) 
+        private bool LoginEmailNicknameExists(string email, string login, string nickname)
         {
-            return (_context.Accounts?.Any(e => e.Email == email || e.Login==login || e.Nickname==nickname)).GetValueOrDefault();
+            return (_context.Accounts?.Any(e => e.Email == email || e.Login == login || e.Nickname == nickname)).GetValueOrDefault();
         }
         private bool NicknameExists(string nickname)
         {
@@ -262,4 +263,3 @@ namespace szachy_online.Api.Controllers
         }
     }
 }
-

@@ -1,4 +1,4 @@
-﻿
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -15,8 +15,8 @@ namespace szachy_online.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-        public class GameController : ControllerBase
-        {
+    public class GameController : ControllerBase
+    {
         private readonly AccountService _accountService;
         private readonly DataContext _context;
         private readonly IHubContext<ChessHub> _hubContext;
@@ -32,6 +32,7 @@ namespace szachy_online.Api.Controllers
         }
 
         [HttpPost("GetInfoAboutGame")]
+        [Authorize]
         public async Task<IActionResult> GetInfoAboutGame([FromBody] Guid gameID)
         {
             var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).FirstOrDefaultAsync(x => x.GameID == gameID);
@@ -54,6 +55,7 @@ namespace szachy_online.Api.Controllers
         }
 
         [HttpPost("SetWinner")]
+        [Authorize]
         public async Task<IActionResult> SetWinner(Guid gameID, string result)
         {
             var gameEntity = await _context.Games.FirstOrDefaultAsync(x => x.GameID == gameID);
@@ -68,6 +70,7 @@ namespace szachy_online.Api.Controllers
         }
 
         [HttpGet("ComputerMove/{gid}/{move}")]
+        [Authorize]
         public async Task<IActionResult> ComputerMove(Guid gid, string move)
         {
             var gameEntity = await _context.Games.FindAsync(gid);
@@ -81,7 +84,7 @@ namespace szachy_online.Api.Controllers
                 var moves = gameEntity.PGN.Split(' ').ToList();
                 if (moves.Count % 2 == 0)
                 {
-                    var test2= moves.ElementAt(moves.Count - 2).Split('.').ToList();
+                    var test2 = moves.ElementAt(moves.Count - 2).Split('.').ToList();
                     var lastMoveNumber = int.Parse(test2[0]);
                     var newMoveNumber = lastMoveNumber + 1;
                     move = newMoveNumber + "." + move;
@@ -94,6 +97,8 @@ namespace szachy_online.Api.Controllers
 
             var machine = await _context.Machines.FindAsync((gameEntity.BlackPlayerID == userId) ? gameEntity.WhitePlayerID : gameEntity.BlackPlayerID);
             string computerMove = (machine.Level != "Random") ? await _gameService.GetBestMove(gameEntity.PGN, machine.Level) : await _gameService.GetRandomMove(gameEntity.PGN);
+
+            string originalMove = computerMove;
 
             if (gameEntity.PGN == null)
                 gameEntity.PGN = "1." + computerMove; // Rozpoczynamy numerację ruchów od 1
@@ -113,16 +118,17 @@ namespace szachy_online.Api.Controllers
             _context.Games.Update(gameEntity);
             _context.SaveChanges();
 
-
-            await _hubContext.Clients.All.SendAsync(gid.ToString(), computerMove);
+            await _hubContext.Clients.All.SendAsync(gid.ToString(), originalMove);
 
             return Ok();
         }
 
         [HttpGet("PlayerMove/{gid}/{move}")]
+        [Authorize]
         public async Task<IActionResult> PlayerMove(Guid gid, string move)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            string originalMove = move;
 
             var gameEntity = await _context.Games.FindAsync(gid);
             if (gameEntity.PGN == null)
@@ -143,25 +149,24 @@ namespace szachy_online.Api.Controllers
             _context.Games.Update(gameEntity);
             _context.SaveChanges();
 
-            if(gameEntity.WhitePlayerID == userId)
+            if (gameEntity.WhitePlayerID == userId)
             {
-                await _hubContext.Clients.All.SendAsync(gameEntity.BlackPlayerID.ToString(), move);
+                await _hubContext.Clients.All.SendAsync(gameEntity.BlackPlayerID.ToString(), originalMove);
             }
-            else 
+            else
             {
-                await _hubContext.Clients.All.SendAsync(gameEntity.WhitePlayerID.ToString(), move);
+                await _hubContext.Clients.All.SendAsync(gameEntity.WhitePlayerID.ToString(), originalMove);
             }
-           
+
             return Ok();
         }
 
         [HttpPost("CreateGameWithComputer")]
+        [Authorize]
         public async Task<IActionResult> CreateGameWithComputer(string level, string color, int openingId)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var machine = await _context.Machines.Where(x => x.Level == level).FirstOrDefaultAsync();
-
-            
 
             GameEntity game = new GameEntity
             {
@@ -176,7 +181,7 @@ namespace szachy_online.Api.Controllers
                 game.PGN = opening.PGN;
             }
 
-                if (color == "Random")
+            if (color == "Random")
             {
                 Random random = new Random();
                 int randomNumber = random.Next(2);
@@ -196,25 +201,28 @@ namespace szachy_online.Api.Controllers
             _context.Games.Add(game);
             await _context.SaveChangesAsync();
 
-            GameIdDto gamedto = new GameIdDto { 
+            GameIdDto gamedto = new GameIdDto
+            {
                 GameID = game.GameID.ToString(),
                 PGN = game.PGN,
             };
-            
+
             return Ok(gamedto);
         }
 
         [HttpPost("StartGameWithComputer")]
+        [Authorize]
         public async Task<IActionResult> StartGameWithComputer(Guid guid)
         {
             var gameEntity = await _context.Games.FindAsync(guid);
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-
             if (gameEntity.WhitePlayerID != userId)
             {
                 var machine = await _context.Machines.FindAsync((gameEntity.BlackPlayerID == userId) ? gameEntity.WhitePlayerID : gameEntity.BlackPlayerID);
                 string computerMove = (machine.Level != "Random") ? await _gameService.GetBestMove(gameEntity.PGN, machine.Level) : await _gameService.GetRandomMove(gameEntity.PGN);
+
+                string originalMove = computerMove;
 
                 if (gameEntity.PGN == null)
                     gameEntity.PGN = "1." + computerMove; // Rozpoczynamy numerację ruchów od 1
@@ -234,15 +242,13 @@ namespace szachy_online.Api.Controllers
                 _context.Games.Update(gameEntity);
                 _context.SaveChanges();
 
-
-                await _hubContext.Clients.All.SendAsync(guid.ToString(), computerMove);
+                await _hubContext.Clients.All.SendAsync(guid.ToString(), originalMove);
             }
             return Ok();
         }
 
-
-
         [HttpPost("CreateGameOnlineWithPlayer")]
+        [Authorize]
         public async Task<IActionResult> CreateGameOnlineWithPlayer(Guid guid, string color)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -256,7 +262,7 @@ namespace szachy_online.Api.Controllers
 
             };
 
-            if (color=="Random")
+            if (color == "Random")
             {
                 Random random = new Random();
                 int randomNumber = random.Next(2);
@@ -282,13 +288,13 @@ namespace szachy_online.Api.Controllers
             return Ok(temp.GameID);
         }
 
-
         [HttpPost("Forfeit")]
+        [Authorize]
         public async Task<IActionResult> Forfeit(Guid guid)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var gameEntity = await _context.Games.FindAsync(guid);
-            if( gameEntity.WhitePlayerID == userId)
+            if (gameEntity.WhitePlayerID == userId)
             {
                 if (gameEntity.BlackPlayerID.Equals(Guid.Empty))
                 {
@@ -299,7 +305,7 @@ namespace szachy_online.Api.Controllers
                     gameEntity.Winner = "BlackPlayer";
                     await _hubContext.Clients.All.SendAsync(gameEntity.BlackPlayerID.ToString(), "Winner");
                 }
-                
+
                 await _hubContext.Clients.All.SendAsync(gameEntity.WhitePlayerID.ToString(), "Loser");
             }
             else
@@ -323,6 +329,7 @@ namespace szachy_online.Api.Controllers
         }
 
         [HttpPost("AcceptDraw")]
+        [Authorize]
         public async Task<IActionResult> AcceptDraw(Guid guid)
         {
             var gameEntity = await _context.Games.FindAsync(guid);

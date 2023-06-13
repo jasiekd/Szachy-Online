@@ -195,6 +195,16 @@ export class GameService{
         } 
     }
 
+    async setWinner(gameID,result){
+
+        try{
+            const response = await axios.post(HostName+'/api/Game/SetWinner/?gameID='+gameID+"&result="+result,{})
+            return response;
+        }catch(error){
+            return error.response;
+        } 
+    }
+
 
 }
 

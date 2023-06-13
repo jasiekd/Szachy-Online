@@ -11,7 +11,7 @@ export default function GameController({children,getOpenings,getUserById})
     const navigate = useNavigate();
     const [receiveMoveAlert,setReceiveMoveAlert] = useState(true);
 
-    const [lastEnemyMove,setLastEnemyMove] = useState(true);
+    const [lastEnemyMove,setLastEnemyMove] = useState();
     const receiveInvate = (senderUid,color) =>{
         if(senderUid==="Cancel Invitation")
         {
@@ -204,6 +204,9 @@ export default function GameController({children,getOpenings,getUserById})
     const setRefToGame = async(gameRef)=>{
         game.current = gameRef;
     }
+    const setWinner = async(gameID,result) =>{
+        const response = await gameGateway.setWinner(gameID,result);
+    }
 
     InvHub.onReceiveInvate = receiveInvate;
     //ChessHub.onReceiveGameData = onReceiveStartGame;
@@ -225,7 +228,8 @@ export default function GameController({children,getOpenings,getUserById})
         sendPlayerMoveComputer,
         getUserById,
         cancelInvate,
-        timeOutInvate
+        timeOutInvate,
+        setWinner
     })
 
     
