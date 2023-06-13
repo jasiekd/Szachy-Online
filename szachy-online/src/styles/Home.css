@@ -36,8 +36,13 @@
 .piece-header{
     justify-self: center;
     text-align: center;
+    color:white;
     font-size: 30px;
     font-weight: 800;
+}
+.pointer{
+    cursor: pointer;
+
 }
 .piece-main-text{
     

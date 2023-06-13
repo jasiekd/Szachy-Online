@@ -7,6 +7,7 @@ import imgFile from '../img/file.png';
 import imgFriends from '../img/friends.png';
 import imgLogin from '../img/login.png';
 import imgRegister from '../img/register.png';
+import imgprofile from '../img/profile.png';
 import LoginComponent from "../components/LoginComponent";
 import LoginController, { checkIsLogged,logOut } from "../controllers/LoginController";
 import RegisterComponent from "../components/RegisterComponent";
@@ -130,6 +131,7 @@ function Header(){
             showConfirmButton: false,
           })
     }
+   
     return(
         <>
         <nav className="app-nav">
@@ -162,6 +164,10 @@ function Header(){
                     <button className="nav-btn" onMouseOver={showFriendOptions} onMouseOut={hideFriendOptions} onClick={hideAdditionalMenu}>
                         <img className="btn-img" src={imgFriends} alt=""/>
                         <p>Znajomi</p>
+                    </button>
+                    <button className="nav-btn" onClick={()=>navigate("/profile")}>
+                        <img className="btn-img" src={imgprofile} alt=""/>
+                        <p>Profil</p>
                     </button>
                     <button className="nav-btn" onClick={()=>logOut()}>
                         <img className="btn-img" src={imgLogin} alt=""/>
