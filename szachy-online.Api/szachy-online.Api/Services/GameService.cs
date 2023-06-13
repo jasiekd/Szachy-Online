@@ -1,4 +1,5 @@
-﻿using pax.chess;
+﻿using Newtonsoft.Json;
+using pax.chess;
 using System.Drawing;
 using szachy_online.Api.Data;
 
@@ -316,11 +317,26 @@ namespace szachy_online.Api.Services
 
                     foreach (var test2 in game.State.ValidPositions(test).ToList())
                     {
-                        game.Move(test, test2.X, test2.Y);
-                        int eval = await MinMax(depth - 1, false, game);
-                        game.Revert();
-
-                        maxEval = Math.Max(maxEval, eval);
+                        Game clonedGame = new Game(game);
+                        if (clonedGame.State.Info.IsCheck)
+                        {
+                            clonedGame.Move(test, test2.X, test2.Y);
+                            if (!clonedGame.State.Info.IsCheck)
+                            {
+                                int eval = await MinMax(depth - 1, false, clonedGame);
+                                maxEval = Math.Max(maxEval, eval);
+                            }
+                        }
+                        else
+                        {
+                            var clonedPiece = clonedGame.State.Pieces.ToList().Find(x => x == test);
+                            clonedGame.Move(test, test2.X, test2.Y);
+                            if (clonedPiece.Position.Equals(test2))
+                            {
+                                int eval = await MinMax(depth - 1, false, clonedGame);
+                                maxEval = Math.Max(maxEval, eval);
+                            }
+                        }
                     };
 
                 }
@@ -335,11 +351,31 @@ namespace szachy_online.Api.Services
 
                     foreach (var test2 in game.State.ValidPositions(test).ToList())
                     {
-                        game.Move(test, test2.X, test2.Y);
-                        int eval = await MinMax(depth - 1, true, game);
-                        game.Revert();
-
-                        minEval = Math.Min(minEval, eval);
+                        Game clonedGame = new Game(game);
+                        if (clonedGame.State.Info.IsCheck)
+                        {
+                            clonedGame.Move(test, test2.X, test2.Y);
+                            if (!clonedGame.State.Info.IsCheck)
+                            {
+                                int eval = await MinMax(depth - 1, true, clonedGame);
+                                minEval = Math.Min(minEval, eval);
+                            }
+                        }
+                        else
+                        {
+                            var clonedPiece = clonedGame.State.Pieces.ToList().Find(x => x == test);
+                            clonedGame.Move(test, test2.X, test2.Y);
+                            if (clonedPiece.Position.Equals(test2))
+                            {
+                                if (!clonedGame.State.Info.IsCheck)
+                                {
+                                    int eval = await MinMax(depth - 1, true, clonedGame);
+                                    minEval = Math.Min(minEval, eval);
+                                }
+                            }
+                                
+                                
+                        }
                     };
 
                 }
@@ -360,16 +396,38 @@ namespace szachy_online.Api.Services
                 {
                     foreach (var test2 in game.State.ValidPositions(test).ToList())
                     {
-
-                        game.Move(test, test2.X, test2.Y);
-                        move = game.State.CurrentMove.PgnMove;
-                        int eval = await MinMax(depth - 1, false, game);
-                        game.Revert();
-
-                        if (eval > maxEval)
+                        Game clonedGame = new Game(game);
+                        if (clonedGame.State.Info.IsCheck)
                         {
-                            maxEval = eval;
-                            bestMove = move;
+                            clonedGame.Move(test, test2.X, test2.Y);
+                            if (!clonedGame.State.Info.IsCheck)
+                            {
+                                move = clonedGame.State.CurrentMove.PgnMove;
+                                int eval = await MinMax(depth - 1, false, clonedGame);
+                                if (eval > maxEval)
+                                {
+                                    maxEval = eval;
+                                    bestMove = move;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var clonedPiece = clonedGame.State.Pieces.ToList().Find(x => x == test);
+                            clonedGame.Move(test, test2.X, test2.Y);
+                            if (clonedPiece.Position.Equals(test2))
+                            {
+                                if (!clonedGame.State.Info.IsCheck)
+                                {
+                                    move = clonedGame.State.CurrentMove.PgnMove;
+                                    int eval = await MinMax(depth - 1, false, clonedGame);
+                                    if (eval > maxEval)
+                                    {
+                                        maxEval = eval;
+                                        bestMove = move;
+                                    }
+                                }
+                            }
                         }
                     };
                 }
@@ -382,16 +440,38 @@ namespace szachy_online.Api.Services
                 {
                     foreach (var test2 in game.State.ValidPositions(test).ToList())
                     {
-
-                        game.Move(test, test2.X, test2.Y);
-                        move = game.State.CurrentMove.PgnMove;
-                        int eval = await MinMax(depth - 1, true, game);
-                        game.Revert();
-
-                        if (eval < maxEval)
+                        Game clonedGame = new Game(game);
+                        if (clonedGame.State.Info.IsCheck)
                         {
-                            maxEval = eval;
-                            bestMove = move;
+                            clonedGame.Move(test, test2.X, test2.Y);
+                            if (!clonedGame.State.Info.IsCheck)
+                            {
+                                move = clonedGame.State.CurrentMove.PgnMove;
+                                int eval = await MinMax(depth - 1, true, clonedGame);
+                                if (eval < maxEval)
+                                {
+                                    maxEval = eval;
+                                    bestMove = move;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var clonedPiece = clonedGame.State.Pieces.ToList().Find(x => x == test);
+                            clonedGame.Move(test, test2.X, test2.Y);
+                            if (clonedPiece.Position.Equals(test2))
+                            {
+                                if (!clonedGame.State.Info.IsCheck)
+                                {
+                                    move = clonedGame.State.CurrentMove.PgnMove;
+                                    int eval = await MinMax(depth - 1, true, clonedGame);
+                                    if (eval < maxEval)
+                                    {
+                                        maxEval = eval;
+                                        bestMove = move;
+                                    }
+                                }
+                            }
                         }
                     };
                 }
@@ -417,21 +497,40 @@ namespace szachy_online.Api.Services
         {
             Game game = Pgn.MapString(pgn);
             List<string> listOfAvailableMoves = new List<string>();
+            
+            //mimo ze check to i tak znajduje validposition dla innych pionkow :)
 
             foreach (var test in game.State.Pieces.ToList())
             {
 
                 foreach (var test2 in game.State.ValidPositions(test).ToList())
                 {
-                    game.Move(test, test2.X, test2.Y);
-                    listOfAvailableMoves.Add(game.State.CurrentMove.PgnMove);
-                    game.Revert();
+                    Game clonedGame = new Game(game);
+                    if(clonedGame.State.Info.IsCheck)
+                    {
+                        clonedGame.Move(test, test2.X, test2.Y);
+                        if (!clonedGame.State.Info.IsCheck)
+                        {
+                            listOfAvailableMoves.Add(clonedGame.State.CurrentMove.PgnMove);
+                        }
+                    }
+                    else
+                    {
+                        var clonedPiece = clonedGame.State.Pieces.ToList().Find(x => x == test);
+                        clonedGame.Move(test, test2.X, test2.Y);
+                        if (clonedPiece.Position.Equals(test2))
+                        {
+                            if (!clonedGame.State.Info.IsCheck)
+                            {
+                                listOfAvailableMoves.Add(clonedGame.State.CurrentMove.PgnMove);
+                            }
+                        }
+                    }
                 };
 
             }
             Random random = new Random();
             return listOfAvailableMoves.ElementAt(random.Next(listOfAvailableMoves.Count));
-
         }
     }
 }

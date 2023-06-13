@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using pax.chess;
+using System.Linq;
 using System.Security.Claims;
 using szachy_online.Api.Data;
 using szachy_online.Api.Dto;
@@ -44,6 +47,7 @@ namespace szachy_online.Api.Controllers
                 WhiteNickname = gameEntity.WhitePlayer.Nickname,
                 BlackID = gameEntity.BlackPlayer.Id,
                 BlackNickname = gameEntity.BlackPlayer.Nickname,
+                PGN = gameEntity.PGN,
             };
 
             return Ok(response);
@@ -57,17 +61,16 @@ namespace szachy_online.Api.Controllers
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             if (gameEntity.PGN == null)
-                gameEntity.PGN = "1. " + move; // Rozpoczynamy numerację ruchów od 1
+                gameEntity.PGN = "1." + move; // Rozpoczynamy numerację ruchów od 1
             else
             {
                 var moves = gameEntity.PGN.Split(' ').ToList();
-                var lastMove = moves.LastOrDefault();
-                if (lastMove != null && lastMove.Contains("."))
+                if (moves.Count % 2 == 0)
                 {
-                    // Pobieramy ostatni numer ruchu i zwiększamy go o 1
-                    var lastMoveNumber = int.Parse(lastMove.Split('.')[0]);
+                    var test2= moves.ElementAt(moves.Count - 2).Split('.').ToList();
+                    var lastMoveNumber = int.Parse(test2[0]);
                     var newMoveNumber = lastMoveNumber + 1;
-                    move = newMoveNumber + ". " + move;
+                    move = newMoveNumber + "." + move;
                 }
                 gameEntity.PGN += " " + move;
             }
@@ -79,17 +82,16 @@ namespace szachy_online.Api.Controllers
             string computerMove = (machine.Level != "Random") ? await _gameService.GetBestMove(gameEntity.PGN, machine.Level) : await _gameService.GetRandomMove(gameEntity.PGN);
 
             if (gameEntity.PGN == null)
-                gameEntity.PGN = "1. " + computerMove; // Rozpoczynamy numerację ruchów od 1
+                gameEntity.PGN = "1." + computerMove; // Rozpoczynamy numerację ruchów od 1
             else
             {
                 var moves = gameEntity.PGN.Split(' ').ToList();
-                var lastMove = moves.LastOrDefault();
-                if (lastMove != null && lastMove.Contains("."))
+                if (moves.Count % 2 == 0)
                 {
-                    // Pobieramy ostatni numer ruchu i zwiększamy go o 1
-                    var lastMoveNumber = int.Parse(lastMove.Split('.')[0]);
+                    var test2 = moves.ElementAt(moves.Count - 2).Split('.').ToList();
+                    var lastMoveNumber = int.Parse(test2[0]);
                     var newMoveNumber = lastMoveNumber + 1;
-                    computerMove = newMoveNumber + ". " + computerMove;
+                    computerMove = newMoveNumber + "." + computerMove;
                 }
                 gameEntity.PGN += " " + computerMove;
             }
@@ -110,17 +112,16 @@ namespace szachy_online.Api.Controllers
 
             var gameEntity = await _context.Games.FindAsync(gid);
             if (gameEntity.PGN == null)
-                gameEntity.PGN = "1. " + move; // Rozpoczynamy numerację ruchów od 1
+                gameEntity.PGN = "1." + move; // Rozpoczynamy numerację ruchów od 1
             else
             {
                 var moves = gameEntity.PGN.Split(' ').ToList();
-                var lastMove = moves.LastOrDefault();
-                if (lastMove != null && lastMove.Contains("."))
+                if (moves.Count % 2 == 0)
                 {
-                    // Pobieramy ostatni numer ruchu i zwiększamy go o 1
-                    var lastMoveNumber = int.Parse(lastMove.Split('.')[0]);
+                    var test2 = moves.ElementAt(moves.Count - 2).Split('.').ToList();
+                    var lastMoveNumber = int.Parse(test2[0]);
                     var newMoveNumber = lastMoveNumber + 1;
-                    move = newMoveNumber + ". " + move;
+                    move = newMoveNumber + "." + move;
                 }
                 gameEntity.PGN += " " + move;
             }
@@ -202,17 +203,16 @@ namespace szachy_online.Api.Controllers
                 string computerMove = (machine.Level != "Random") ? await _gameService.GetBestMove(gameEntity.PGN, machine.Level) : await _gameService.GetRandomMove(gameEntity.PGN);
 
                 if (gameEntity.PGN == null)
-                    gameEntity.PGN = "1. " + computerMove; // Rozpoczynamy numerację ruchów od 1
+                    gameEntity.PGN = "1." + computerMove; // Rozpoczynamy numerację ruchów od 1
                 else
                 {
                     var moves = gameEntity.PGN.Split(' ').ToList();
-                    var lastMove = moves.LastOrDefault();
-                    if (lastMove != null && lastMove.Contains("."))
+                    if (moves.Count % 2 == 0)
                     {
-                        // Pobieramy ostatni numer ruchu i zwiększamy go o 1
-                        var lastMoveNumber = int.Parse(lastMove.Split('.')[0]);
+                        var test2 = moves.ElementAt(moves.Count - 2).Split('.').ToList();
+                        var lastMoveNumber = int.Parse(test2[0]);
                         var newMoveNumber = lastMoveNumber + 1;
-                        computerMove = newMoveNumber + ". " + computerMove;
+                        computerMove = newMoveNumber + "." + computerMove;
                     }
                     gameEntity.PGN += " " + computerMove;
                 }

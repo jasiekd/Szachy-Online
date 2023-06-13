@@ -19,7 +19,7 @@ namespace szachy_online.Api.Services
 
         public string GenerateBearerToken(string id)
         {
-            var expiry = DateTimeOffset.Now.AddMinutes(15); //ważny przez 15 minut
+            var expiry = DateTimeOffset.Now.AddMinutes(60); //ważny przez 15 minut
             var userClaims = GetClaimsForUser(id);
             return CreateToken(expiry, userClaims);
         }
