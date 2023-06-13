@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react"
 import InvHub, { GameService ,ChessHub } from "../services/GameServices";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-export default function GameController({children,getOpenings})
+export default function GameController({children,getOpenings,getUserById})
 {
     const game = useRef(null);
     const invHubInstance =  new InvHub();
@@ -13,14 +13,43 @@ export default function GameController({children,getOpenings})
 
     const [lastEnemyMove,setLastEnemyMove] = useState(true);
     const receiveInvate = (senderUid,color) =>{
-        InvHub.senderUid = senderUid;
-        InvHub.senderColor = color;
-        console.log(color);
-        InvHub.openInvate();
+        if(senderUid==="Cancel Invitation")
+        {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Użytkonik odrzucił zaproszenie',
+                background: "#20201E",
+                showConfirmButton: true,
+              });
+        }
+        else if(senderUid === "Friend not responded")
+        {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Użytkowniuk nie przyjął zaproszenia',
+                background: "#20201E",
+                showConfirmButton: true,
+              });
+        }
+        else{
+
+            InvHub.senderUid = senderUid;
+            InvHub.senderColor = color;
+            console.log(color);
+            InvHub.openInvate();
+        }
+       
     }
     const invateToGame = (receiverUid) =>{
-        //handleOpenInvate();
         invHubInstance.sendInvate(receiverUid);
+    }
+    const cancelInvate = (receiverUid) =>{
+        invHubInstance.cancelGameInvate(receiverUid)
+    }
+    const timeOutInvate = (receiverUid) =>{
+        invHubInstance.timeOutInvate(receiverUid);
     }
     const setInvateDialogRef = (open,close) =>{
  
@@ -194,6 +223,9 @@ export default function GameController({children,getOpenings})
         getOpenings,
         startGameWithComputer,
         sendPlayerMoveComputer,
+        getUserById,
+        cancelInvate,
+        timeOutInvate
     })
 
     

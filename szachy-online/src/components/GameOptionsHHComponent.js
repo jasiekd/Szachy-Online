@@ -9,14 +9,30 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import Countdown from 'react-countdown';
+
 function SendInvate({invateToGame,friendId}){
+    const [disabledBtn,setDisabledBtn] = useState(false);
+    const [endDate,setEndDate] = useState();
     const invate = () => {
-       // console.log("Fuid:"+friendId);
+        setEndDate(Date.now()+30000)
+       setDisabledBtn(true);
         invateToGame(friendId);
     }
+    const Completionist = () => <span>Time Out!</span>;
+    const renderer = ({ hours, minutes, seconds, completed }) => {
+        if (completed) {
+            //timeOutInvate(invHub.getSenderUid());
+            //handleClose();
+            setDisabledBtn(false);
+          return <Completionist />;
+        } else {
+          return <span>Oczekiwanie: {seconds}</span>;
+        }
+      };
     return(
         <div style={{display:"flex",gap:"10rem"}}>
-             <button className='option-btn' onClick={()=>invate()}>Zaproś</button>
+             <button className='option-btn' onClick={()=>invate()} disabled={disabledBtn}>{disabledBtn?<Countdown date={endDate} renderer={renderer} />:"Zaproś"}</button>
             <button className='option-btn'>Anuluj</button>
         </div>
     )

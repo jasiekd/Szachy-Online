@@ -1,3 +1,4 @@
+import AccountController from "../controllers/AccountController";
 import GameController from "../controllers/GameController";
 import onlineHumanHuman from "../img/occ.png";
 import onlineHumanComputer from "../img/ocm.png";
@@ -18,9 +19,11 @@ export default function GameComponent({getStyle,show,hide,showOHH,showTHH,showTH
     },[])
     return(
         <div className='option' style={getStyle} onMouseOver={show}  onMouseOut={hide}>
-            <GameController>
-                <GameInvate open={openGameInvate} handleClose={handleCloseGameInvate}/>
-            </GameController>
+            <AccountController>
+                <GameController>
+                    <GameInvate open={openGameInvate} handleClose={handleCloseGameInvate}/>
+                </GameController>
+            </AccountController>
             <button className='nav-btn' onClick={showOHH}>
                 <img className="btn-img" src={onlineHumanHuman} alt=""/>
                 <p className='slide-btn-text'>Online Człowiek - Człowiek</p>

@@ -30,6 +30,16 @@ export default class AccountService{
         //}
         
     }
+
+    async getUserById(uid){
+        try{
+            const response = await axios.get(HostName+'/api/Account/getUser/'+uid,{});
+            return response;
+        }catch(error){
+            return error.response;
+        }   
+    }
+
     async findByNickName(nickname){
         try{
             const response = await axios.post(HostName+'/api/Account/findByNickname?nickname='+nickname,{})
@@ -38,4 +48,22 @@ export default class AccountService{
             return error.response;
         }
     }  
+
+    async getMyHistory(){
+        try{
+            const response = await axios.get(HostName+'/api/Account/GetMyHistory',{})
+            return response;
+        }catch(error){
+            return error.response;
+        }
+    }
+
+    async getMyFriendHistory(uid){
+        try{
+            const response = await axios.get(HostName+'/api/Account/GetMyFriendHistory/'+uid,{})
+            return response;
+        }catch(error){
+            return error.response;
+        }
+    }
 }
