@@ -1,7 +1,7 @@
 import React from "react";
 import AccountService from "../services/AccountService";
 import Swal from "sweetalert2";
-export default function AccountController({children})
+export default function AccountController({children, getInfoAboutGame})
 {
     const gateway = new AccountService();
     
@@ -62,8 +62,8 @@ export default function AccountController({children})
         }
     }
 
-    const getMyFriendHistory = async() =>{
-        const response = await gateway.getMyFriendHistory();
+    const getMyFriendHistory = async(uid) =>{
+        const response = await gateway.getMyFriendHistory(uid);
         if(response.status === 200)
         {
             return response.data;
@@ -78,6 +78,7 @@ export default function AccountController({children})
         findByNickName,
         getUserById,
         getMyHistory,
-        getMyFriendHistory
+        getMyFriendHistory,
+        getInfoAboutGame
     })
 }

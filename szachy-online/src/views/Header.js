@@ -165,7 +165,7 @@ function Header(){
                         <img className="btn-img" src={imgFriends} alt=""/>
                         <p>Znajomi</p>
                     </button>
-                    <button className="nav-btn" onClick={()=>navigate("/profile")}>
+                    <button className="nav-btn" onClick={()=>{navigate("/profile");window.location.reload();}}>
                         <img className="btn-img" src={imgprofile} alt=""/>
                         <p>Profil</p>
                     </button>

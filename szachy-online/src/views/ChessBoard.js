@@ -6,6 +6,7 @@ import '../styles/ChessBoard.css';
 import Header from './Header.js';
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import winnerIcon from "../img/winner.png";
 
 
 export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMove,setRefToGame,getInfoAboutGame,receiveMoveAlert,lastEnemyMove}) {
@@ -196,12 +197,72 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
       //game.move(lastEnemyMove);
       // console.log("mamy problem");
     }
+    checkEndGame();
     pawnMoves();
-    console.log('a');
-    setGame(gameCopy);
+    checkEndGame();
+        setGame(gameCopy);
     
 
   },[lastEnemyMove])
+
+  const checkEndGame = (turn) =>{
+    var imageElement = document.createElement('img');
+    imageElement.src = winnerIcon;
+    imageElement.style.width = '100%';
+    imageElement.style.height = '90%';
+    const possibleMoves = game.moves();
+    if (game.in_checkmate()) {
+      if(game.turn()==="b")
+      {
+        // setWinner(localStorage.gameIdComputer,"White")
+        Swal.fire({
+          position: 'center',
+          color:'white',
+          html: imageElement.outerHTML+('<p>Wygrał gracz '+gameInfo.whiteNickname+'</p>'),
+          background: "#20201E",
+          showConfirmButton: true,
+          allowOutsideClick: false
+        })
+      }
+      else{
+        // setWinner(localStorage.gameIdComputer,"Black")
+        Swal.fire({
+          position: 'center',
+          color:'white',
+          html: imageElement.outerHTML+('<p>Wygrał gracz '+gameInfo.blackNickname+'</p>'),
+          background: "#20201E",
+          showConfirmButton: true,
+          allowOutsideClick: false
+        })
+      }
+      
+      return;
+    } 
+    if (game.in_draw()) {
+      Swal.fire({
+          position: 'center',
+          icon: 'warning',
+          title: 'Remis',
+          color:'white',
+          background: "#20201E",
+          showConfirmButton: true,
+          allowOutsideClick: false
+      })
+      return;
+    } 
+    if (possibleMoves.length === 0) {
+      Swal.fire({
+          position: 'center',
+          icon: 'warning',
+          title: 'Koniec ruchów',
+          color:'white',
+          background: "#20201E",
+          showConfirmButton: true,
+          allowOutsideClick: false
+      })
+      return;
+    } 
+  }
   return (
     <div className="App">
       <Header/>

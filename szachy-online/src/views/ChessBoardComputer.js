@@ -158,7 +158,8 @@ export default function ChessBoardComputer({setWinner,startGameWithComputer,send
             })
         });
         
-    }else{
+    }
+    else{
         navigate("/home");
     }
   },[])
@@ -185,8 +186,9 @@ export default function ChessBoardComputer({setWinner,startGameWithComputer,send
       }
       
     }
+    checkEndGame()
+
     pawnMoves();
-    console.log('a');
     setGame(gameCopy);
     checkEndGame()
 
@@ -199,23 +201,31 @@ export default function ChessBoardComputer({setWinner,startGameWithComputer,send
     imageElement.style.width = '100%';
     imageElement.style.height = '90%';
     const possibleMoves = game.moves();
-    if (game.game_over()) {
-      console.log(game.turn());
+    if (game.in_checkmate()) {
       if(game.turn()==="b")
       {
         setWinner(localStorage.gameIdComputer,"White")
-      }
-      else{
-        setWinner(localStorage.gameIdComputer,"Black")
-      }
-      Swal.fire({
+        Swal.fire({
           position: 'center',
           color:'white',
-          html: imageElement.outerHTML+('<p>Wygrał gracz '+game.turn()==="b"?gameInfo.whiteNickname:gameInfo.blackNickname+'</p>'),
+          html: imageElement.outerHTML+('<p>Wygrał gracz '+gameInfo.whiteNickname+'</p>'),
           background: "#20201E",
           showConfirmButton: true,
           allowOutsideClick: false
-      })
+        })
+      }
+      else{
+        setWinner(localStorage.gameIdComputer,"Black")
+        Swal.fire({
+          position: 'center',
+          color:'white',
+          html: imageElement.outerHTML+('<p>Wygrał gracz '+gameInfo.blackNickname+'</p>'),
+          background: "#20201E",
+          showConfirmButton: true,
+          allowOutsideClick: false
+        })
+      }
+      
       return;
     } 
     if (game.in_draw()) {
