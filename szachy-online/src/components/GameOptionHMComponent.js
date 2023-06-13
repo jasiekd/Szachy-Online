@@ -35,6 +35,17 @@ export default function GameOptionHMComponent({getStyle,hide,createGameWithCompu
        getOpenings().then(r=>{
         console.log(r);
             setOpeningList(r);
+            setOpeningList((prevOpening)=>[
+                ...prevOpening,
+                {
+                    id: 0,
+                    name: "Standardowe rozpoczęcie",
+                    description: "",
+                    pgn: ""
+                }
+            ])
+            console.log("test")
+            console.log(openingsList)
         })
     },[])
     const onSelecOpening = (value) =>{

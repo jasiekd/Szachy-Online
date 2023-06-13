@@ -6,9 +6,9 @@ import '../styles/ChessBoard.css';
 import Header from './Header.js';
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import winnerIcon from "../img/winner.png";
 
-
-export default function ChessBoardComputer({startGameWithComputer,sendPlayerMoveComputer,getInfoAboutGame,setChessHubOnGame,lastEnemyMove}) {
+export default function ChessBoardComputer({setWinner,startGameWithComputer,sendPlayerMoveComputer,getInfoAboutGame,setChessHubOnGame,lastEnemyMove}) {
   const location = useLocation();
   const navigate = useNavigate();
   const [moveHistory, setMoveHistory] = useState([]);
@@ -75,7 +75,9 @@ export default function ChessBoardComputer({startGameWithComputer,sendPlayerMove
       promotion: "q",
     });
     if(move){
-      sendPlayerMoveComputer(move.san);
+      sendPlayerMoveComputer(move.san).then(()=>{
+        checkEndGame();
+      });
     }
     return true;
   }
@@ -168,17 +170,79 @@ export default function ChessBoardComputer({startGameWithComputer,sendPlayerMove
     // console.log(gameCopy.moves());
     if(gameCopy.move(lastEnemyMove)===null)
     {
-      //gameCopy.remove(lastEnemyMove);
-      //game.move(lastEnemyMove);
-       console.log("mamy problem: "+lastEnemyMove);
+      if(lastEnemyMove)
+      {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Błąd rozgrywki',
+          background: "#20201E",
+          showConfirmButton: true,
+          allowOutsideClick: false
+        })
+        setWinner("Draw");
+         console.log("mamy problem: "+lastEnemyMove);
+      }
+      
     }
     pawnMoves();
     console.log('a');
     setGame(gameCopy);
-    
+    checkEndGame()
 
   },[lastEnemyMove])
   
+
+  const checkEndGame = (turn) =>{
+    var imageElement = document.createElement('img');
+    imageElement.src = winnerIcon;
+    imageElement.style.width = '100%';
+    imageElement.style.height = '90%';
+    const possibleMoves = game.moves();
+    if (game.game_over()) {
+      console.log(game.turn());
+      if(game.turn()==="b")
+      {
+        setWinner(localStorage.gameIdComputer,"White")
+      }
+      else{
+        setWinner(localStorage.gameIdComputer,"Black")
+      }
+      Swal.fire({
+          position: 'center',
+          color:'white',
+          html: imageElement.outerHTML+('<p>Wygrał gracz '+game.turn()==="b"?gameInfo.whiteNickname:gameInfo.blackNickname+'</p>'),
+          background: "#20201E",
+          showConfirmButton: true,
+          allowOutsideClick: false
+      })
+      return;
+    } 
+    if (game.in_draw()) {
+      Swal.fire({
+          position: 'center',
+          icon: 'warning',
+          title: 'Remis',
+          color:'white',
+          background: "#20201E",
+          showConfirmButton: true,
+          allowOutsideClick: false
+      })
+      return;
+    } 
+    if (possibleMoves.length === 0) {
+      Swal.fire({
+          position: 'center',
+          icon: 'warning',
+          title: 'Koniec ruchów',
+          color:'white',
+          background: "#20201E",
+          showConfirmButton: true,
+          allowOutsideClick: false
+      })
+      return;
+    } 
+  }
   return (
     <div className="App">
       <Header/>
