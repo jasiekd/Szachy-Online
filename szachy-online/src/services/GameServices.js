@@ -26,8 +26,13 @@ class InvHub{
     }
 
     sendInvate(receiverUid){
-        //console.log(InvHub.connection);
         InvHub.connection.send("SendGameInvitation",localStorage.uid,receiverUid,"Random");
+    }
+    cancelGameInvate(receiverUid){
+        InvHub.connection.send("CancelGameInvitation",receiverUid);
+    }
+    timeOutInvate(receiverUid){
+        InvHub.connection.send("TimeOutGameInvitation",receiverUid);
     }
 
     refactorConnection(){

@@ -25,6 +25,18 @@ export default function AccountController({children})
         }
     }
 
+    const getUserById = async(uid) =>{
+        const response = await gateway.getUserById(uid);
+        if(response.status === 200)
+        {
+            return response.data.nickname;
+            
+        }
+        else{
+            return "error_get_user_by_id"
+        }
+    }
+
     const findByNickName = async(nickname) =>{
         const response = await gateway.findByNickName(nickname);
 
@@ -38,8 +50,34 @@ export default function AccountController({children})
         }
     }
 
+    const getMyHistory = async() =>{
+        const response = await gateway.getMyHistory();
+        if(response.status === 200)
+        {
+            return response.data;
+        }
+        else{
+           
+            return [];
+        }
+    }
+
+    const getMyFriendHistory = async() =>{
+        const response = await gateway.getMyFriendHistory();
+        if(response.status === 200)
+        {
+            return response.data;
+        }
+        else{
+           
+            return [];
+        }
+    }
     return React.cloneElement(children,{
         getUser,
         findByNickName,
+        getUserById,
+        getMyHistory,
+        getMyFriendHistory
     })
 }

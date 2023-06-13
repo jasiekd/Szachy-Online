@@ -8,6 +8,8 @@ import {
 } from "react-router-dom";
 import GameController from "../controllers/GameController";
 import ChessBoardComputer from "../views/ChessBoardComputer";
+import AccountController from "../controllers/AccountController";
+import Profile from "../views/Profile";
 
 const router = createBrowserRouter([
     {
@@ -38,6 +40,10 @@ const router = createBrowserRouter([
         element: <GameController><ChessBoardComputer /></GameController>,
     }
     ,
+    {
+        path: "/profile",
+        element: <AccountController><Profile/></AccountController>
+    }
 ]);
 
 export default router;
