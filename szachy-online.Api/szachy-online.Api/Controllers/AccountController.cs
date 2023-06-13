@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Plugins;
+using pax.chess;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -119,6 +120,53 @@ namespace szachy_online.Api.Controllers
             }
 
             return Ok(nicknames);
+        }
+
+        [HttpGet("GetMyHistory")]
+        public async Task<IActionResult> GetMyHistory()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x=>(x.BlackPlayerID.Equals(userId))||(x.WhitePlayerID.Equals(userId))).ToListAsync();
+
+            var response = new List<object>();
+
+            foreach(var temp in gameEntity)
+            {
+                response.Add(new
+                {
+                    GameID = temp.GameID,
+                    WhiteID = temp.WhitePlayer.Id,
+                    WhiteNickname = temp.WhitePlayer.Nickname,
+                    BlackID = temp.BlackPlayer.Id,
+                    BlackNickname = temp.BlackPlayer.Nickname,
+                    Date = temp.DateStarted
+                });
+            }
+            return Ok(response);
+        }
+
+        [HttpGet("GetMyFriendHistory/{idFriend}")]
+        public async Task<IActionResult> GetMyFriendHistory(Guid idFriend)
+        {
+            
+            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x => (x.BlackPlayerID.Equals(idFriend)) || (x.WhitePlayerID.Equals(idFriend))).ToListAsync();
+
+            var response = new List<object>();
+
+            foreach (var temp in gameEntity)
+            {
+                response.Add(new
+                {
+                    GameID = temp.GameID,
+                    WhiteID = temp.WhitePlayer.Id,
+                    WhiteNickname = temp.WhitePlayer.Nickname,
+                    BlackID = temp.BlackPlayer.Id,
+                    BlackNickname = temp.BlackPlayer.Nickname,
+                    Date = temp.DateStarted
+                });
+            }
+            return Ok(response);
         }
 
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

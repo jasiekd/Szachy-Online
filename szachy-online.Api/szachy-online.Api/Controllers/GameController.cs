@@ -53,6 +53,20 @@ namespace szachy_online.Api.Controllers
             return Ok(response);
         }
 
+        [HttpPost("SetWinner")]
+        public async Task<IActionResult> SetWinner(Guid gameID, string result)
+        {
+            var gameEntity = await _context.Games.FirstOrDefaultAsync(x => x.GameID == gameID);
+            if (gameEntity == null)
+            {
+                return NotFound();
+            }
+            gameEntity.Winner = result;
+            _context.Games.Update(gameEntity);
+            _context.SaveChanges();
+            return Ok();
+        }
+
         [HttpGet("ComputerMove/{gid}/{move}")]
         public async Task<IActionResult> ComputerMove(Guid gid, string move)
         {
