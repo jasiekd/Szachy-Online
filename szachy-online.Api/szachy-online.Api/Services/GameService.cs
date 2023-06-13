@@ -57,14 +57,14 @@ namespace szachy_online.Api.Services
             switch (piece)
             {
                 case PieceType.Pawn:
-                    return 1;
+                    return 10;
                 case PieceType.Knight:
                 case PieceType.Bishop:
-                    return 3;
+                    return 30;
                 case PieceType.Rook:
-                    return 5;
+                    return 50;
                 case PieceType.Queen:
-                    return 9;
+                    return 90;
                 default:
                     return 0;
             }
@@ -881,7 +881,11 @@ namespace szachy_online.Api.Services
         }
         public async Task<string> GetBestMove(string pgn, string level)
         {
-            Game game = Pgn.MapString(pgn);
+            Game game = new Game();
+            if (pgn != null)
+            {
+                game = Pgn.MapString(pgn);
+            }
             int depth = 0;
             if (level == "One")
             {
@@ -891,12 +895,17 @@ namespace szachy_online.Api.Services
             {
                 depth = 2;
             }
+
             return await FindBestMove(depth, game);
         }
 
         public async Task<string> GetRandomMove(string pgn)
         {
-            Game game = Pgn.MapString(pgn);
+            Game game = new Game();
+            if (pgn != null)
+            {
+                game = Pgn.MapString(pgn);
+            }
             List<string> listOfAvailableMoves = new List<string>();
 
             foreach (var test in game.State.Pieces.ToList())
