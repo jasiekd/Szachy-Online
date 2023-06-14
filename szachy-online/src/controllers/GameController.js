@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react"
 import InvHub, { GameService ,ChessHub } from "../services/GameServices";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import winnerIcon from "../img/winner.png";
 export default function GameController({children,getOpenings,getUserById})
 {
     const game = useRef(null);
@@ -9,16 +10,21 @@ export default function GameController({children,getOpenings,getUserById})
     const chessHub = new ChessHub();
     const gameGateway = new GameService();
     const navigate = useNavigate();
+    const setBlockStartGame = useState(null);
     const [receiveMoveAlert,setReceiveMoveAlert] = useState(true);
 
     const [lastEnemyMove,setLastEnemyMove] = useState();
     const receiveInvate = (senderUid,color) =>{
         if(senderUid==="Cancel Invitation")
         {
+           /* if(setBlockStartGame!==null)
+            {
+                setBlockStartGame(false);
+            }*/
             Swal.fire({
                 position: 'center',
                 icon: 'error',
-                title: 'Użytkonik odrzucił zaproszenie',
+                title: 'Użytkownik odrzucił zaproszenie',
                 background: "#20201E",
                 showConfirmButton: true,
               });
@@ -28,7 +34,7 @@ export default function GameController({children,getOpenings,getUserById})
             Swal.fire({
                 position: 'center',
                 icon: 'error',
-                title: 'Użytkowniuk nie przyjął zaproszenia',
+                title: 'Użytkownik nie przyjął zaproszenia',
                 background: "#20201E",
                 showConfirmButton: true,
               });
@@ -69,16 +75,29 @@ export default function GameController({children,getOpenings,getUserById})
     }
 
     const onReceivePlayerMove = (move) =>{
-        console.log("odbieram: "+move);
-        setLastEnemyMove(move);
-        setReceiveMoveAlert(!receiveMoveAlert);
-        //console.log("wynik ruchu: ");
-        //console.log(game.current.move(move));
-        //const gameCopy = { ...game.current };
-        //const result = gameCopy.move(move);
-    
-        //game.current=gameCopy;
-        //console.log(move)
+        if(move === "Winner")
+        {
+            var imageElement = document.createElement('img');
+            imageElement.src = winnerIcon;
+            imageElement.style.width = '100%';
+            imageElement.style.height = '90%';
+            Swal.fire({
+                position: 'center',
+                color:'white',
+                html: imageElement.outerHTML+('<p>Przeciwnik poddał gre</p>'),
+                background: "#20201E",
+                showConfirmButton: true,
+                allowOutsideClick: false
+              }).then(()=>navigate("/home"))
+            
+        }
+        else{
+            console.log("odbieram: "+move);
+            setLastEnemyMove(move);
+            setReceiveMoveAlert(!receiveMoveAlert);
+        }
+        
+       
     }
 
 
@@ -207,6 +226,27 @@ export default function GameController({children,getOpenings,getUserById})
     const setWinner = async(gameID,result) =>{
         const response = await gameGateway.setWinner(gameID,result);
     }
+    const setBlockRef = async(ref) =>{
+        setBlockRef = ref;
+    }
+
+    const forfeit = async(gameId)=>{
+        const response = await gameGateway.forfeit(gameId);
+        if(response.status === 200)
+        {
+            navigate("/home")
+            return response.data;
+        }
+        else{
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Błąd procesu poddawania',
+                background: "#20201E",
+                showConfirmButton: true,
+              });
+        }
+    }
 
     InvHub.onReceiveInvate = receiveInvate;
     //ChessHub.onReceiveGameData = onReceiveStartGame;
@@ -229,7 +269,9 @@ export default function GameController({children,getOpenings,getUserById})
         getUserById,
         cancelInvate,
         timeOutInvate,
-        setWinner
+        setWinner,
+        setBlockRef,
+        forfeit
     })
 
     

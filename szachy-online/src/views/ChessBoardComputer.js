@@ -7,8 +7,12 @@ import Header from './Header.js';
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import winnerIcon from "../img/winner.png";
+import GiveUpGame from "../components/GiveUpGame";
+import GameController from "../controllers/GameController";
 
 export default function ChessBoardComputer({setWinner,startGameWithComputer,sendPlayerMoveComputer,getInfoAboutGame,setChessHubOnGame,lastEnemyMove}) {
+  const [gameStarted,setGameStarted]=useState(false);
+  const [state, setState] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
   const [moveHistory, setMoveHistory] = useState([]);
@@ -22,7 +26,9 @@ export default function ChessBoardComputer({setWinner,startGameWithComputer,send
     setMoveHistory([]);
   },[]);
   useEffect(() => {
+    
     if(location.state && location.state.content) {
+      //console.log(location.state.content);
       const gameCopy = { ...game };
       gameCopy.load_pgn(location.state.content);
       setGame(gameCopy);
@@ -146,22 +152,32 @@ export default function ChessBoardComputer({setWinner,startGameWithComputer,send
   useEffect(()=>{
     if(localStorage.gameIdComputer && localStorage.pgnComputer && location.state && location.state.color)
     {
+      console.log(localStorage.pgnComputer);
         game.load_pgn(localStorage.pgnComputer);
         if(location.state.color === "BlackPlayer")
             setOrientation("black")
         else if(location.state.color === "WhitePlayer")
             setOrientation("white")
-        setChessHubOnGame().then(r=>{
-            startGameWithComputer(localStorage.gameIdComputer)
-            getInfoAboutGame(localStorage.gameIdComputer).then((r)=>{
-                setGameInfo(r)
-            })
+            setChessHubOnGame().then(r=>{
+              if(gameStarted===false){
+                setGameStarted(true);
+                setTimeout(()=>{
+                  startGameWithComputer(localStorage.gameIdComputer)
+                },2000)
+              }
+            
+            
         });
         
     }
     else{
         navigate("/home");
     }
+  },[])
+  useEffect(()=>{
+    getInfoAboutGame(localStorage.gameIdComputer).then((r)=>{
+      setGameInfo(r)
+  })
   },[])
   useEffect(()=>{
     
@@ -173,14 +189,6 @@ export default function ChessBoardComputer({setWinner,startGameWithComputer,send
     {
       if(lastEnemyMove)
       {
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: 'Błąd rozgrywki',
-          background: "#20201E",
-          showConfirmButton: true,
-          allowOutsideClick: false
-        })
         setWinner("Draw");
          console.log("mamy problem: "+lastEnemyMove);
       }
@@ -229,6 +237,7 @@ export default function ChessBoardComputer({setWinner,startGameWithComputer,send
       return;
     } 
     if (game.in_draw()) {
+      setWinner(localStorage.gameIdComputer,"Draw")
       Swal.fire({
           position: 'center',
           icon: 'warning',
@@ -241,6 +250,7 @@ export default function ChessBoardComputer({setWinner,startGameWithComputer,send
       return;
     } 
     if (possibleMoves.length === 0) {
+      setWinner(localStorage.gameIdComputer,"Draw")
       Swal.fire({
           position: 'center',
           icon: 'warning',
@@ -253,9 +263,19 @@ export default function ChessBoardComputer({setWinner,startGameWithComputer,send
       return;
     } 
   }
+  
+
+  const [openGiveUp,setOpenGiveUp] = useState(false);
+  const handleCloseGiveUp = () =>{
+    setOpenGiveUp(!openGiveUp)
+  }
   return (
     <div className="App">
       <Header/>
+      <GameController>
+        <GiveUpGame open={openGiveUp} handleClose={handleCloseGiveUp} gameId={localStorage.gameIdComputer}/>
+      </GameController>
+      
       <main className="content">
         <div className="content-row">
           <div className="first-section">
@@ -273,6 +293,7 @@ export default function ChessBoardComputer({setWinner,startGameWithComputer,send
                 {orientation === 'white' && (gameInfo ? gameInfo.whiteNickname : null)}
               </p>
             </div>
+            <button className="option-btn friends-btn-reject" style={{width:"100%"}} onClick={()=>setOpenGiveUp(true)}>Poddaj się</button>
           </div>
           <div className="second-section">
             <div className="second-section-header">

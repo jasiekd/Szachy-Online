@@ -7,9 +7,11 @@ import Header from './Header.js';
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import winnerIcon from "../img/winner.png";
+import loseIcon from "../img/lose.png"
+import GameController from "../controllers/GameController";
+import GiveUpGame from "../components/GiveUpGame";
 
-
-export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMove,setRefToGame,getInfoAboutGame,receiveMoveAlert,lastEnemyMove}) {
+export default function ChessBoard({setWinner,sendPlayerMove,setChessHubOnGame,getPlayerMove,setRefToGame,getInfoAboutGame,receiveMoveAlert,lastEnemyMove}) {
   const location = useLocation();
   const navigate = useNavigate();
   const [moveHistory, setMoveHistory] = useState([]);
@@ -52,8 +54,7 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
   }, [location]);
 
   const [game, setGame] = useState(new Chess());
-  //game.move("d4")
- // game.move("e5")
+
  
   function makeAMove(move) {
     const gameCopy = { ...game };
@@ -98,6 +99,7 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
       to: targetSquare,
       promotion: "q", // always promote to a queen for example simplicity
     });
+    checkEndGame();
     if(move){
       // console.log("wykonano: ");
       // console.log(move)
@@ -197,24 +199,37 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
       //game.move(lastEnemyMove);
       // console.log("mamy problem");
     }
-    checkEndGame();
+   // checkEndGame();
     pawnMoves();
+  //  checkEndGame();
+    setGame(gameCopy);
     checkEndGame();
-        setGame(gameCopy);
-    
 
   },[lastEnemyMove])
 
   const checkEndGame = (turn) =>{
     var imageElement = document.createElement('img');
-    imageElement.src = winnerIcon;
+
     imageElement.style.width = '100%';
     imageElement.style.height = '90%';
     const possibleMoves = game.moves();
+   
     if (game.in_checkmate()) {
+      debugger
+      if(game.turn() === "b" && gameInfo.whiteID === localStorage.uid)
+      {
+        imageElement.src = winnerIcon;
+      }
+      else if(game.turn() === "w" && gameInfo.blackID === localStorage.uid){
+        imageElement.src = winnerIcon;
+      }
+      else{
+        imageElement.src = loseIcon;
+      }
       if(game.turn()==="b")
       {
-        // setWinner(localStorage.gameIdComputer,"White")
+        
+        setWinner(localStorage.gameId,"White")
         Swal.fire({
           position: 'center',
           color:'white',
@@ -225,7 +240,8 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
         })
       }
       else{
-        // setWinner(localStorage.gameIdComputer,"Black")
+        
+        setWinner(localStorage.gameId,"Black")
         Swal.fire({
           position: 'center',
           color:'white',
@@ -239,6 +255,7 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
       return;
     } 
     if (game.in_draw()) {
+      setWinner(localStorage.gameId,"Draw")
       Swal.fire({
           position: 'center',
           icon: 'warning',
@@ -251,6 +268,7 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
       return;
     } 
     if (possibleMoves.length === 0) {
+      setWinner(localStorage.gameId,"Draw")
       Swal.fire({
           position: 'center',
           icon: 'warning',
@@ -263,9 +281,17 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
       return;
     } 
   }
+
+  const [openGiveUp,setOpenGiveUp] = useState(false);
+  const handleCloseGiveUp = () =>{
+    setOpenGiveUp(!openGiveUp)
+  }
   return (
     <div className="App">
       <Header/>
+      <GameController>
+        <GiveUpGame open={openGiveUp} handleClose={handleCloseGiveUp} gameId={localStorage.gameId}/>
+      </GameController>
       <main className="content">
         <div className="content-row">
           <div className="first-section">
@@ -283,6 +309,7 @@ export default function ChessBoard({sendPlayerMove,setChessHubOnGame,getPlayerMo
                 {orientation === 'white' && (gameInfo ? gameInfo.whiteNickname : null)}
               </p>
             </div>
+            <button className="option-btn friends-btn-reject" style={{width:"100%"}} onClick={()=>setOpenGiveUp(true)}>Poddaj się</button>
           </div>
           <div className="second-section">
             <div className="second-section-header">
