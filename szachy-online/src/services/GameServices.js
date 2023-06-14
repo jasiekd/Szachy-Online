@@ -10,6 +10,7 @@ class InvHub{
     static onReceiveInvate = (senderUid,color) =>{};
     static connection = null;
     static instance = null;
+    static blockFun = null;
     constructor(){
 
        if(InvHub.instance)

@@ -10,17 +10,18 @@ export default function GameController({children,getOpenings,getUserById})
     const chessHub = new ChessHub();
     const gameGateway = new GameService();
     const navigate = useNavigate();
-    const setBlockStartGame = useState(null);
+    
     const [receiveMoveAlert,setReceiveMoveAlert] = useState(true);
 
     const [lastEnemyMove,setLastEnemyMove] = useState();
     const receiveInvate = (senderUid,color) =>{
         if(senderUid==="Cancel Invitation")
         {
-           /* if(setBlockStartGame!==null)
+            debugger
+           if(InvHub.blockFun!==null)
             {
-                setBlockStartGame(false);
-            }*/
+                InvHub.blockFun(false)
+            }
             Swal.fire({
                 position: 'center',
                 icon: 'error',
@@ -227,7 +228,7 @@ export default function GameController({children,getOpenings,getUserById})
         const response = await gameGateway.setWinner(gameID,result);
     }
     const setBlockRef = async(ref) =>{
-        setBlockRef = ref;
+        InvHub.blockFun=ref;
     }
 
     const forfeit = async(gameId)=>{

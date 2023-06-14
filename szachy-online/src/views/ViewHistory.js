@@ -14,6 +14,8 @@ export default function ChessBoard() {
 
   const [moves,setMoves]=useState([]);
   const [moveCounter,setMoveCounter]=useState(0);
+  const [playerW,setPlayerW] = useState("");
+  const [playerB,setPlayerB] = useState("");
   useEffect(() => {
     setMoveHistory([]);
   },[]);
@@ -59,6 +61,10 @@ export default function ChessBoard() {
           temp.black = item;
           tempMoveHistory.push(temp);
           temp = {};
+        }
+        if ((index === elementy.length - 1) && (temp.hasOwnProperty('white') && temp.white !== '')) {
+          tempPgnMoves.push(pgnMove);
+          tempMoveHistory.push(temp);
         }
     })
     setMoves(tempPgnMoves);
@@ -149,6 +155,13 @@ export default function ChessBoard() {
     element.click();
     fileWriterSuccessAlert();
   }
+  useEffect(()=>{
+    if(location.state.white && location.state.black)
+    {
+      setPlayerW(location.state.white)
+      setPlayerB(location.state.black)
+    }
+  },[])
   return (
     <div className="App">
       <Header/>
@@ -157,13 +170,13 @@ export default function ChessBoard() {
           <div className="first-section">
             
             <div className="user-nickname">
-              <p>Makrol</p>
+              <p>{playerB}</p>
             </div>
             <div className="chess-board">
               <Chessboard  position={game.fen()} onPieceDrop={onDrop}/>
             </div>
             <div className="user-nickname">
-              <p>Zetux</p>
+              <p>{playerW}</p>
             </div>
           </div>
           <div className="second-section">
@@ -171,8 +184,8 @@ export default function ChessBoard() {
                 <p>Ruchy pionków:</p>
                 <div className="move-pawn-row">
                   <p className="column">lp.</p>
-                  <p className="column">Zetux</p>
-                  <p className="column">Makrol</p>
+                  <p className="column">{playerW}</p>
+                  <p className="column">{playerB}</p>
                 </div>
             </div>
             <div className="second-section-main">

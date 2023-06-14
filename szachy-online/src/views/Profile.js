@@ -33,12 +33,11 @@ export default function Profile({ getMyHistory,getMyFriendHistory,getInfoAboutGa
                 debugger
                 const chess = new Chess();
                 chess.load_pgn(r.pgn)
-                chess.set_comment( JSON.stringify({
-                   white: r.whiteNickname,
-                   black: r.blackNickname
-                }))
+               
+                let black = r.blackNickname;
+                let white = r.whiteNickname;
                 let content=chess.pgn();
-                navigate('/viewHistory',{state:{content}});
+                navigate('/viewHistory',{state:{content,black,white}});
             }
 
         });
