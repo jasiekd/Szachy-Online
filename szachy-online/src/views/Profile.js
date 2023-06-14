@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from './Header.js';
 import moment from "moment/moment.js";
-
+import {Chess} from "chess.js";
 export default function Profile({ getMyHistory,getMyFriendHistory,getInfoAboutGame}){
     const location = useLocation();
     const navigate = useNavigate();
@@ -30,7 +30,14 @@ export default function Profile({ getMyHistory,getMyFriendHistory,getInfoAboutGa
     function navigateToViewHistory(gameID){    
         getInfoAboutGame(gameID).then((r)=>{
             if(r){
-                let content=r.pgn;
+                debugger
+                const chess = new Chess();
+                chess.load_pgn(r.pgn)
+                chess.set_comment( JSON.stringify({
+                   white: r.whiteNickname,
+                   black: r.blackNickname
+                }))
+                let content=chess.pgn();
                 navigate('/viewHistory',{state:{content}});
             }
 

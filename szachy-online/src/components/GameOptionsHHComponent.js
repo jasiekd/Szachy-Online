@@ -11,9 +11,12 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Countdown from 'react-countdown';
 
-function SendInvate({invateToGame,friendId}){
+function SendInvate({invateToGame,friendId,setBlockRef}){
     const [disabledBtn,setDisabledBtn] = useState(false);
     const [endDate,setEndDate] = useState();
+    useEffect(()=>{
+        setBlockRef(setDisabledBtn);
+    },[])
     const invate = () => {
         setEndDate(Date.now()+30000)
        setDisabledBtn(true);
@@ -30,6 +33,7 @@ function SendInvate({invateToGame,friendId}){
           return <span>Oczekiwanie: {seconds}</span>;
         }
       };
+    
     return(
         <div style={{display:"flex",gap:"10rem"}}>
              <button className='option-btn' onClick={()=>invate()} disabled={disabledBtn}>{disabledBtn?<Countdown date={endDate} renderer={renderer} />:"Zaproś"}</button>
@@ -63,7 +67,7 @@ function FreindInvate({onGetFriendsList,setSelectedFriendId}){
     return(
         <div className='freind-invate'>
             <FormControl style={{width:"100%"}}>
-                <FormLabel style={{color:"white",fontSize:"2rem"}}>Przciwnik</FormLabel>
+                <FormLabel style={{color:"white",fontSize:"2rem"}}>Przeciwnik</FormLabel>
                 <Autocomplete
                 options={data}
                 disableClearable

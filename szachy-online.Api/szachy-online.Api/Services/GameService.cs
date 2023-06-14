@@ -66,7 +66,7 @@ namespace szachy_online.Api.Services
                 case PieceType.Queen:
                     return 90;
                 default:
-                    return 0;
+                    return 100;
             }
         }
         private async Task<int> GetPiecePositionScore(Piece piece)
@@ -895,7 +895,7 @@ namespace szachy_online.Api.Services
             {
                 depth = 2;
             }
-
+            depth = 3;
             return await FindBestMove(depth, game);
         }
 

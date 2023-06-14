@@ -7,11 +7,13 @@ import GameInvate from "./GameInvate";
 import { useEffect, useState } from "react";
 export default function GameComponent({getStyle,show,hide,showOHH,showTHH,showTHC,setInvateDialogRef}){
     const [openGameInvate, setOpenGameInvate] = useState(false);
+    const [update,setUpdate] = useState(false);
     const handleCloseGameInvate = () => {
         setOpenGameInvate(false);
     };
     const openGameInvateDialog = () =>{
-            setOpenGameInvate(true);   
+            setOpenGameInvate(true); 
+            setUpdate(!update);  
     }
     
     useEffect(()=>{
@@ -21,7 +23,7 @@ export default function GameComponent({getStyle,show,hide,showOHH,showTHH,showTH
         <div className='option' style={getStyle} onMouseOver={show}  onMouseOut={hide}>
             <AccountController>
                 <GameController>
-                    <GameInvate open={openGameInvate} handleClose={handleCloseGameInvate}/>
+                    <GameInvate open={openGameInvate} handleClose={handleCloseGameInvate} update={update}/>
                 </GameController>
             </AccountController>
             <button className='nav-btn' onClick={showOHH}>

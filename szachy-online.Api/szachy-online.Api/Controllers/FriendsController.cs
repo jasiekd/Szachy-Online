@@ -18,36 +18,6 @@ namespace szachy_online.Api.Controllers
         {
             _context = context;
         }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<IEnumerable<FriendsEntity>>> GetFriends()
-        {
-            if (_context.Friends == null)
-            {
-                return NotFound();
-            }
-            return await _context.Friends.ToListAsync();
-        }
-
-        [HttpGet("{id}")]
-        [Authorize]
-        public async Task<ActionResult<FriendsEntity>> GetFriendsEntity(long id)
-        {
-            if (_context.Friends == null)
-            {
-                return NotFound();
-            }
-            var friendsEntity = await _context.Friends.FindAsync(id);
-
-            if (friendsEntity == null)
-            {
-                return NotFound();
-            }
-
-            return friendsEntity;
-        }
-
         [HttpGet("sendInvitation/{nickname}")]
         [Authorize]
         public async Task<IActionResult> SendInvitation(string nickname)
@@ -160,16 +130,16 @@ namespace szachy_online.Api.Controllers
             return friendships;
         }
 
-        [HttpGet("acceptInvitation/{id}")]
+        [HttpGet("acceptInvitation/{friendshipID}")]
         [Authorize]
-        public async Task<IActionResult> AcceptInvitation(long id)
+        public async Task<IActionResult> AcceptInvitation(long friendshipID)
         {
             if (_context.Friends == null)
             {
                 return NotFound();
             }
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            FriendsEntity friendsEntity = await _context.Friends.FindAsync(id);
+            FriendsEntity friendsEntity = await _context.Friends.FindAsync(friendshipID);
 
             if (friendsEntity == null)
             {
@@ -191,15 +161,15 @@ namespace szachy_online.Api.Controllers
         }
 
         // DELETE: api/Friends/5
-        [HttpDelete("removeFriend/{id}")]
+        [HttpDelete("removeFriend/{friendshipID}")]
         [Authorize]
-        public async Task<IActionResult> RemoveFriend(long id)
+        public async Task<IActionResult> RemoveFriend(long friendshipID)
         {
             if (_context.Friends == null)
             {
                 return NotFound();
             }
-            var friendsEntity = await _context.Friends.FindAsync(id);
+            var friendsEntity = await _context.Friends.FindAsync(friendshipID);
             if (friendsEntity == null)
             {
                 return NotFound();
@@ -224,58 +194,6 @@ namespace szachy_online.Api.Controllers
         private bool FriendshipExists(Guid senderId, Guid receiverId)
         {
             return (_context.Friends?.Any(e => (e.User1ID == senderId && e.User2ID == receiverId) || (e.User1ID == receiverId && e.User2ID == senderId))).GetValueOrDefault();
-        }
-
-        [HttpPut("{id}")]
-        [Authorize]
-        public async Task<IActionResult> PutFriendsEntity(long id, FriendsEntity friendsEntity)
-        {
-            if (id != friendsEntity.FriendshipID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(friendsEntity).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FriendsEntityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        [HttpPost]
-        [Authorize]
-        public async Task<ActionResult<FriendsEntity>> PostFriendsEntity(FriendsEntity friendsEntity)
-        {
-            if (_context.Friends == null)
-            {
-                return Problem("Entity set 'DataContext.Friends'  is null.");
-            }
-            _context.Friends.Add(friendsEntity);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetFriendsEntity", new
-            {
-                id = friendsEntity.FriendshipID
-            }, friendsEntity);
-        }
-
-        private bool FriendsEntityExists(long id)
-        {
-            return (_context.Friends?.Any(e => e.FriendshipID == id)).GetValueOrDefault();
         }
     }
 }

@@ -32,27 +32,17 @@ namespace szachy_online.Api.Controllers
             else
                 return Ok(result);
         }
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<IEnumerable<AccountEntity>>> GetAccounts()
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-            return await _context.Accounts.ToListAsync();
-        }
 
-        [HttpGet("getUser/{id}")]
+        [HttpGet("getUser/{requestUserID}")]
         [Authorize]
-        public async Task<ActionResult<AccountEntity>> GetAccountEntity(Guid id)
+        public async Task<ActionResult<AccountEntity>> GetAccountEntity(Guid requestUserID)
         {
 
             if (_context.Accounts == null)
             {
                 return NotFound();
             }
-            var accountEntity = await _context.Accounts.FindAsync(id);
+            var accountEntity = await _context.Accounts.FindAsync(requestUserID);
 
             if (accountEntity == null)
             {
@@ -125,7 +115,7 @@ namespace szachy_online.Api.Controllers
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x => (x.BlackPlayerID.Equals(userId)) || (x.WhitePlayerID.Equals(userId))).ToListAsync();
+            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x => (x.BlackPlayerID.Equals(userId)) || (x.WhitePlayerID.Equals(userId))).OrderByDescending(x => x.DateStarted).ToListAsync();
 
             var response = new List<object>();
 
@@ -149,7 +139,7 @@ namespace szachy_online.Api.Controllers
         public async Task<IActionResult> GetMyFriendHistory(Guid idFriend)
         {
 
-            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x => (x.BlackPlayerID.Equals(idFriend)) || (x.WhitePlayerID.Equals(idFriend))).ToListAsync();
+            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x => (x.BlackPlayerID.Equals(idFriend)) || (x.WhitePlayerID.Equals(idFriend))).OrderByDescending(x=>x.DateStarted).ToListAsync();
 
             var response = new List<object>();
 
@@ -166,35 +156,6 @@ namespace szachy_online.Api.Controllers
                 });
             }
             return Ok(response);
-        }
-        [HttpPut("{id}")]
-        [Authorize]
-        public async Task<IActionResult> PutAccountEntity(Guid id, AccountEntity accountEntity)
-        {
-            if (id != accountEntity.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(accountEntity).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AccountEntityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
         [HttpPost("register")]
@@ -222,44 +183,15 @@ namespace szachy_online.Api.Controllers
             _context.Accounts.Add(accountEntity);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAccountEntity", new
+            return CreatedAtAction("PostAccountEntity", new
             {
                 id = accountEntity.Id
             }, accountEntity);
         }
 
-        [HttpDelete("{id}")]
-        [Authorize]
-        public async Task<IActionResult> DeleteAccountEntity(Guid id)
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-            var accountEntity = await _context.Accounts.FindAsync(id);
-            if (accountEntity == null)
-            {
-                return NotFound();
-            }
-
-            _context.Accounts.Remove(accountEntity);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool AccountEntityExists(Guid id)
-        {
-            return (_context.Accounts?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
-
         private bool LoginEmailNicknameExists(string email, string login, string nickname)
         {
             return (_context.Accounts?.Any(e => e.Email == email || e.Login == login || e.Nickname == nickname)).GetValueOrDefault();
-        }
-        private bool NicknameExists(string nickname)
-        {
-            return (_context.Accounts?.Any(e => e.Nickname == nickname)).GetValueOrDefault();
         }
     }
 }

@@ -7,11 +7,17 @@ import InvHub from '../services/GameServices';
 import { useEffect, useState } from 'react';
 import Countdown from 'react-countdown';
 
-export default function GameInvate({open,handleClose,createGameOnlineWithPlayer,getUserById,cancelInvate,timeOutInvate}){
+export default function GameInvate({open,handleClose,createGameOnlineWithPlayer,getUserById,cancelInvate,timeOutInvate,update}){
     const invHub = new InvHub();
     const [username,setUserName] = useState("");
     const [endDate,setEndDate] = useState();
 
+    useEffect(()=>{
+        setEndDate(Date.now()+30000);
+        getUserById(invHub.getSenderUid()).then((r)=>{
+            setUserName(r)
+        })
+    },[update])
     const onAccept = () =>{
         handleClose();
         createGameOnlineWithPlayer(invHub.getSenderUid(),invHub.getSenderColor());
@@ -39,6 +45,7 @@ export default function GameInvate({open,handleClose,createGameOnlineWithPlayer,
           return <span>Czas na akceptacje: {seconds}</span>;
         }
       };
+   
     return(
         <Dialog 
                 sx={{ '& .MuiDialog-paper': { background:'#1d1d1b' }}}

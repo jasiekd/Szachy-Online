@@ -204,6 +204,15 @@ export class GameService{
             return error.response;
         } 
     }
+    async forfeit(gameID){
+
+        try{
+            const response = await axios.post(HostName+'/api/Game/Forfeit/?guid='+gameID,{})
+            return response;
+        }catch(error){
+            return error.response;
+        } 
+    }
 
 
 }
