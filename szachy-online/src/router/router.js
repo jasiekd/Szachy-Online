@@ -42,7 +42,7 @@ const router = createBrowserRouter([
     ,
     {
         path: "/profile",
-        element: <AccountController><Profile/></AccountController>
+        element: <GameController><AccountController><Profile/></AccountController></GameController>
     }
 ]);
 

@@ -12,7 +12,7 @@ export default function FileComponent({getStyle,show,hide})
         reader.onload = function(e) {
             var content = reader.result;
             navigate(path,{state:{content}});
-
+            // window.location.reload();
         }
         
         reader.readAsText(file);    
@@ -28,7 +28,7 @@ export default function FileComponent({getStyle,show,hide})
             <img className="btn-img" src={continueIcon} alt=""/>
             <p className='slide-btn-text'>Wznów gre z pliku</p>
         </label>
-        <input type="file"  id="fileInput" style={{display:'none'}} accept='.pgn' onChange={(event)=>fileReader(event.target.files[0],'/chessBoard')}/>
+        <input type="file"  id="fileInput" style={{display:'none'}} accept='.pgn' onChange={(event)=>{fileReader(event.target.files[0],'/turnbasedGameplay');}}/>
         
         <label htmlFor="fileInput2"  className='nav-btn'>
             <img className="btn-img" src={chessHistory} alt=""/>

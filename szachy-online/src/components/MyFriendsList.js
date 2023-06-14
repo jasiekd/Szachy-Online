@@ -15,7 +15,7 @@ function MyFriendsButtons ({onRemoveFriend,closeList,friendshipID,uid,nick}){
     }
     return(
         <div style={{display:"flex",gap:"1rem"}}>
-            <button className="option-btn friends-btn-accept" onClick={()=>navigate("/profile",{state:{user:uid,nick:nick}})}>Pokaż profil</button>
+            <button className="option-btn friends-btn-accept" onClick={()=>{navigate("/profile",{state:{user:uid,nick:nick}});window.location.reload();}}>Pokaż profil</button>
             <button className="option-btn friends-btn-reject" onClick={()=>onClickRemove()}>Usuń</button>
         </div>
         
