@@ -40,6 +40,12 @@
    max-height: 30vw;
    overflow-y:scroll;
 }
+.second-section-footer2{
+   margin-top: auto;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
 .second-section-footer{
    margin-top: auto;
    display: flex;

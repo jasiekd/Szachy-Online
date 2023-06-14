@@ -37,7 +37,10 @@ export default function ChessBoard() {
       gameCopy.load_pgn(location.state.content);
       setGame(gameCopy);
       fileReadSuccessAlert();
-      const stringDoPrzerobienia = location.state.content;
+      let stringDoPrzerobienia = location.state.content;
+      if(stringDoPrzerobienia.match(/\.[^\s.]/g)){
+        stringDoPrzerobienia = stringDoPrzerobienia.replace(/\./g, '. ');
+      }
       const elementy = stringDoPrzerobienia.trim().split('. '&&' ');
       const tempMoveHistory = [];
       let temp = {};
