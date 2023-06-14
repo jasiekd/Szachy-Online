@@ -32,27 +32,17 @@ namespace szachy_online.Api.Controllers
             else
                 return Ok(result);
         }
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<IEnumerable<AccountEntity>>> GetAccounts()
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-            return await _context.Accounts.ToListAsync();
-        }
 
-        [HttpGet("getUser/{id}")]
+        [HttpGet("getUser/{requestUserID}")]
         [Authorize]
-        public async Task<ActionResult<AccountEntity>> GetAccountEntity(Guid id)
+        public async Task<ActionResult<AccountEntity>> GetAccountEntity(Guid requestUserID)
         {
 
             if (_context.Accounts == null)
             {
                 return NotFound();
             }
-            var accountEntity = await _context.Accounts.FindAsync(id);
+            var accountEntity = await _context.Accounts.FindAsync(requestUserID);
 
             if (accountEntity == null)
             {
@@ -167,35 +157,6 @@ namespace szachy_online.Api.Controllers
             }
             return Ok(response);
         }
-        [HttpPut("{id}")]
-        [Authorize]
-        public async Task<IActionResult> PutAccountEntity(Guid id, AccountEntity accountEntity)
-        {
-            if (id != accountEntity.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(accountEntity).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AccountEntityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
 
         [HttpPost("register")]
         [AllowAnonymous]
@@ -228,38 +189,9 @@ namespace szachy_online.Api.Controllers
             }, accountEntity);
         }
 
-        [HttpDelete("{id}")]
-        [Authorize]
-        public async Task<IActionResult> DeleteAccountEntity(Guid id)
-        {
-            if (_context.Accounts == null)
-            {
-                return NotFound();
-            }
-            var accountEntity = await _context.Accounts.FindAsync(id);
-            if (accountEntity == null)
-            {
-                return NotFound();
-            }
-
-            _context.Accounts.Remove(accountEntity);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool AccountEntityExists(Guid id)
-        {
-            return (_context.Accounts?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
-
         private bool LoginEmailNicknameExists(string email, string login, string nickname)
         {
             return (_context.Accounts?.Any(e => e.Email == email || e.Login == login || e.Nickname == nickname)).GetValueOrDefault();
-        }
-        private bool NicknameExists(string nickname)
-        {
-            return (_context.Accounts?.Any(e => e.Nickname == nickname)).GetValueOrDefault();
         }
     }
 }

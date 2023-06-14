@@ -8,6 +8,6 @@
     "\\szachy-online.Api\\szachy-online.Api\\Hubs",
     "\\szachy-online.Api\\szachy-online.Api\\Services"
   ],
-  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api\\Controllers\\AccountController.cs",
+  "SelectedNode": "\\szachy-online.Api\\szachy-online.Api\\Services\\TokenService.cs",
   "PreviewInSolutionExplorer": false
 }

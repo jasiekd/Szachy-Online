@@ -69,11 +69,11 @@ namespace szachy_online.Api.Controllers
             return Ok();
         }
 
-        [HttpGet("ComputerMove/{gid}/{move}")]
+        [HttpGet("ComputerMove/{gameID}/{move}")]
         [Authorize]
-        public async Task<IActionResult> ComputerMove(Guid gid, string move)
+        public async Task<IActionResult> ComputerMove(Guid gameID, string move)
         {
-            var gameEntity = await _context.Games.FindAsync(gid);
+            var gameEntity = await _context.Games.FindAsync(gameID);
 
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
@@ -118,19 +118,19 @@ namespace szachy_online.Api.Controllers
             _context.Games.Update(gameEntity);
             _context.SaveChanges();
 
-            await _hubContext.Clients.All.SendAsync(gid.ToString(), originalMove);
+            await _hubContext.Clients.All.SendAsync(gameID.ToString(), originalMove);
 
             return Ok();
         }
 
-        [HttpGet("PlayerMove/{gid}/{move}")]
+        [HttpGet("PlayerMove/{gameID}/{move}")]
         [Authorize]
-        public async Task<IActionResult> PlayerMove(Guid gid, string move)
+        public async Task<IActionResult> PlayerMove(Guid gameID, string move)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             string originalMove = move;
 
-            var gameEntity = await _context.Games.FindAsync(gid);
+            var gameEntity = await _context.Games.FindAsync(gameID);
             if (gameEntity.PGN == null)
                 gameEntity.PGN = "1." + move; // Rozpoczynamy numerację ruchów od 1
             else
