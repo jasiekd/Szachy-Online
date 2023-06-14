@@ -64,6 +64,7 @@ namespace szachy_online.Api.Controllers
                 return NotFound();
             }
             gameEntity.Winner = result;
+            gameEntity.PGN += "#";
             _context.Games.Update(gameEntity);
             _context.SaveChanges();
             return Ok();
@@ -322,6 +323,7 @@ namespace szachy_online.Api.Controllers
 
                 await _hubContext.Clients.All.SendAsync(gameEntity.BlackPlayerID.ToString(), "Loser");
             }
+            gameEntity.PGN += "#";
             _context.Games.Update(gameEntity);
             _context.SaveChanges();
 

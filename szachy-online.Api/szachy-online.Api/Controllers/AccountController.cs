@@ -115,7 +115,7 @@ namespace szachy_online.Api.Controllers
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x => (x.BlackPlayerID.Equals(userId)) || (x.WhitePlayerID.Equals(userId))).ToListAsync();
+            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x => (x.BlackPlayerID.Equals(userId)) || (x.WhitePlayerID.Equals(userId))).OrderByDescending(x => x.DateStarted).ToListAsync();
 
             var response = new List<object>();
 
@@ -139,7 +139,7 @@ namespace szachy_online.Api.Controllers
         public async Task<IActionResult> GetMyFriendHistory(Guid idFriend)
         {
 
-            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x => (x.BlackPlayerID.Equals(idFriend)) || (x.WhitePlayerID.Equals(idFriend))).ToListAsync();
+            var gameEntity = await _context.Games.Include(x => x.WhitePlayer).Include(x => x.BlackPlayer).Where(x => x.Winner != null).Where(x => (x.BlackPlayerID.Equals(idFriend)) || (x.WhitePlayerID.Equals(idFriend))).OrderByDescending(x=>x.DateStarted).ToListAsync();
 
             var response = new List<object>();
 
@@ -183,7 +183,7 @@ namespace szachy_online.Api.Controllers
             _context.Accounts.Add(accountEntity);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAccountEntity", new
+            return CreatedAtAction("PostAccountEntity", new
             {
                 id = accountEntity.Id
             }, accountEntity);
